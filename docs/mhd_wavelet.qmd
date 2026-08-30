@@ -1,0 +1,45 @@
+---
+title: "Análisis de Wavelet de Morlet para MHD (mhd_wavelet.py)"
+author: "Documentación de Librerías"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Descripción General
+
+El script `mhd_wavelet.py` es una adición a la biblioteca de procesamiento de señales del proyecto. Está específicamente diseñado para cumplir con los requisitos del primer objetivo específico del proyecto de graduación preliminar, el cual detalla el uso de un análisis de Morlet Wavelet continuo (CWT) para caracterizar la naturaleza no estacionaria de las oscilaciones MHD (como los modos Alfvén) en descargas de plasma de Heliotron J.
+
+## Definición de la Wavelet Madre (Morlet compleja)
+
+La wavelet de Morlet compleja está definida matemáticamente como:
+
+$$\psi(t) = \pi^{-1/4} e^{i \omega_0 t} e^{-t^2/2}$$
+
+donde $\omega_0$ (parámetro de frecuencia adimensional, típicamente $\omega_0 = 6$) controla el número de oscilaciones dentro de la envolvente gaussiana, logrando un balance óptimo entre resolución temporal y de frecuencia.
+
+## Funcionalidades del Pipeline
+
+1. **Carga y parseo de señales temporales**: Lee señales de las bobinas de Mirnov en formato `.edf`.
+2. **Decimación inteligente (Downsampling)**: Aplica un filtro de decimación paso bajo (`scipy.signal.decimate`) para reducir el número de puntos de datos de forma segura de acuerdo con la frecuencia de Nyquist (evitando aliasing), lo que acelera el cálculo del escalograma.
+3. **CWT vectorial personalizada**: Computa la transformada por convolución directa rápida para cada una de las escalas deseadas basadas en las frecuencias físicas:
+   
+   $$\text{scale} = \frac{\omega_0 \cdot f_s}{2 \pi f}$$
+
+4. **Generación de Escalogramas**: Genera mapas de contorno de potencia espectral en función del tiempo y la frecuencia y los guarda automáticamente en formato PNG de alta resolución.
+
+## Ejemplo de Uso
+
+Para ejecutar el pipeline sobre el archivo `MP1@86171.edf`:
+
+```bash
+python mhd_wavelet.py
+```

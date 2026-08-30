@@ -1,0 +1,43 @@
+---
+title: "Análisis de Coherencia y Espectro Cruzado (libana_signal.py)"
+author: "Documentación de Librerías"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Descripción General
+
+La biblioteca `libana_signal.py` proporciona funciones esenciales de procesamiento de señales para la caracterización de oscilaciones de magnetohidrodinámica (MHD) y el análisis de acoplamientos no lineales.
+
+## Funciones Clave
+
+### Espectroscopía y Running FFT (`running`)
+Calcula la evolución temporal de la densidad espectral de potencia (Short-Time Fourier Transform) utilizando la función `scipy.signal.spectrogram`. Es compatible con la remoción de tendencias (detrend), ventanas configurables y traslapes.
+
+### Densidad Espectral Cruzada (`csd`) y Coherencia Espacial (`xcoh2`)
+- `csd`: Calcula la densidad espectral cruzada entre dos canales (por ejemplo, dos bobinas de Mirnov diferentes).
+- `xcoh2`: Estima la coherencia al cuadrado entre dos canales a partir de la PSD cruzada ($P_{xy}$), y las PSD individuales de cada señal ($P_{xx}$, $P_{yy}$):
+  
+  $$\gamma^2 = \frac{|P_{xy}|^2}{P_{xx} \cdot P_{yy}}$$
+
+Esta función es vital para verificar el primer objetivo específico, el cual impone un umbral de coherencia espacial de $\gamma^2 > 0.7$ para confirmar estructuras coherentes de plasma.
+
+### Bicoherencia de Tres Ondas (`bicoherence_simple` / `abicoh2` / `xbicoh2`)
+Implementa análisis de acoplamiento no lineal de tres ondas para verificar la condición de resonancia:
+
+$$f_1 \pm f_2 = f_3$$
+
+- `abicoh2`: Calcula la auto-bicoherencia al cuadrado.
+- `xbicoh2`: Calcula la bicoherencia cruzada al cuadrado.
+- `summedbicoh2`: Calcula la bicoherencia sumada sobre frecuencias para identificar bandas de modulación de turbulencia.
+
+Estas funciones son la base de la metodología para el tercer objetivo específico, que requiere mapear eventos de bicoherencia superiores a un umbral de $b^2 > 0.5$.

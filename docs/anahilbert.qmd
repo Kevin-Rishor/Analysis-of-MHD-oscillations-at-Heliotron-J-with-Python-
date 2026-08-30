@@ -1,0 +1,52 @@
+---
+title: "Transformación de Hilbert y Frecuencia Instantánea (anahilbert.py)"
+author: "Documentación de Librerías"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Descripción General
+
+El script `anahilbert.py` calcula la señal analítica de una serie de tiempo en formato `.edf`. Permite extraer:
+1. La señal filtrada por banda (Band-pass filter usando filtro de Bessel de orden `nord`).
+2. La envolvente (Envelope) de la señal filtrada usando la amplitud de la señal analítica por la transformada de Hilbert.
+3. La frecuencia instantánea (Instantaneous Frequency), calculada de la derivada temporal de la fase instantánea desenrollada (unwrapped phase) y suavizada mediante un filtro Savitzky-Golay (`savgol_filter`).
+
+## Dependencias
+
+Se requiere:
+- `numpy`, `scipy.signal` (para el filtro de Bessel, Savitzky-Golay, transformada de Hilbert).
+- `turnelib` (I/O de archivos `.edf`).
+- `libana_signal` (análisis espectral auxiliar).
+- `matplotlib` y `matplotlibutil` (visualización e interfaz interactiva).
+
+## Parámetros de la Línea de Comandos
+
+El script recibe los siguientes argumentos desde la terminal:
+
+| Argumento | Descripción | Ejemplo de formato |
+|-----------|-------------|--------------------|
+| `-f`, `--file` | Ruta del archivo `.edf` a procesar. | `MP1@86171.edf` |
+| `-t`, `--target` | ID de la variable a procesar (1-based, default=1). | `1` |
+| `-s`, `--smoothing` | Ancho de ventana del filtro Savitzky-Golay (entero impar, default=525). | `251` |
+| `-l`, `--lower` | Frecuencia de corte inferior para el filtro paso banda en [kHz]. | `10.0` |
+| `-u`, `--upper` | Frecuencia de corte superior para el filtro paso banda en [kHz]. | `100.0` |
+| `-o`, `--order` | Orden del filtro de Bessel (default=4). | `4` |
+| `-w`, `--write` | Guarda los resultados calculados (`Hilbert_` prefix) de vuelta a un archivo `.edf`. | (Flag) |
+
+## Ejemplo de Uso
+
+Para procesar `MP1@86171.edf` con un filtro paso banda de 20 kHz a 80 kHz y guardar los resultados:
+
+```bash
+python scripts/Scripts/jpack/latest/anahilbert.py -f MP1@86171.edf -l 20 -u 80 -w
+```

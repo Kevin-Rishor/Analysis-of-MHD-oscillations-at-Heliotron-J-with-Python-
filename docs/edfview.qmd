@@ -1,0 +1,51 @@
+---
+title: "Visualización de Datos EDF (edfview.py)"
+author: "Documentación de Librerías"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Descripción General
+
+El script `edfview.py` es una utilidad que permite cargar y visualizar archivos en formato experimental de datos `.edf` utilizando `matplotlib`. El script tiene soporte especial para visualización de una dimensión (1D) con múltiples opciones para arreglar los gráficos y subplots de forma automática.
+
+## Dependencias
+
+Se requiere:
+- `numpy`, `pathlib`.
+- `turnelib` (clase `edf`).
+- `jclass` (función `edfview_1D`).
+- `jslang` (integración con el servidor de datos abiertos LHD para descarga/visualización directa vía WebAPI).
+
+## Parámetros de la Línea de Comandos
+
+El script recibe los siguientes argumentos desde la terminal:
+
+| Argumento | Descripción | Ejemplo de formato |
+|-----------|-------------|--------------------|
+| `-f`, `--file` | Ruta del archivo `.edf` o `.npz` a visualizar. | `MP1@86171.edf` |
+| `-s`, `--shot` | Número de descarga/disparo de plasma (Solo modo LHD). | `194949` |
+| `-d`, `--diagname` | Nombre del diagnóstico (Solo modo LHD). | `ech` |
+| `-t`, `--target` | Lista de IDs de variables a graficar (default: todas). | `-t 1 2 4` |
+| `-y`, `--ylabel` | Etiqueta personalizada para el eje Y. | `'$n_\mathrm{e}$'` |
+| `-m`, `--multi` | Si se activa, grafica múltiples subplots (uno por canal/ID). | (Flag) |
+| `-p`, `--portrait` | Habilita el modo vertical (Portrait). | (Flag) |
+| `-r`, `--reverse` | Invierte el mapa de colores por defecto (jet_r vs jet). | (Flag) |
+| `-w`, `--write` | Guarda la descarga remota a un archivo `.edf` local (Solo modo LHD). | (Flag) |
+
+## Ejemplo de Uso
+
+Para visualizar las variables de un archivo local con subplots múltiples:
+
+```bash
+python scripts/Scripts/jpack/latest/edfview.py -f MP1@86171.edf -m
+```

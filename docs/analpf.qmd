@@ -1,0 +1,47 @@
+---
+title: "Filtrado Paso Bajo (analpf.py)"
+author: "Documentación de Librerías"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Descripción General
+
+El script `analpf.py` aplica un filtro paso bajo (Low-pass filter) a una serie de datos temporales en formato `.edf` utilizando un filtro de Bessel de orden `nord` analógico bilinealizado digitalmente a través de la función `scipy.signal.filtfilt` (filtrado de fase cero).
+
+## Dependencias
+
+Se requiere:
+- `numpy`, `scipy.signal`.
+- `turnelib` (I/O de archivos `.edf`).
+- `libana_signal` (auxiliar).
+- `matplotlib` y `matplotlibutil` (graficación).
+
+## Parámetros de la Línea de Comandos
+
+El script recibe los siguientes argumentos desde la terminal:
+
+| Argumento | Descripción | Ejemplo de formato |
+|-----------|-------------|--------------------|
+| `-f`, `--file` | Ruta del archivo `.edf` a procesar. | `MP1@86171.edf` |
+| `-t`, `--target` | ID de la variable a procesar (1-based, default=1). | `1` |
+| `-c`, `--cut` | Frecuencia de corte para el filtro paso bajo en [kHz]. | `150.0` |
+| `-o`, `--order` | Orden para el filtro de Bessel (default=4). | `4` |
+| `-w`, `--write` | Guarda los resultados con el prefijo `Lowpass_` de vuelta a formato `.edf`. | (Flag) |
+
+## Ejemplo de Uso
+
+Para aplicar un filtro paso bajo con frecuencia de corte de 50 kHz a `MP1@86171.edf` y guardarlo:
+
+```bash
+python scripts/Scripts/jpack/latest/analpf.py -f MP1@86171.edf -c 50 -w
+```

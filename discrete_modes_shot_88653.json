@@ -1,0 +1,305 @@
+{
+  "shot": "88653",
+  "confirmation_rule": "any single coil pair > threshold",
+  "threshold_phys": 0.7,
+  "noise_baseline_window_ms": [
+    150.0,
+    175.0
+  ],
+  "discrete_modes": [
+    {
+      "frequency_hz": 89000.00000000981,
+      "amplitude": 8.507620565344157e-07,
+      "snr_threshold": 1.1726590829962614e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.8554548352950656,
+        "MP1_MP4": 0.8768503891025773,
+        "MP3_MP4": 0.8789224620114561
+      },
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "coherence_confirmed": true,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": true,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          178.999,
+          184.999
+        ],
+        [
+          191.999,
+          302.999
+        ]
+      ],
+      "total_active_duration_ms": 117.0
+    },
+    {
+      "frequency_hz": 40000.00000000441,
+      "amplitude": 4.118599274490982e-07,
+      "snr_threshold": 2.6083335782355444e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.016594068262630685,
+        "MP1_MP4": 0.07400599051829405,
+        "MP3_MP4": 0.003968137845789256
+      },
+      "confirming_pairs": [],
+      "coherence_confirmed": false,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": false,
+      "baseline_calibration_contaminated": true,
+      "active_intervals_ms": [
+        [
+          177.999,
+          185.999
+        ],
+        [
+          187.999,
+          199.999
+        ],
+        [
+          201.999,
+          240.999
+        ],
+        [
+          242.999,
+          302.999
+        ]
+      ],
+      "total_active_duration_ms": 119.0
+    },
+    {
+      "frequency_hz": 49000.0000000054,
+      "amplitude": 3.836695104106658e-07,
+      "snr_threshold": 6.112846817568823e-10,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.0500955991350907,
+        "MP1_MP4": 0.02855871249052042,
+        "MP3_MP4": 0.13379895775224668
+      },
+      "confirming_pairs": [],
+      "coherence_confirmed": false,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": false,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          177.999,
+          309.999
+        ],
+        [
+          314.999,
+          317.999
+        ],
+        [
+          325.999,
+          328.999
+        ],
+        [
+          357.999,
+          361.999
+        ],
+        [
+          384.999,
+          387.999
+        ],
+        [
+          406.999,
+          409.999
+        ]
+      ],
+      "total_active_duration_ms": 148.0
+    },
+    {
+      "frequency_hz": 95500.00000001052,
+      "amplitude": 2.721518459596667e-07,
+      "snr_threshold": 1.2635955457625784e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.6487617225163417,
+        "MP1_MP4": 0.6478220976253288,
+        "MP3_MP4": 0.7100704649224044
+      },
+      "confirming_pairs": [
+        "MP3_MP4"
+      ],
+      "coherence_confirmed": true,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": true,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          177.999,
+          188.999
+        ],
+        [
+          190.999,
+          209.999
+        ],
+        [
+          212.999,
+          237.999
+        ],
+        [
+          239.999,
+          302.999
+        ]
+      ],
+      "total_active_duration_ms": 118.0
+    },
+    {
+      "frequency_hz": 83500.0000000092,
+      "amplitude": 2.2651315320185548e-07,
+      "snr_threshold": 1.7137580418652712e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.17786727046078807,
+        "MP1_MP4": 0.25560981017094003,
+        "MP3_MP4": 0.2941393909553462
+      },
+      "confirming_pairs": [],
+      "coherence_confirmed": false,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": false,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          178.999,
+          185.999
+        ],
+        [
+          197.999,
+          303.999
+        ]
+      ],
+      "total_active_duration_ms": 113.0
+    },
+    {
+      "frequency_hz": 31500.00000000347,
+      "amplitude": 1.1619907218114479e-07,
+      "snr_threshold": 1.110277552024467e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.058705155480885535,
+        "MP1_MP4": 0.04342722061605201,
+        "MP3_MP4": 0.006039443681960074
+      },
+      "confirming_pairs": [],
+      "coherence_confirmed": false,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": false,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          177.999,
+          310.999
+        ],
+        [
+          324.999,
+          328.999
+        ],
+        [
+          349.999,
+          353.999
+        ],
+        [
+          355.999,
+          361.999
+        ],
+        [
+          366.999,
+          369.999
+        ],
+        [
+          373.999,
+          382.999
+        ],
+        [
+          385.999,
+          392.999
+        ],
+        [
+          397.999,
+          400.999
+        ]
+      ],
+      "total_active_duration_ms": 169.0
+    },
+    {
+      "frequency_hz": 79000.0000000087,
+      "amplitude": 5.12851170826344e-08,
+      "snr_threshold": 8.345784841848359e-10,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.01333046924109028,
+        "MP1_MP4": 0.09888337439347708,
+        "MP3_MP4": 0.11633216383481794
+      },
+      "confirming_pairs": [],
+      "coherence_confirmed": false,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": false,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          177.999,
+          185.999
+        ],
+        [
+          191.999,
+          239.999
+        ],
+        [
+          241.999,
+          302.999
+        ],
+        [
+          380.999,
+          383.999
+        ]
+      ],
+      "total_active_duration_ms": 120.0
+    },
+    {
+      "frequency_hz": 26000.000000002863,
+      "amplitude": 5.1003415824561686e-08,
+      "snr_threshold": 1.7052461216946558e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.08951663897297082,
+        "MP1_MP4": 0.0468560589919586,
+        "MP3_MP4": 0.03603294213061927
+      },
+      "confirming_pairs": [],
+      "coherence_confirmed": false,
+      "confirmation_rule": "any single coil pair > threshold",
+      "dual_criterion_pass": false,
+      "baseline_calibration_contaminated": false,
+      "active_intervals_ms": [
+        [
+          177.999,
+          308.999
+        ],
+        [
+          314.999,
+          317.999
+        ],
+        [
+          326.999,
+          329.999
+        ],
+        [
+          341.999,
+          344.999
+        ]
+      ],
+      "total_active_duration_ms": 140.0
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+---
+title: "Transformación Afín (affine.py)"
+author: "Documentación de Librerías"
+format: 
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false # Se pone en false por defecto para que no intente correr el script CLI sin archivos de prueba
+---
+
+## Descripción General
+
+El script `affine.py` aplica una transformación afín simple a matrices de datos, específicamente diseñado para trabajar con archivos en formato `.edf` a través de la librería `turnelib`.
+
+Sean $X$ y $Y$ matrices de dimensiones $n \times m$, y sean $a$ y $b$ vectores de longitud $m$. La operación principal se define escalarmente (elemento a elemento) como:
+
+$$
+Y[i, j] = a[j] \cdot X[i, j] + b[j]
+$$
+
+El resultado se guarda en un nuevo archivo con el prefijo `af_` y los parámetros utilizados se registran en los metadatos del archivo de salida.
+
+## Dependencias
+
+Para que este script funcione correctamente en el entorno, se requiere:
+- `numpy` (Para la vectorización y parseo de listas).
+- `turnelib` (Librería base para la lectura y escritura del formato `.edf`).
+- `argparse` y `pathlib` (Librerías estándar de Python).
+
+## Parámetros de la Línea de Comandos
+
+El script se ejecuta desde la terminal y recibe los siguientes argumentos:
+
+| Argumento | Descripción | Ejemplo de formato |
+|-----------|-------------|--------------------|
+| `-f`, `--file` | Ruta del archivo `.edf` que se va a procesar. | `archivo.edf` |
+| `-a` | Vector de escala (separado por comas o espacios). | `1,1` o `"3 4.2 5"` |
+| `-b` | Vector de desplazamiento (separado por comas o espacios). | `0,0.15` o `"0 0.15"` |
+
+## Ejemplo de Uso
+
+Para ejecutar la transformación sobre el archivo `HAFAST11.5@83848.edf`, aplicando un vector $a = [1, 1]$ y un vector $b = [0, 0.15]$, utiliza el siguiente comando en la terminal:
+
+```bash
+python affine.py -f HAFAST11.5@83848.edf -a 1,1 -b "0 0.15"

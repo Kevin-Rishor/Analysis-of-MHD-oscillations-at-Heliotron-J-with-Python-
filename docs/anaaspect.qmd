@@ -1,0 +1,50 @@
+---
+title: "Espectro de Potencia Auto (anaaspect.py)"
+author: "Documentación de Librerías"
+format:
+  html:
+    toc: true
+    toc-title: "Contenido"
+    code-fold: show
+    theme: cosmo
+  pdf:
+    geometry: "margin=2cm"
+    number-sections: true
+execute:
+  eval: false
+---
+
+## Descripción General
+
+El script `anaaspect.py` calcula el espectro de potencia auto (Auto Power Spectrum) de una serie de tiempo dada en formato experimental de datos `.edf` utilizando el método de Welch a través de `libana_signal.py`.
+
+La densidad espectral de potencia (PSD) se estima dividiendo los datos en segmentos con traslape, aplicando una ventana de Hanning y promediando los periodogramas de los segmentos. Las salidas principales son:
+1. FFT de tiempo corto en ejecución (Spectrogram / STFFT).
+2. Espectro de potencia promedio de conjunto (ensemble averaged) sobre un intervalo temporal de interés especificado de forma interactiva.
+
+## Dependencias
+
+Se requiere:
+- `numpy` (operaciones de arreglos).
+- `turnelib` (clase `edf` e I/O).
+- `libana_signal` (cómputo de STFFT/running).
+- `matplotlib` y `matplotlibutil` (graficación).
+
+## Parámetros de la Línea de Comandos
+
+El script recibe los siguientes argumentos desde la terminal:
+
+| Argumento | Descripción | Ejemplo de formato |
+|-----------|-------------|--------------------|
+| `-f`, `--file` | Ruta del archivo `.edf` a procesar. Si es nulo, abre un cuadro para cargar. | `MP1@86171.edf` |
+| `-t`, `--target` | ID de la variable a graficar y procesar (1-based index, default=1). | `1` |
+| `-r`, `--resolution` | Resolución de frecuencia requerida en [Hz] (Requerido). | `500.0` |
+| `-w`, `--write` | Guarda los resultados calculados (`stfft_` y `spct_`) de vuelta a archivos `.edf`. | (Flag) |
+
+## Ejemplo de Uso
+
+Para calcular el espectro de potencia de `MP1@86171.edf` con una resolución de 1000 Hz:
+
+```bash
+python scripts/Scripts/jpack/latest/anaaspect.py -f MP1@86171.edf -r 1000 -w
+```
