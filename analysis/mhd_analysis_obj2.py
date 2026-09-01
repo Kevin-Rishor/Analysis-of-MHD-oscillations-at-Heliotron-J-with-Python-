@@ -183,14 +183,16 @@ def lagged_pearson_significance(x, y, dt_corr, lag_ms):
 # -------------------------------------------------------------------------------------------
 def compute_probe_pair_coherence(signal_dict, key, pairs, t_sec, dt, args, nfft=None):
     nfft_use = nfft if nfft is not None else args.nfft
+    noverlap = nfft_use // 2
     results = {}
     for (pa, pb) in pairs:
         if pa in signal_dict and pb in signal_dict:
             xa = signal_dict[pa][key]
             xb = signal_dict[pb][key]
+            n_ens = max(1, (len(xa) - nfft_use) // (nfft_use - noverlap) + 1)
             f_pair, Pxy_pair, Pyy_pair, Pxx_pair = LAS.csd(
                 xa, t_sec, xb, dt=dt, nfft=nfft_use,
-                noverlap=nfft_use // 2, nensemble=args.ensemble, window='hann', detrend='constant'
+                noverlap=noverlap, nensemble=n_ens, window='hann', detrend='constant'
             )
             coh2_pair = LAS.xcoh2(Pxy_pair, Pyy_pair, Pxx_pair)
             mean_coh2_pair = np.mean(coh2_pair, axis=1) if coh2_pair.ndim > 1 else coh2_pair
