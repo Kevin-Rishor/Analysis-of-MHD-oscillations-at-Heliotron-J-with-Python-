@@ -68,7 +68,7 @@ def check_channel_identity(channel_name):
     """
     if not MIRNOV_NAME_RE.match(channel_name):
         # The log message has been slightly updated to reflect the new strict pattern
-        log.info(f"\u26a0\ufe0f WARNING: channel '{channel_name}' does not follow the expected Mirnov coil "
+        log.info(f" WARNING: channel '{channel_name}' does not follow the expected Mirnov coil "
               f"pattern (MP1, MP3, or MP4). Check the diagnostic documentation to "
               f"see what this channel actually measures before interpreting it as a Mirnov "
               f"magnetic signal.")
@@ -151,7 +151,7 @@ def load_edf_all_channels(fpath, exclude_names=None):
     n_cols = dat.shape[1] - 1
     names = list(getattr(edf, 'ValName', []) or [])
     if len(names) != n_cols:
-        log.debug(f"    \u26a0\ufe0f {fpath}: edf.ValName length ({len(names)}) does not match the number of "
+        log.debug(f"     {fpath}: edf.ValName length ({len(names)}) does not match the number of "
                   f"data columns ({n_cols}); falling back to generic column names 'col1'..'col{n_cols}'.")
         names = [f"col{i + 1}" for i in range(n_cols)]
 
@@ -534,7 +534,7 @@ def _plot_wp_window_detection(t_ms, ys, ys_smooth, baseline_end_ms, baseline_mea
     plt.tight_layout()
     plt.savefig(out_path, dpi=150)
     plt.close(fig)
-    log.debug(f"   \U0001f5bc\ufe0f  Diagnostic plot saved to: '{out_path}' -- open this to VISUALLY confirm "
+    log.debug(f"   \U0001f5bc  Diagnostic plot saved to: '{out_path}' -- open this to VISUALLY confirm "
           f"the auto-detected window(s) against the actual W_p trace before trusting them.")
 
 
@@ -597,7 +597,7 @@ def detect_flat_frequency_subwindow(ifreq_khz, t_ms, dt, i0_domain, i1_domain, a
         lo = max(args.flat_window_start, t_ms[i0_domain])
         hi = min(args.flat_window_end, t_ms[i1_domain - 1])
         if hi <= lo:
-            log.info(f"  \u26a0\ufe0f [M9] MANUAL --flat-window-start/--flat-window-end ({args.flat_window_start:.1f}-"
+            log.info(f"   [M9] MANUAL --flat-window-start/--flat-window-end ({args.flat_window_start:.1f}-"
                      f"{args.flat_window_end:.1f} ms) does not overlap the search domain "
                      f"({t_ms[i0_domain]:.1f}-{t_ms[i1_domain-1]:.1f} ms); falling back to the full domain.")
             return fallback
@@ -609,7 +609,7 @@ def detect_flat_frequency_subwindow(ifreq_khz, t_ms, dt, i0_domain, i1_domain, a
 
     scan_samples = max(3, int(round(args.flat_scan_window_ms / (dt * 1000.0))))
     if scan_samples >= n_domain:
-        log.info(f"  \u26a0\ufe0f [M9] Search domain ({n_domain} samples, {n_domain * dt * 1000.0:.1f} ms) is shorter "
+        log.info(f"   [M9] Search domain ({n_domain} samples, {n_domain * dt * 1000.0:.1f} ms) is shorter "
                  f"than --flat-scan-window-ms ({args.flat_scan_window_ms:.1f} ms); the full domain will be used as-is.")
         return fallback
 
@@ -669,7 +669,7 @@ def detect_flat_frequency_subwindow(ifreq_khz, t_ms, dt, i0_domain, i1_domain, a
         if min_duration_ms is not None:
             floor_note = (f" -- set by --nfft/--ensemble, not just --flat-min-duration-ms="
                            f"{args.flat_min_duration_ms:.1f} ms")
-        log.info(f"  \u26a0\ufe0f [M9] Tolerance-grown flat-frequency window ({duration_ms:.1f} ms, "
+        log.info(f"   [M9] Tolerance-grown flat-frequency window ({duration_ms:.1f} ms, "
                  f"{end - start} samples) is shorter than the required minimum "
                  f"({effective_min_duration_ms:.1f} ms{floor_note}); extending further, past the "
                  f"{100.0*args.flat_growth_tolerance:.0f}% flatness tolerance, using whichever side is "
@@ -689,7 +689,7 @@ def detect_flat_frequency_subwindow(ifreq_khz, t_ms, dt, i0_domain, i1_domain, a
         i0_flat, i1_flat = i0_domain + start, i0_domain + end
 
         if duration_ms < effective_min_duration_ms:
-            log.info(f"  \u26a0\ufe0f [M9] Even the full {n_domain * dt * 1000.0:.1f} ms search domain "
+            log.info(f"   [M9] Even the full {n_domain * dt * 1000.0:.1f} ms search domain "
                      f"({n_domain} samples) is shorter than the {effective_min_duration_ms:.1f} ms required "
                      "for the requested --nfft/--ensemble/overlap; falling back to the full search domain "
                      "as-is. The downstream bicoherence call will still fail for this shot -- lower --nfft "
@@ -1069,7 +1069,7 @@ def print_channel_result(channel_name, result, threshold):
               f"({result['b2_stat_threshold']:.3f}){marker}")
     if result['sum_total_bins'] != result['diff_total_bins']:
         ratio = result['diff_total_bins'] / result['sum_total_bins'] if result['sum_total_bins'] else float('nan')
-        log.debug(f"     \u26a0\ufe0f [Domain-size caveat] Sum domain = {result['sum_total_bins']} bins vs. "
+        log.debug(f"      [Domain-size caveat] Sum domain = {result['sum_total_bins']} bins vs. "
               f"Diff domain = {result['diff_total_bins']} bins (ratio {ratio:.2f}x). Percentages above "
               f"are each self-normalized; do NOT directly compare a Diff-domain percentage against "
               f"a Sum-domain percentage from another channel without confirming both domains use "
@@ -1114,7 +1114,7 @@ def run_single_shot(shot_id, args):
     det = None
     if args.full_discharge:
         main_t_start, main_t_end = None, None
-        log.debug("\u26a0\ufe0f --full-discharge mode active: the main ranking will use the FULL shot, "
+        log.debug(" --full-discharge mode active: the main ranking will use the FULL shot, "
               "mixing distinct physical windows.")
         # Quiescent/Control still need concrete bounds for the later window comparison; if they
         # weren't given manually, fall through to auto-detection for those two only.
@@ -1141,7 +1141,7 @@ def run_single_shot(shot_id, args):
             need_auto = True
 
     if need_auto and args.no_auto_burst:
-        log.info("\u274c ABORTING: --no-auto-burst was set but at least one of --burst-start/--burst-end, "
+        log.info(" ABORTING: --no-auto-burst was set but at least one of --burst-start/--burst-end, "
                  "--quiescent-start/--quiescent-end, --control-start/--control-end was not fully "
                  "provided. Cannot determine all required windows.")
         return
@@ -1152,7 +1152,7 @@ def run_single_shot(shot_id, args):
               f"(k_on={args.auto_burst_k_on}, k_off={args.auto_burst_k_off}, "
               f"min_duration={args.auto_burst_min_duration_ms:.0f} ms) ---")
         if not wp_file_detect.exists():
-            log.info(f"\u274c ABORTING: cannot auto-detect windows, {wp_file_detect} not found. "
+            log.info(f" ABORTING: cannot auto-detect windows, {wp_file_detect} not found. "
                      f"Supply all window bounds manually, or check --pattern/data directory.")
             return
         det = detect_hmode_burst_window(
@@ -1172,7 +1172,7 @@ def run_single_shot(shot_id, args):
             # once, WITH the M9 sub-window included, instead of saving it twice.
             defer_plot=True)
         if not det['ok']:
-            log.info(f"\u274c ABORTING: auto-detection FAILED ({det.get('reason', 'unknown reason')}). "
+            log.info(f" ABORTING: auto-detection FAILED ({det.get('reason', 'unknown reason')}). "
                      f"Supply all window bounds manually.")
             return
 
@@ -1199,7 +1199,7 @@ def run_single_shot(shot_id, args):
         if quiescent_start is None or quiescent_end is None:
             quiescent_start, quiescent_end = det['quiescent_start_ms'], det['quiescent_end_ms']
             if quiescent_start is None:
-                log.info("\u274c Quiescent window: NO candidate window could be evaluated at all "
+                log.info(" Quiescent window: NO candidate window could be evaluated at all "
                       "(the burst starts too close to the beginning of the recording for even "
                       "one window to fit before it). Supply --quiescent-start/--quiescent-end "
                       "manually, or reduce --auto-quiescent-duration-ms.")
@@ -1208,7 +1208,7 @@ def run_single_shot(shot_id, args):
                       f"(nearest flat, sub-threshold segment found before burst onset; "
                       f"mean={det['quiescent_mean']:.3f}, std={det['quiescent_std']:.3f})")
             else:
-                log.info(f"\u26a0\ufe0f Quiescent window: NO segment before the burst fully satisfied the "
+                log.info(f" Quiescent window: NO segment before the burst fully satisfied the "
                       f"flatness/level criteria. Using the best available candidate as a fallback: "
                       f"{quiescent_start:.1f}-{quiescent_end:.1f} ms. Treat with extra caution -- check "
                       f"the diagnostic plot or supply --quiescent-start/--quiescent-end manually.")
@@ -1216,7 +1216,7 @@ def run_single_shot(shot_id, args):
         if control_start is None or control_end is None:
             control_start, control_end = det['control_start_ms'], det['control_end_ms']
             if control_start is None:
-                log.info("\u274c Control window: NO candidate window could be evaluated at all "
+                log.info(" Control window: NO candidate window could be evaluated at all "
                       "(the burst ends too close to the end of the recording for even one window "
                       "to fit after it). Supply --control-start/--control-end manually, or reduce "
                       "--auto-control-duration-ms.")
@@ -1225,7 +1225,7 @@ def run_single_shot(shot_id, args):
                       f"(nearest flat, sub-threshold segment found after burst end; "
                       f"mean={det['control_mean']:.3f}, std={det['control_std']:.3f})")
             else:
-                log.info(f"\u26a0\ufe0f Control window: NO segment after the burst fully satisfied the "
+                log.info(f" Control window: NO segment after the burst fully satisfied the "
                       f"flatness/level criteria. Using the best available candidate as a fallback: "
                       f"{control_start:.1f}-{control_end:.1f} ms. Treat with extra caution -- check "
                       f"the diagnostic plot or supply --control-start/--control-end manually.")
@@ -1269,7 +1269,7 @@ def run_single_shot(shot_id, args):
     files = sorted([f for f in files if MIRNOV_NAME_RE.match(Path(f).name.split('@')[0])])
 
     if not files:
-        log.info(f"\u26a0\ufe0f No files found for pattern '{args.pattern}' -- falling back to default channel.")
+        log.info(f" No files found for pattern '{args.pattern}' -- falling back to default channel.")
         files = [f"data/hj{SHOT}/MP1@{SHOT}.edf"]
         log.debug(f"Using default channel: {files[0]}")
     else:
@@ -1411,7 +1411,7 @@ def run_single_shot(shot_id, args):
         for ch, a in amp_entries:
             log.debug(f"   * {ch}: RMS = {a:.4g} V")
         if outliers:
-            log.info(f"\u26a0\ufe0f [Amplitude sanity check] the following channel(s) deviate from the array "
+            log.info(f" [Amplitude sanity check] the following channel(s) deviate from the array "
                      f"median RMS ({median_amp:.4g} V) by more than {AMPLITUDE_ANOMALY_RATIO:.0f}x -- could be "
                      f"real physics or a calibration/gain difference; verify before treating as validated:")
             for ch, a, ratio in outliers:
@@ -1474,7 +1474,7 @@ def run_single_shot(shot_id, args):
         near_f2_edge = (args.f2max - f2_r) <= boundary_margin_khz
         if near_f1_edge or near_f2_edge:
             which = " and ".join([n for n, cond in (("f1", near_f1_edge), ("f2", near_f2_edge)) if cond])
-            log.info(f"  \u26a0\ufe0f [{r['channel']}] Boundary-proximity warning: the leading peak's {which} is within "
+            log.info(f"   [{r['channel']}] Boundary-proximity warning: the leading peak's {which} is within "
                      f"{boundary_margin_khz:.1f} kHz of the search boundary (f1max={args.f1max:.0f}, "
                      f"f2max={args.f2max:.0f} kHz) -- rerun with a larger --f1max/--f2max to confirm this isn't "
                      f"a boundary artifact before reporting it.")
@@ -1488,12 +1488,12 @@ def run_single_shot(shot_id, args):
             core_pct = r.get('stability_frac', 0.5) * 100.0
             if core_leader is not None:
                 core_sign = "+" if r['coupling_type'] == 'Sum' else "-"
-                log.info(f"  \u26a0\ufe0f [{r['channel']}] Peak-stability warning: leading peak does NOT agree with "
+                log.info(f"   [{r['channel']}] Peak-stability warning: leading peak does NOT agree with "
                          f"the best peak inside a smaller core box (innermost {core_pct:.0f}% of f1max/f2max), "
                          f"which instead points to f1={core_leader[1]:.1f} {core_sign} f2={core_leader[2]:.1f} kHz "
                          f"(b\u00b2={core_leader[0]:.3f}) -- sensitive to --f1max/--f2max choice, treat with caution.")
             else:
-                log.info(f"  \u26a0\ufe0f [{r['channel']}] Peak-stability warning: no comparable peak found inside a "
+                log.info(f"   [{r['channel']}] Peak-stability warning: no comparable peak found inside a "
                          f"smaller core search box; treat the reported leader with extra caution.")
 
     # 2b. Detailed bicoherence + PSD plot for the leading channel
@@ -1732,7 +1732,7 @@ def run_single_shot(shot_id, args):
         skipped_windows = [name for name, (w_start, w_end) in windows.items()
                             if w_start is None or w_end is None]
         if skipped_windows:
-            log.debug(f"\u274c Skipping {', '.join(skipped_windows)} from this comparison: no valid time "
+            log.debug(f" Skipping {', '.join(skipped_windows)} from this comparison: no valid time "
                   f"bounds are available for it (see the window-resolution messages above). It will "
                   f"NOT be silently analyzed as the full discharge.")
             windows = {name: bounds for name, bounds in windows.items() if name not in skipped_windows}
@@ -1834,10 +1834,10 @@ def run_single_shot(shot_id, args):
                                         f"though the Mann-Whitney U population-level test still favors the "
                                         f"burst (p_bq={p_bq:.4e}, p_bc={p_bc:.4e}) -- the single extreme value "
                                         f"and the whole-distribution shift are different questions.")
-                    log.info("\u26a0\ufe0f Statistical nuance: " + "; ".join(reasons) + ". No rigorous basis to "
+                    log.info(" Statistical nuance: " + "; ".join(reasons) + ". No rigorous basis to "
                              "call the coupling an exclusive/dominant H-mode signature from the max value alone.")
             except Exception as e_test:
-                log.debug(f"    \u26a0\ufe0f Could not complete the formal inference analysis: {e_test}")
+                log.debug(f"     Could not complete the formal inference analysis: {e_test}")
 
         # --- Final confirmation criterion: agreement with enhanced heat transport (Wp) ---
         # main.md: "Agreement between the enhanced heat transport periods and the temporal
@@ -1873,7 +1873,7 @@ def run_single_shot(shot_id, args):
                         t_ms_ech = t_sec_ech * 1000.0
                         has_ech = True
                     except Exception as e_ech:
-                        log.debug(f"    \u26a0\ufe0f Could not load the ECH signal: {e_ech}")
+                        log.debug(f"     Could not load the ECH signal: {e_ech}")
 
                 log.debug(f"  - Average values in the burst / quiescent / control windows:")
                 for win_name, (w_start, w_end) in windows.items():
@@ -1901,7 +1901,7 @@ def run_single_shot(shot_id, args):
                           "during the burst window is what the proposal defines as the final confirmation criterion.")
 
             except Exception as e:
-                log.info(f"\u26a0\ufe0f Could not perform the W_p window comparison: {e}")
+                log.info(f" Could not perform the W_p window comparison: {e}")
     log.debug("=" * 90)
 
     # ------------------------------------------------------------------------------------------
@@ -1959,7 +1959,7 @@ def run_single_shot(shot_id, args):
                 val_t_start, val_t_end = 188.0, 236.0
                 reason = (val_det.get('reason', 'unknown reason') if val_det is not None
                           else f"{val_wp_file} not found")
-                log.info(f"\u26a0\ufe0f Could not auto-detect the burst window for validation shot "
+                log.info(f" Could not auto-detect the burst window for validation shot "
                          f"{args.validation_shot} ({reason}). Falling back to a fixed default "
                          f"({val_t_start:.0f}-{val_t_end:.0f} ms) which may NOT correspond to this shot's "
                          f"actual H-mode burst -- verify manually with --validation-burst-start/end before "
@@ -1985,7 +1985,7 @@ def run_single_shot(shot_id, args):
             file_rep = Path(args.validation_dir) / f"{val_channel_name}@{args.validation_shot}.edf"
 
             if not file_rep.exists():
-                log.debug(f"\u26a0\ufe0f Channel '{val_channel_name}' not found for shot {args.validation_shot} "
+                log.debug(f" Channel '{val_channel_name}' not found for shot {args.validation_shot} "
                       f"in {args.validation_dir}; skipping.")
                 continue
 
@@ -2052,7 +2052,7 @@ def run_single_shot(shot_id, args):
                                   f"{args.validation_shot}: f1={f1_rep:.1f}, f2={f2_rep:.1f} kHz; "
                                   f"outside \u00b1{args.repro_tol_khz} kHz tolerance).")
             except Exception as e:
-                log.info(f"\u26a0\ufe0f Error processing validation shot {args.validation_shot} for {val_channel_name}: {e}")
+                log.info(f" Error processing validation shot {args.validation_shot} for {val_channel_name}: {e}")
 
     # ------------------------------------------------------------------------------------------
     # 5. Cross-Diagnostic Consistency Validation: magnetic vs. electrostatic
@@ -2089,7 +2089,7 @@ def run_single_shot(shot_id, args):
             xdiag_tips_matched_per_mp[r['channel']] = set()
 
     if not langmuir_files:
-        log.info(f"\u26a0\ufe0f No Langmuir probe files found with pattern '{args.langmuir_pattern}' -- "
+        log.info(f" No Langmuir probe files found with pattern '{args.langmuir_pattern}' -- "
                  f"cross-diagnostic consistency (Objective 3, criterion 2) CANNOT be tested, so it will "
                  f"show as FAIL by default below. This is a missing-data/config issue, not a physics result: "
                  f"adjust --langmuir-pattern to the actual Langmuir probe names in your dataset (e.g. LP1, "
@@ -2103,11 +2103,11 @@ def run_single_shot(shot_id, args):
             try:
                 t_sec_lp, dt_lp, fs_lp, lp_channels = load_edf_all_channels(lp_file, exclude_names=exclude_tips)
             except Exception as e:
-                log.info(f"\u26a0\ufe0f [{lp_array_name}] Could not read probe-tip columns from this file: {e}")
+                log.info(f" [{lp_array_name}] Could not read probe-tip columns from this file: {e}")
                 continue
 
             if not lp_channels:
-                log.info(f"\u26a0\ufe0f [{lp_array_name}] No usable probe-tip columns found after excluding "
+                log.info(f" [{lp_array_name}] No usable probe-tip columns found after excluding "
                          f"{exclude_tips} -- check --langmuir-exclude-channels against this file's actual "
                          f"bias/trigger pin labels.")
                 continue
@@ -2234,7 +2234,7 @@ def run_single_shot(shot_id, args):
                 xdiag_max_chance_match_p = max(xdiag_max_chance_match_p, p_any)
                 significant = p_any < args.xdiag_alpha
 
-                log.debug(f"  \u2139\ufe0f Multiple-comparisons context: {n_candidates_tested_file} RAW candidate "
+                log.debug(f"   Multiple-comparisons context: {n_candidates_tested_file} RAW candidate "
                       f"triad(s) tested (leading peaks only, {n_raw_tips} significant tip(s) x {n_mp_compared} MP "
                       f"channel(s)) across {lp_array_name} (\u00b1{args.xdiag_tol_khz} kHz box, "
                       f"{args.f1max:.0f}x{args.f2max:.0f} kHz search area). Since adjacent probe tips are "
@@ -2269,7 +2269,7 @@ def run_single_shot(shot_id, args):
                     # with pure chance even after crediting for tip correlation. Report them, but
                     # do NOT count them as confirmed.
                     involved_channels = sorted({mp_ch for (_, _, mp_ch, *_rest) in raw_matches})
-                    log.info(f"\u26a0\ufe0f [{lp_array_name}] {len(raw_matches)} raw match(es) were found (involving "
+                    log.info(f" [{lp_array_name}] {len(raw_matches)} raw match(es) were found (involving "
                              f"{', '.join(involved_channels)}), but NONE are counted as confirmed cross-"
                              f"diagnostic consistency: even after crediting tip correlation "
                              f"(M_eff\u2248{m_eff_tips:.2f} effective tips instead of {n_raw_tips} raw), the "
@@ -2305,11 +2305,11 @@ def run_single_shot(shot_id, args):
                 alt_str = (f" Peak(s) #{', #'.join(str(i+1) for i in confirmed_alt)} of {best_channel_name} "
                            f"DO have all three frequencies PSD-confirmed, if you need a more robust "
                            f"alternative to lead with." if confirmed_alt else "")
-                log.info(f"\u26a0\ufe0f CAVEAT: the headline peak (#1) of {best_channel_name} has at least one "
+                log.info(f" CAVEAT: the headline peak (#1) of {best_channel_name} has at least one "
                       f"frequency component that does NOT correspond to a real local PSD peak -- treat it as "
                       f"less certain than its b\u00b2 alone suggests.{alt_str}")
             elif headline_psd_ok is True:
-                log.debug(f"\n  \u2705 The headline peak (#1) of {best_channel_name} has all three frequencies "
+                log.debug(f"\n   The headline peak (#1) of {best_channel_name} has all three frequencies "
                       f"PSD-confirmed, which is separate, supporting evidence alongside whatever the Langmuir "
                       f"cross-validation above found.")
 
@@ -2356,18 +2356,18 @@ def run_single_shot(shot_id, args):
                  f"cross-consistency(Langmuir)={xdiag_status:<4}{flag}")
 
     if not passed_both:
-        log.info("\n\u26a0\ufe0f RESULT: Objective 3 is NOT validated under the strict double criterion -- no "
+        log.info("\n RESULT: Objective 3 is NOT validated under the strict double criterion -- no "
                  "channel simultaneously passed reproducibility AND cross-diagnostic consistency. "
                  "See the log file for the per-channel breakdown of which criterion each channel failed.")
     else:
         flagged_passed = [ch for ch in passed_both if ch in amplitude_outlier_channels]
-        log.info(f"\n\u2705 RESULT: Objective 3 double-validation criterion MET by: {', '.join(passed_both)}")
+        log.info(f"\n RESULT: Objective 3 double-validation criterion MET by: {', '.join(passed_both)}")
         if flagged_passed:
-            log.info(f"   \u26a0\ufe0f CAVEAT: {', '.join(flagged_passed)} was also flagged as an RMS amplitude "
+            log.info(f"    CAVEAT: {', '.join(flagged_passed)} was also flagged as an RMS amplitude "
                      f"outlier above -- confirm its calibration/gain before reporting it as validated.")
         CHANCE_MATCH_CAUTION_THRESHOLD = 0.20
         if xdiag_max_chance_match_p > CHANCE_MATCH_CAUTION_THRESHOLD:
-            log.info(f"   \u26a0\ufe0f CAVEAT: up to a {xdiag_max_chance_match_p*100:.0f}% probability that at least "
+            log.info(f"    CAVEAT: up to a {xdiag_max_chance_match_p*100:.0f}% probability that at least "
                      f"one Langmuir-MP triad match arose by pure chance (multiple-comparisons check) -- disclose "
                      f"this alongside the result, don't present the match as unambiguous confirmation.")
     log.debug("=" * 90)
@@ -2394,7 +2394,7 @@ def run_shot_worker(task):
         run_single_shot(shot_id, args)
     except Exception as e:
         import traceback
-        buf.write(f"\n\u274c ERROR processing shot {shot_id}: {e}\n")
+        buf.write(f"\n ERROR processing shot {shot_id}: {e}\n")
         buf.write(traceback.format_exc())
     return shot_id, buf.getvalue()
 

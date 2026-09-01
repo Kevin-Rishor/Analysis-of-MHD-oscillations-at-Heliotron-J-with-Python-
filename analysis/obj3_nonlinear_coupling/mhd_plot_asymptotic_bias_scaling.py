@@ -1,25 +1,33 @@
-"""
-mhd_plot_asymptotic_bias_scaling.py
-Sober, publication-grade asymptotic convergence test (1/N -> 0)
-for Heliotron J #88653 (Mirnov coil MP1).
-Formatted strictly according to standard academic journal styling (no AI banners/decorations).
-"""
-
+import sys
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-import sys
-sys.path.append(str(Path(__file__).parent.parent / "jpack"))
-sys.path.append(r"c:\TFG\jpack")
-sys.path.append(r"c:\TFG\analysis")
+current = Path(__file__).resolve().parent
+root_dir = None
+for p in [current] + list(current.parents):
+    if (p / "jpack").exists():
+        root_dir = p
+        break
+if root_dir is None:
+    root_dir = Path("c:/TFG")
+
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
+    if str(p_add) not in sys.path:
+        sys.path.append(str(p_add))
+
 import turnelib as TE
 import libana_signal as LAS
 from mhd_analysis_obj3 import load_edf_signal, slice_window
 
-def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
-    out_dir = Path(out_dir)
-    data_path = Path(r"c:\TFG\data") / f"hj{shot}" / f"MP1@{shot}.edf"
+
+def generate_sober_asymptotic_plot(shot=88653, out_dir=None):
+    if out_dir is None:
+        out_dir = root_dir
+    else:
+        out_dir = Path(out_dir)
+
+    data_path = root_dir / "data" / f"hj{shot}" / f"MP1@{shot}.edf"
 
     t_start, t_end = 259.1, 275.0
     t_sec, ys, dt, fs = load_edf_signal(data_path)
@@ -29,33 +37,27 @@ def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
     step = 512
     M_max = (len(ys_win) - nfft) // step + 1
 
-    # Extract all 30 FFT segments
     window = np.hanning(nfft)
     W2 = np.sum(window**2)
     segments_fft = []
     for k in range(M_max):
         idx0 = k * step
         seg = ys_win[idx0:idx0 + nfft]
-        # Linear detrend
         seg = seg - np.polyval(np.polyfit(np.arange(nfft), seg, 1), np.arange(nfft))
         X = np.fft.fft(seg * window)
         segments_fft.append(X)
-    segments_fft = np.array(segments_fft)  # (30, 1024)
+    segments_fft = np.array(segments_fft)
 
-    freqs = np.fft.fftfreq(nfft, d=dt) / 1000.0  # kHz
+    freqs = np.fft.fftfreq(nfft, d=dt) / 1000.0
 
-    # Target frequencies
-    # 1. Primary Triad: f1 = 89.8 kHz, f2 = 41.0 kHz, f3 = 48.8 kHz
     i_89 = np.argmin(np.abs(freqs - 89.8))
     i_41 = np.argmin(np.abs(freqs - 41.0))
     i_49 = np.argmin(np.abs(freqs - 48.8))
 
-    # 2. Subharmonic Peak: f1 = 98.6 kHz, f2 = 48.8 kHz, f3 = 49.8 kHz
     i_99 = np.argmin(np.abs(freqs - 98.6))
     i_48 = np.argmin(np.abs(freqs - 48.8))
     i_50 = np.argmin(np.abs(freqs - 49.8))
 
-    # 3. Uncoupled Noise: f1 = 135.0 kHz, f2 = 20.0 kHz, f3 = 115.0 kHz
     i_135 = np.argmin(np.abs(freqs - 135.0))
     i_20 = np.argmin(np.abs(freqs - 20.0))
     i_115 = np.argmin(np.abs(freqs - 115.0))
@@ -102,7 +104,6 @@ def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
     psd_41 = np.array(psd_41)
     psd_noi = np.array(psd_noi)
 
-    # Linear fits
     m_t, b_t = np.polyfit(inv_N, b2_triad, 1)
     m_s, b_s = np.polyfit(inv_N, b2_sub, 1)
     m_n, b_n = np.polyfit(inv_N, b2_noi, 1)
@@ -111,7 +112,6 @@ def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
     m_p41, b_p41 = np.polyfit(inv_N, psd_41, 1)
     m_pn, b_pn = np.polyfit(inv_N, psd_noi, 1)
 
-    # SOBER PLOTTING (Academic Journal Standard)
     plt.rcdefaults()
     plt.rcParams['font.family'] = 'sans-serif'
     plt.rcParams['font.sans-serif'] = ['DejaVu Sans', 'Arial', 'Helvetica']
@@ -127,29 +127,18 @@ def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
 
     x_line = np.linspace(0.0, 0.22, 100)
 
-    # -------------------------------------------------------------------------
-    # PANEL (a): BICOHERENCE vs 1/N
-    # -------------------------------------------------------------------------
-    # Theoretical noise line: E[b^2] = 1/N
     ax1.plot(x_line, x_line, color='gray', linestyle=':', linewidth=1.2,
              label=r"Theoretical noise expectation $\mathbb{E}[b^2] = 1/N$")
-
-    # Subharmonic mode
     ax1.plot(x_line, m_s * x_line + b_s, color='#1f77b4', linestyle='-', linewidth=1.5)
     ax1.plot(inv_N, b2_sub, color='#1f77b4', marker='s', markersize=5.5, linestyle='None',
              label=rf"Subharmonic ($98.6 - 48.8 = 49.8$ kHz): $b^2(0) = {b_s:+.3f}$")
-
-    # Primary triad
     ax1.plot(x_line, m_t * x_line + b_t, color='#ff7f0e', linestyle='-', linewidth=1.5)
     ax1.plot(inv_N, b2_triad, color='#ff7f0e', marker='o', markersize=5.5, linestyle='None',
              label=rf"Primary triad ($89.8 - 41.0 = 48.8$ kHz): $b^2(0) = {b_t:+.3f}$")
-
-    # Uncoupled noise
     ax1.plot(x_line, m_n * x_line + b_n, color='#d62728', linestyle='--', linewidth=1.4)
     ax1.plot(inv_N, b2_noi, color='#d62728', marker='^', markersize=5.5, linestyle='None',
              label=rf"Noise baseline ($135.0, -20.0$ kHz): $b^2(0) = {b_n:+.3f} \approx 0$")
 
-    # Y-intercept dashed marker
     ax1.axvline(0.0, color='black', linewidth=0.8, linestyle='-')
     ax1.set_xlim(-0.01, 0.22)
     ax1.set_ylim(-0.05, 0.50)
@@ -159,17 +148,12 @@ def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
     ax1.grid(True, linestyle=':', alpha=0.35, color='gray')
     ax1.legend(loc='upper left', fontsize=8.2, framealpha=0.9)
 
-    # -------------------------------------------------------------------------
-    # PANEL (b): PSD vs 1/N
-    # -------------------------------------------------------------------------
     ax2.semilogy(x_line, m_p41 * x_line + b_p41, color='#2ca02c', linestyle='-', linewidth=1.5)
     ax2.semilogy(inv_N, psd_41, color='#2ca02c', marker='s', markersize=5.5, linestyle='None',
                  label=rf"Secondary mode ($41.0$ kHz): $P = {b_p41:.2e}$ V$^2$/Hz")
-
     ax2.semilogy(x_line, m_p89 * x_line + b_p89, color='#1f77b4', linestyle='-', linewidth=1.5)
     ax2.semilogy(inv_N, psd_89, color='#1f77b4', marker='o', markersize=5.5, linestyle='None',
                  label=rf"Primary mode ($89.8$ kHz): $P = {b_p89:.2e}$ V$^2$/Hz")
-
     ax2.semilogy(x_line, m_pn * x_line + b_pn, color='#7f7f7f', linestyle='--', linewidth=1.4)
     ax2.semilogy(inv_N, psd_noi, color='#7f7f7f', marker='^', markersize=5.5, linestyle='None',
                  label=rf"Noise baseline ($135.0$ kHz): $P = {b_pn:.2e}$ V$^2$/Hz")
@@ -187,8 +171,10 @@ def generate_sober_asymptotic_plot(shot=88653, out_dir="c:/TFG"):
     out_png = out_dir / f"mhd_asymptotic_bias_scaling_shot_{shot}.png"
     plt.savefig(out_png, dpi=200)
     plt.close(fig)
-    print(f"Sober asymptotic scaling plot saved to: '{out_png}'")
+    print(f"Asymptotic scaling plot saved to: '{out_png}'")
     return str(out_png)
+
 
 if __name__ == "__main__":
     generate_sober_asymptotic_plot(88653)
+

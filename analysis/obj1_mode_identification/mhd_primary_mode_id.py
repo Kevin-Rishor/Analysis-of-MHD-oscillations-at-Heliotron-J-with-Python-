@@ -1,12 +1,3 @@
-"""
-mhd_primary_mode_id.py
-Primary MHD/EP Mode Identification:
-1. Toroidal mode number (n) estimation from the toroidal Mirnov probe array (MP1, MP3, MP4),
-   excluding MP2 due to poloidal angle disparity (theta != 0 deg).
-2. Radial fluctuation profile & localization using the 16-channel fast ECE radiometer array
-   (ECE1FAST to ECE16FAST) and fast H-alpha array (HAFAST3.5, 7.5, 11.5, 15.5).
-"""
-
 import sys
 import json
 from pathlib import Path
@@ -15,36 +6,35 @@ import scipy.signal as dsp
 import matplotlib.pyplot as plt
 
 current = Path(__file__).resolve().parent
-ROOT_DIR = None
+root_dir = None
 for p in [current] + list(current.parents):
     if (p / "jpack").exists():
-        ROOT_DIR = p
+        root_dir = p
         break
-if ROOT_DIR is None:
-    ROOT_DIR = Path("c:/TFG")
+if root_dir is None:
+    root_dir = Path("c:/TFG")
 
-for p_add in [ROOT_DIR / "jpack", ROOT_DIR / "analysis", ROOT_DIR / "analysis" / "common"]:
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
         sys.path.append(str(p_add))
 
 import turnelib as TE
 
-def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0, mode_freq=89.0):
+
+def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0, mode_freq=89.0, out_dir=None):
     if data_dir is None:
-        data_dir = Path(r"c:\TFG\data") / f"hj{shot}"
+        data_dir = root_dir / "data" / f"hj{shot}"
     else:
         data_dir = Path(data_dir)
 
-    print("=" * 80)
-    print(f"PRIMARY MHD/EP MODE IDENTIFICATION - SHOT {shot}")
-    print(f"Mode Frequency Target: {mode_freq:.1f} kHz | Mode-Active Window: {t_start:.1f} - {t_end:.1f} ms")
-    print("=" * 80)
+    if out_dir is None:
+        out_dir = root_dir
+    else:
+        out_dir = Path(out_dir)
+
+    print(f"Primary Mode Identification (Shot {shot}, target: {mode_freq:.1f} kHz, window: {t_start:.1f}-{t_end:.1f} ms)")
 
     # 1. Toroidal Mode Number (n) Estimation
-    print("\n--- 1. Toroidal Mode Number (n) Estimation ---")
-    print("Valid coils at theta = 0 deg: MP1 (33.3 deg), MP3 (213.3 deg), MP4 (303.3 deg).")
-    print("Excluding MP2 (131.3 deg) to prevent poloidal mode (m) contamination.")
-
     probe_angles = {"MP1": 33.3, "MP3": 213.3, "MP4": 303.3}
     probes = ["MP1", "MP3", "MP4"]
     probe_data = {}
@@ -65,7 +55,6 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
 
     idx_win = np.where((t_ms >= t_start) & (t_ms <= t_end))[0]
     win_duration_ms = len(idx_win) * dt * 1000.0
-    print(f"Window duration: {win_duration_ms:.2f} ms ({len(idx_win)} samples at {fs/1e6:.1f} MHz)")
 
     pairs = [("MP1", "MP3"), ("MP1", "MP4"), ("MP3", "MP4")]
     nperseg = 2048
@@ -76,7 +65,7 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
         x1 = probe_data[p1][1][idx_win]
         x2 = probe_data[p2][1][idx_win]
         f, Pxy = dsp.csd(x1, x2, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
-        f_c, coh = dsp.coherence(x1, x2, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
+        _, coh = dsp.coherence(x1, x2, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
         f_khz = f / 1000.0
         idx_f = np.argmin(np.abs(f_khz - mode_freq))
         actual_f = f_khz[idx_f]
@@ -94,12 +83,11 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
             "coh_curve": coh,
             "phase_curve": np.angle(Pxy),
         }
-        print(f"  Pair {p1}-{p2}: delta_varphi = {d_tor_deg:+6.1f} deg | gamma^2 = {gamma2:.3f} | phase = {phase_deg:+6.1f} deg")
+        print(f"  Pair {p1}-{p2}: delta_phi={d_tor_deg:+6.1f} deg | gamma^2={gamma2:.3f} | phase={phase_deg:+6.1f} deg")
 
     # Fit candidate n values
     n_candidates = list(range(-6, 7))
     n_fit_results = {}
-    print("\nCandidate Toroidal Mode Number Fits:")
     for n in n_candidates:
         sq_err = 0.0
         pair_diffs = []
@@ -117,13 +105,11 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     best_n_list = sorted(n_fit_results.keys(), key=lambda n: n_fit_results[n]["rmse_deg"])
     best_n = best_n_list[0]
     second_best_n = best_n_list[1]
-    print(f"\nToroidal Fit Conclusion: Minimum RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg achieved at n = {best_n:+d} (aliased with n = {second_best_n:+d} due to delta_varphi = 90 deg array spacing).")
+    print(f"Toroidal fit: min RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg at n = {best_n:+d} (aliased: {second_best_n:+d})")
 
-    # 2. Radial Profile & Localization (ECE Radiometer Array)
-    print("\n--- 2. Radial Fluctuation Profile Analysis (16-channel Fast ECE Radiometer) ---")
+    # 2. Radial Profile & Localization
     x_mp1 = probe_data["MP1"][1][idx_win]
     ece_results = []
-
     b_band, a_band = dsp.bessel(4, [80000.0 / (fs / 2.0), 100000.0 / (fs / 2.0)], btype="bandpass")
 
     for i in range(1, 17):
@@ -138,12 +124,12 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
             try:
                 ghz_str = prop_matches[0].split("'")[1].replace("GHz", "").strip()
                 ghz = float(ghz_str)
-            except:
+            except Exception:
                 pass
         y_ece_all = dat_ece[:, 1]
         y_ece_win = y_ece_all[idx_win]
 
-        f_c, coh = dsp.coherence(x_mp1, y_ece_win, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
+        _, coh = dsp.coherence(x_mp1, y_ece_win, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
         f, Pxy = dsp.csd(x_mp1, y_ece_win, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
         idx_89 = np.argmin(np.abs(f / 1000.0 - mode_freq))
         gamma2_89 = float(coh[idx_89])
@@ -166,18 +152,14 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
         })
 
     ece_results.sort(key=lambda d: d["freq_ghz"])
-    print(f"{'Channel':<12} {'Freq (GHz)':<12} {'Coh gamma^2':<14} {'Phase (deg)':<14} {'RMS Fluct (V)':<16} {'Rel Fluct ~T/T':<16}")
+    print(f"\n{'Channel':<12} {'Freq (GHz)':<12} {'Coh gamma^2':<14} {'Phase (deg)':<14} {'RMS Fluct (V)':<16} {'Rel Fluct ~T/T':<16}")
     for d in ece_results:
         print(f"{d['channel']:<12} {d['freq_ghz']:<12.1f} {d['gamma2']:<14.4f} {d['phase_deg']:<+14.1f} {d['fluc_rms']:<16.4e} {d['relative_fluc']:<16.4e}")
 
     peak_fluc_ece = max(ece_results, key=lambda d: d["fluc_rms"])
     peak_coh_ece = max(ece_results, key=lambda d: d["gamma2"])
-    print(f"\nECE Radial Localization Summary:")
-    print(f"  Peak Fluctuation Amplitude: {peak_fluc_ece['channel']} at {peak_fluc_ece['freq_ghz']:.1f} GHz (RMS = {peak_fluc_ece['fluc_rms']:.4e} V)")
-    print(f"  Peak Mirnov Coherence:      {peak_coh_ece['channel']} at {peak_coh_ece['freq_ghz']:.1f} GHz (gamma^2 = {peak_coh_ece['gamma2']:.4f})")
 
-    # 3. Edge Emission Coupling (HAFAST Array)
-    print("\n--- 3. Edge H-alpha Fast Array Coupling ---")
+    # 3. Edge Emission Coupling (HAFAST)
     ha_results = []
     for ha in ["3.5", "7.5", "11.5", "15.5"]:
         fpath = data_dir / f"HAFAST{ha}@{shot}.edf"
@@ -185,7 +167,7 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
             continue
         dat_ha = edf.load(str(fpath))
         y_ha_win = dat_ha[:, 1][idx_win]
-        f_c, coh = dsp.coherence(x_mp1, y_ha_win, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
+        _, coh = dsp.coherence(x_mp1, y_ha_win, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
         f, Pxy = dsp.csd(x_mp1, y_ha_win, fs=fs, window="hann", nperseg=nperseg, noverlap=noverlap)
         idx_89 = np.argmin(np.abs(f / 1000.0 - mode_freq))
         y_fluc = dsp.filtfilt(b_band, a_band, y_ha_win)
@@ -200,18 +182,19 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
         })
         print(f"  HAFAST{ha:<4}: gamma^2(89kHz) = {gamma2_ha:.4f} | Phase = {phase_ha:+6.1f} deg | RMS = {rms_ha:.4e} V")
 
-    # 4. PLOTTING: FIGURE 1 - TOROIDAL MODE STRUCTURE
+    # 4. Plot Toroidal Structure
+    plt.rcdefaults()
     fig_tor, axs_tor = plt.subplots(3, 1, figsize=(10, 11))
     fig_tor.suptitle(f"Primary Mode Toroidal Identification - Shot {shot}\n(f ~ {mode_freq:.1f} kHz, Window {t_start:.1f}-{t_end:.1f} ms)", fontsize=13, fontweight="bold")
 
     for (p1, p2), pdict in measured_pairs.items():
-        axs_tor[0].plot(pdict["f_khz"], pdict["coh_curve"], label=f"{p1}-{p2} (delta_varphi={pdict['d_tor_deg']:+.0f} deg)", linewidth=1.8)
+        axs_tor[0].plot(pdict["f_khz"], pdict["coh_curve"], label=f"{p1}-{p2} (delta_phi={pdict['d_tor_deg']:+.0f} deg)", linewidth=1.8)
     axs_tor[0].axvline(mode_freq, color="red", linestyle="--", linewidth=1.2, label=f"Mode Peak ({mode_freq:.1f} kHz)")
     axs_tor[0].axhline(0.5, color="gray", linestyle=":", label="Significance Floor (0.5)")
     axs_tor[0].set_xlim(60.0, 120.0)
     axs_tor[0].set_ylim(0.0, 1.05)
     axs_tor[0].set_ylabel(r"Cross-Coherence $\gamma^2$")
-    axs_tor[0].set_title("Inter-Probe Cross-Spectral Coherence (Toroidal Array: MP1, MP3, MP4 at theta = 0 deg)", fontsize=10)
+    axs_tor[0].set_title("Inter-Probe Cross-Spectral Coherence", fontsize=10)
     axs_tor[0].legend(loc="upper right", fontsize=8.5)
     axs_tor[0].grid(True, alpha=0.3)
 
@@ -243,18 +226,18 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     axs_tor[2].axhline(45.0, color="gray", linestyle="--", label="Phase Tolerance Limit (45 deg)")
     axs_tor[2].set_xlabel("Toroidal Mode Number (n)")
     axs_tor[2].set_ylabel("Phase RMSE (deg)")
-    axs_tor[2].set_title(f"Root-Mean-Square Phase Error Across Toroidal Modes n (Best: n = {best_n:+d} / {second_best_n:+d}, RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg)", fontsize=10)
+    axs_tor[2].set_title(f"Toroidal Mode Phase Error (Best: n = {best_n:+d} / {second_best_n:+d}, RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg)", fontsize=10)
     axs_tor[2].set_xticks(n_plot)
     axs_tor[2].legend(loc="upper right", fontsize=8.5)
     axs_tor[2].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    out_png_tor = f"c:/TFG/mhd_primary_mode_toroidal_n_shot_{shot}.png"
+    out_png_tor = out_dir / f"mhd_primary_mode_toroidal_n_shot_{shot}.png"
     plt.savefig(out_png_tor, dpi=150)
     plt.close(fig_tor)
-    print(f"\nFigure saved to: '{out_png_tor}'")
+    print(f"Toroidal fit figure saved to: '{out_png_tor}'")
 
-    # 5. PLOTTING: FIGURE 2 - RADIAL ECE & HAFAST PROFILES
+    # 5. Plot Radial Profiles
     fig_rad, axs_rad = plt.subplots(3, 1, figsize=(10, 11))
     fig_rad.suptitle(f"Primary Mode Radial Fluctuation & Localization Profile - Shot {shot}\n(f ~ {mode_freq:.1f} kHz, Window {t_start:.1f}-{t_end:.1f} ms)", fontsize=13, fontweight="bold")
 
@@ -263,19 +246,19 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     ece_gam = [d["gamma2"] for d in ece_results]
     ece_chs = [d["channel"] for d in ece_results]
 
-    axs_rad[0].plot(ece_ghz, ece_rms, marker="o", color="crimson", linewidth=2.0, markersize=7, label=r"RMS Fluctuation Amplitude $\tilde{T}_e$ (V)")
-    axs_rad[0].axvspan(64.0, 67.0, color="gold", alpha=0.2, label=r"Peak Fluctuation Zone (64.5 - 66.5 GHz, ECE12/ECE13)")
-    axs_rad[0].set_xlabel("ECE Radiometer Frequency (GHz)")
+    axs_rad[0].plot(ece_ghz, ece_rms, marker="o", color="crimson", linewidth=2.0, markersize=7, label=r"RMS Fluctuation $\tilde{T}_e$ (V)")
+    axs_rad[0].axvspan(64.0, 67.0, color="gold", alpha=0.2, label=r"Peak Fluctuation Zone (64.5 - 66.5 GHz)")
+    axs_rad[0].set_xlabel("ECE Frequency (GHz)")
     axs_rad[0].set_ylabel(r"Fluctuation RMS Amplitude $\tilde{T}_e$ (V)")
-    axs_rad[0].set_title(r"Radial Electron Temperature Fluctuation Profile $\tilde{T}_e(r)$ Across ECE Radiometer Channels", fontsize=10)
+    axs_rad[0].set_title(r"Radial Electron Temperature Fluctuation Profile $\tilde{T}_e(r)$", fontsize=10)
     for g, r, ch in zip(ece_ghz, ece_rms, ece_chs):
         if r > 0.05:
             axs_rad[0].annotate(f"{ch}\n({r:.2f}V)", (g, r), textcoords="offset points", xytext=(0, 8), ha="center", fontsize=8, fontweight="bold", color="darkred")
     axs_rad[0].grid(True, alpha=0.3)
     axs_rad[0].legend(loc="upper left", fontsize=8.5)
 
-    axs_rad[1].plot(ece_ghz, ece_gam, marker="s", color="tab:blue", linewidth=1.8, markersize=6, label=r"Coherence $\gamma^2(f=89\mathrm{kHz})$ with Mirnov MP1")
-    axs_rad[1].set_xlabel("ECE Radiometer Frequency (GHz)")
+    axs_rad[1].plot(ece_ghz, ece_gam, marker="s", color="tab:blue", linewidth=1.8, markersize=6, label=r"Coherence $\gamma^2(89\mathrm{kHz})$ with MP1")
+    axs_rad[1].set_xlabel("ECE Frequency (GHz)")
     axs_rad[1].set_ylabel(r"Cross-Coherence $\gamma^2$")
     axs_rad[1].set_title("Radial Coherence with Mirnov Probe MP1", fontsize=10)
     axs_rad[1].grid(True, alpha=0.3)
@@ -286,13 +269,13 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     ha_rms = [d["fluc_rms"] for d in ha_results]
 
     ax_ha_twin = axs_rad[2].twinx()
-    bars = axs_rad[2].bar(np.arange(len(ha_names)) - 0.15, ha_cohs, width=0.3, color="teal", alpha=0.85, label=r"Coherence $\gamma^2$ with MP1")
-    lines = ax_ha_twin.plot(np.arange(len(ha_names)) + 0.15, ha_rms, marker="D", color="darkorange", linewidth=2.0, label=r"RMS Fluctuation (V)")
+    axs_rad[2].bar(np.arange(len(ha_names)) - 0.15, ha_cohs, width=0.3, color="teal", alpha=0.85, label=r"Coherence $\gamma^2$ with MP1")
+    ax_ha_twin.plot(np.arange(len(ha_names)) + 0.15, ha_rms, marker="D", color="darkorange", linewidth=2.0, label=r"RMS Fluctuation (V)")
     axs_rad[2].set_xticks(np.arange(len(ha_names)))
     axs_rad[2].set_xticklabels(ha_names)
     axs_rad[2].set_ylabel(r"Cross-Coherence $\gamma^2$", color="teal")
     ax_ha_twin.set_ylabel("RMS Fluctuation Amplitude (V)", color="darkorange")
-    axs_rad[2].set_title(r"Edge Fluctuation Coupling: Fast $H_\alpha$ Diagnostic Array (HAFAST)", fontsize=10)
+    axs_rad[2].set_title(r"Edge Fluctuation Coupling: Fast $H_\alpha$ Array (HAFAST)", fontsize=10)
     axs_rad[2].grid(True, alpha=0.3)
 
     h1, l1 = axs_rad[2].get_legend_handles_labels()
@@ -300,10 +283,10 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     axs_rad[2].legend(h1 + h2, l1 + l2, loc="upper right", fontsize=8.5)
 
     plt.tight_layout()
-    out_png_rad = f"c:/TFG/mhd_primary_mode_radial_profile_shot_{shot}.png"
+    out_png_rad = out_dir / f"mhd_primary_mode_radial_profile_shot_{shot}.png"
     plt.savefig(out_png_rad, dpi=150)
     plt.close(fig_rad)
-    print(f"Figure saved to: '{out_png_rad}'")
+    print(f"Radial profile figure saved to: '{out_png_rad}'")
 
     # 6. Export JSON
     id_card = {
@@ -334,12 +317,14 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
         "primary_mode_classification": "Beta-induced Alfven Eigenmode / Energetic Particle Mode (BAE/EPM) with m = 3, n = -1 or +3",
     }
 
-    out_json = f"c:/TFG/primary_mode_identification_shot_{shot}.json"
+    out_json = out_dir / f"primary_mode_identification_shot_{shot}.json"
     with open(out_json, "w", encoding="utf-8") as f:
         json.dump(id_card, f, indent=2)
-    print(f"Identification summary exported to: '{out_json}'")
+    print(f"Summary JSON exported to: '{out_json}'")
 
     return id_card
 
+
 if __name__ == "__main__":
     identify_primary_mode()
+

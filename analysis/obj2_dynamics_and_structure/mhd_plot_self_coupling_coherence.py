@@ -1,41 +1,38 @@
-"""
-mhd_plot_self_coupling_coherence.py
-Self-coupling cross-spectral coherence between magnetic fluctuation B_tilde(t)
-and mode envelope A(t) around ~1-3 kHz for Shot 88653.
-Designed with publication-quality standards (no floating text boxes, clean typography).
-"""
-
+import sys
 from pathlib import Path
 import numpy as np
 import scipy.signal as dsp
 import matplotlib.pyplot as plt
 
-import sys
 current = Path(__file__).resolve().parent
-ROOT_DIR = None
+root_dir = None
 for p in [current] + list(current.parents):
     if (p / "jpack").exists():
-        ROOT_DIR = p
+        root_dir = p
         break
-if ROOT_DIR is None:
-    ROOT_DIR = Path("c:/TFG")
+if root_dir is None:
+    root_dir = Path("c:/TFG")
 
-for p_add in [ROOT_DIR / "jpack", ROOT_DIR / "analysis", ROOT_DIR / "analysis" / "common"]:
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
         sys.path.append(str(p_add))
 
 import turnelib as TE
 from mhd_common import extract_instantaneous_frequency
 
-def generate_self_coupling_plot(shot=88653, out_dir="."):
-    out_dir = Path(out_dir)
-    data_dir = Path(r"c:\TFG\data") / f"hj{shot}"
 
+def generate_self_coupling_plot(shot=88653, out_dir=None):
+    if out_dir is None:
+        out_dir = root_dir
+    else:
+        out_dir = Path(out_dir)
+
+    data_dir = root_dir / "data" / f"hj{shot}"
     probes = ["MP1", "MP3", "MP4"]
     colors = {"MP1": "tab:blue", "MP3": "tab:purple", "MP4": "tab:green"}
     styles = {"MP1": "-", "MP3": "-.", "MP4": "--"}
 
-    t_start, t_end = 259.1, 275.0  # mode-active flat window
+    t_start, t_end = 259.1, 275.0
     edf = TE.edf()
     results = {}
 
@@ -50,15 +47,12 @@ def generate_self_coupling_plot(shot=88653, out_dir="."):
         fs = 1.0 / dt
         ys = dat[:, 1]
 
-        # Extract 80-120 kHz mode envelope on full trace to avoid boundary filter transients
         envelope, _, _, _ = extract_instantaneous_frequency(ys, fs, 80000, 120000, 4, 325)
 
-        # Slice to active window
         idx_win = np.where((t_ms >= t_start) & (t_ms <= t_end))[0]
         ys_win = ys[idx_win]
         env_win = envelope[idx_win]
 
-        # Cross-spectral coherence and phase with high resolution (nperseg=2048, nfft=4096)
         nperseg = 2048
         noverlap = 1536
         nfft = 4096
@@ -75,11 +69,9 @@ def generate_self_coupling_plot(shot=88653, out_dir="."):
             "n_seg": int(np.floor((len(ys_win) - nperseg) / (nperseg - noverlap))) + 1
         }
 
-    # 95% confidence noise floor
     n_seg = list(results.values())[0]["n_seg"]
     sig_floor = 1.0 - (0.05) ** (1.0 / max(1, n_seg - 1))
 
-    # Reset rcParams to standard sans-serif
     plt.rcdefaults()
     fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(9.5, 7.2), sharex=True, facecolor="white")
     fig.suptitle(
@@ -88,9 +80,6 @@ def generate_self_coupling_plot(shot=88653, out_dir="."):
         fontsize=12, fontweight="bold", y=0.97
     )
 
-    # -------------------------------------------------------------------------
-    # Panel (a): Coherence
-    # -------------------------------------------------------------------------
     for p in probes:
         if p in results:
             r = results[p]
@@ -100,16 +89,13 @@ def generate_self_coupling_plot(shot=88653, out_dir="."):
                 label=f"{p} (Self: $\\tilde{{B}}_{{{p}}}$ vs. $\\mathrm{{Env}}_{{{p}}}$)"
             )
 
-    # Indicate 95% confidence noise floor
     ax1.axhline(sig_floor, color="dimgray", ls=":", lw=1.4, label=rf"95% Confidence Noise Floor ($\gamma^2 = {sig_floor:.2f}$)")
     ax1.text(4.92, sig_floor + 0.008, f"95% Floor ({sig_floor:.2f})", color="dimgray", fontsize=8.5, fontweight="bold", ha="right", va="bottom")
 
-    # Coupling band shading and vertical peak lines
     ax1.axvspan(0.8, 2.5, color="gray", alpha=0.08, label="Coupling band ($0.8 - 2.5$ kHz)")
     ax1.axvline(1.22, color="tab:blue", ls="--", lw=1.0, alpha=0.6)
     ax1.axvline(2.20, color="tab:purple", ls="--", lw=1.0, alpha=0.6)
 
-    # Specific peak markers and annotations
     ax1.scatter([1.22], [0.182], color="tab:blue", s=50, zorder=5, edgecolors="white", lw=1.0)
     ax1.annotate(
         "1.22 kHz (MP1, MP4)", xy=(1.22, 0.182), xytext=(1.22, 0.235),
@@ -131,9 +117,6 @@ def generate_self_coupling_plot(shot=88653, out_dir="."):
     ax1.grid(True, ls=":", alpha=0.4)
     ax1.legend(loc="upper right", fontsize=8.5, framealpha=0.95)
 
-    # -------------------------------------------------------------------------
-    # Panel (b): Phase
-    # -------------------------------------------------------------------------
     for p in probes:
         if p in results:
             r = results[p]
@@ -160,8 +143,10 @@ def generate_self_coupling_plot(shot=88653, out_dir="."):
     out_png = out_dir / f"mhd_self_coupling_coherence_shot_{shot}.png"
     plt.savefig(out_png, dpi=200)
     plt.close(fig)
-    print(f"Clean self-coupling coherence saved to: '{out_png}'")
+    print(f"Figure saved to: '{out_png}'")
     return str(out_png)
 
+
 if __name__ == "__main__":
-    generate_self_coupling_plot(88653, out_dir=r"c:\TFG")
+    generate_self_coupling_plot()
+

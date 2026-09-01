@@ -48,10 +48,18 @@ import scipy.stats as stats
 import scipy.ndimage as ndi
 import matplotlib.pyplot as plt
 
-# Add the jpack library path to Python's path
-jpack_path = str(Path(__file__).parent.parent.resolve() / "jpack")
-if jpack_path not in sys.path:
-    sys.path.append(jpack_path)
+current = Path(__file__).resolve().parent
+ROOT_DIR = None
+for p in [current] + list(current.parents):
+    if (p / "jpack").exists():
+        ROOT_DIR = p
+        break
+if ROOT_DIR is None:
+    ROOT_DIR = Path("c:/TFG")
+
+for p_add in [ROOT_DIR / "jpack", ROOT_DIR / "analysis", ROOT_DIR / "analysis" / "common"]:
+    if str(p_add) not in sys.path:
+        sys.path.append(str(p_add))
 
 import turnelib as TE
 import libana_signal as LAS
@@ -61,19 +69,14 @@ from mhd_common import OPTIMAL_SG_WIN, extract_instantaneous_frequency, anti_ali
 def estimate_acf(x, nlags=50):
     """Natively estimates the autocorrelation function (ACF) of a signal."""
     n = len(x)
-    mean = np.mean(x)
     var = np.var(x)
     if var == 0:
         return np.ones(nlags + 1)
-    xp = x - mean
-    acf_vals = []
-    for lag in range(nlags + 1):
-        if lag == 0:
-            r = 1.0
-        else:
-            r = np.sum(xp[:-lag] * xp[lag:]) / (n * var)
-        acf_vals.append(r)
-    return np.array(acf_vals)
+    xp = x - np.mean(x)
+    corr = np.correlate(xp, xp, mode='full')
+    center = len(xp) - 1
+    return corr[center:center + nlags + 1] / (n * var)
+
 
 
 def conservative_p_value(r, N_eff, n_control=0):
@@ -230,7 +233,7 @@ def load_poloidal_array(shot, data_dir, t_ms, invert_channels=PMP_INVERT_CHANNEL
         plab_rad[ch] = np.deg2rad(angle_deg)
 
     if missing:
-        print(f"  ⚠️ [M10] Warning: no file(s) found for poloidal probe(s) {missing}; the poloidal "
+        print(f"  ️ [M10] Warning: no file(s) found for poloidal probe(s) {missing}; the poloidal "
               "mode-number analysis will use only the channels found (needs >=3).")
     inverted_found = [ch for ch in invert_channels if ch in signals]
     if inverted_found:
@@ -271,12 +274,12 @@ def poloidal_array_self_test(plab_rad, max_m_test=10, k_search_margin=6):
           f"(search range +/-{k_search}), using this array's {len(channels)}-probe geometry:")
     first_failure_abs_m = None
     if not failures:
-        print(f"    ✅ All {len(test_modes)} synthetic mode numbers recovered correctly. This array "
+        print(f"     All {len(test_modes)} synthetic mode numbers recovered correctly. This array "
               f"geometry/NUDFT can resolve |m| up to {max_m_test} without aliasing -- a real "
               f"m_dominant result in that range is not, by itself, a boundary artifact.")
     else:
         first_failure_abs_m = min(abs(m) for m, _ in failures)
-        print(f"    ⚠️ {len(failures)}/{len(test_modes)} synthetic mode numbers recovered INCORRECTLY "
+        print(f"    ️ {len(failures)}/{len(test_modes)} synthetic mode numbers recovered INCORRECTLY "
               f"(first failure at |m_true| = {first_failure_abs_m}): {failures}")
         print(f"    -> This array's angular coverage (gaps/uneven spacing) CANNOT reliably resolve "
               f"|m| >= {first_failure_abs_m}, even for a perfect noise-free input. Any REAL "
@@ -304,14 +307,13 @@ def _poloidal_power_map(sig_matrix, angles, fs, fl_hz, fu_hz, max_m, nfft_use):
 
     k_grid = np.arange(-max_m, max_m + 1)
     f_idx_band = np.where(band_mask)[0]
-    P2d = np.zeros((len(k_grid), len(f_idx_band)))
-    for jf, fidx in enumerate(f_idx_band):
-        for it in range(S.shape[2]):
-            Sk = _nudft_poloidal(angles, S[:, fidx, it], k_grid)
-            P2d[:, jf] += (Sk * Sk.conj()).real
-    P2d /= S.shape[2]
+    S_band = S[:, f_idx_band, :]
+    E = np.exp(-1j * k_grid[:, None] * angles[None, :]) / len(angles)
+    Sk = np.tensordot(E, S_band, axes=(1, 0))
+    P2d = np.mean((Sk * Sk.conj()).real, axis=2)
     f_band_khz = f[f_idx_band] / 1000.0
     return k_grid, f_band_khz, P2d
+
 
 
 def poloidal_mode_number_analysis(pmp_signals, plab_rad, dt, i0, i1, fl_hz, fu_hz, args):
@@ -359,7 +361,7 @@ def poloidal_mode_number_analysis(pmp_signals, plab_rad, dt, i0, i1, fl_hz, fu_h
                 m_dominant_expanded = int(m_per_f_exp[f_peak_idx_exp])
                 if abs(m_dominant_expanded) == expanded_max_m:
                     verdict = "boundary_artifact"
-                    print(f"  ⚠️ [M10-AUTOEXPAND] m_dominant was pinned at the search edge "
+                    print(f"  ️ [M10-AUTOEXPAND] m_dominant was pinned at the search edge "
                           f"(+/-{args.pmp_max_mode_number}). Re-checked at +/-{expanded_max_m}: still "
                           f"pinned at the new edge (m = {m_dominant_expanded:+d}). This is a BOUNDARY "
                           "ARTIFACT, not a converged physical mode number -- do not report the "
@@ -383,7 +385,7 @@ def poloidal_mode_number_analysis(pmp_signals, plab_rad, dt, i0, i1, fl_hz, fu_h
                           "any single m value.")
         else:
             verdict = "expand_capped"
-            print(f"  ⚠️ [M10-AUTOEXPAND] m_dominant pinned at the search edge, but "
+            print(f"  ️ [M10-AUTOEXPAND] m_dominant pinned at the search edge, but "
                   f"--pmp-max-mode-expanded ({args.pmp_max_mode_expanded}) does not allow checking "
                   "further. Raise --pmp-max-mode-expanded to get a real verdict.")
 
@@ -620,7 +622,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
     if args.ece_core_channel is not None:
         ece_signals, missing_ece = load_ece_channels(shot, args, t_ms, channels=[args.ece_core_channel])
         if not ece_signals:
-            print(f"  ⚠️ Requested core channel {args.ece_core_channel} was specified but its file is")
+            print(f"  ️ Requested core channel {args.ece_core_channel} was specified but its file is")
             print("     missing for this shot; [M6] validation SKIPPED for this shot.")
             return None
         core_ch = args.ece_core_channel
@@ -629,10 +631,10 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
     else:
         ece_signals_raw, missing_ece = load_ece_channels(shot, args, t_ms)
         if missing_ece:
-            print(f"  ⚠️ Warning: {len(missing_ece)} of {len(args.ece_channels)} requested ECE channels not found "
+            print(f"  ️ Warning: {len(missing_ece)} of {len(args.ece_channels)} requested ECE channels not found "
                   f"(missing: {missing_ece[:5]}{'...' if len(missing_ece) > 5 else ''}).")
         if not ece_signals_raw:
-            print("  ⚠️ No ECE channels found for this shot; [M6] validation SKIPPED. main.md's requirement to")
+            print("  ️ No ECE channels found for this shot; [M6] validation SKIPPED. main.md's requirement to")
             print("     compare against energetic-particle distribution-function models remains UNADDRESSED for this shot.")
             return None
 
@@ -651,7 +653,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
             print(f"  [SAT-DETECT] Excluded {len(saturated_report)} saturated/railed channel(s) from "
                   f"consideration: {sat_list}")
         if not ece_signals:
-            print("  ⚠️ Every candidate ECE channel was flagged saturated for this shot; [M6] validation")
+            print("  ️ Every candidate ECE channel was flagged saturated for this shot; [M6] validation")
             print("     SKIPPED. Try --ece-core-channel to force a specific channel, or relax")
             print("     --sat-rail-frac-threshold / --sat-plateau-run-threshold if this looks like a false positive.")
             return None
@@ -692,7 +694,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
     print(f"  - Envelope vs. ECE-core-proxy: peak |correlation| = {r_ece_peak:+.4f} at lag = {lag_ece_ms:+.2f} ms "
           f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
     if abs(lag_ece_ms) >= 0.9 * args.m6_max_lag_ms:
-        print(f"    ⚠️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search")
+        print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search")
         print("       window edge -- the true peak may lie OUTSIDE this window. Re-run with a larger")
         print("       --m6-max-lag-ms before trusting this number.")
     print("    (Zhong et al. report ~6.0 ms excitation delay, ~1.5 ms suppression delay for their EPM;")
@@ -722,7 +724,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
               f"peak |correlation| = {r_pressure_peak:+.4f} at lag = {lag_pressure_ms:+.2f} ms "
               f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
         if abs(lag_pressure_ms) >= 0.9 * args.m6_max_lag_ms:
-            print(f"    ⚠️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search")
+            print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search")
             print("       window edge -- the true peak may lie OUTSIDE this window. Re-run with a larger")
             print("       --m6-max-lag-ms before trusting this number.")
         r_pressure_sig, p_pressure_std, p_pressure_adj, n_pressure_sig, N_eff_pressure_sig = lagged_pearson_significance(
@@ -760,7 +762,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
                   f"peak |correlation| = {r_chirp_ece_peak:+.4f} at lag = {lag_chirp_ece_ms:+.2f} ms "
                   f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
             if abs(lag_chirp_ece_ms) >= 0.9 * args.m6_max_lag_ms:
-                print(f"    ⚠️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search "
+                print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search "
                       "window edge; widen --m6-max-lag-ms before trusting this number.")
             r_chirp_ece_sig, p_chirp_ece_std, p_chirp_ece_adj, n_chirp_ece_sig, N_eff_chirp_ece_sig = lagged_pearson_significance(
                 chirp_corr, ece_core_active_corr, dt_corr, lag_chirp_ece_ms
@@ -771,7 +773,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
                       f"N_eff={N_eff_chirp_ece_sig:.1f}), p_adj = {format_p_value(p_chirp_ece_adj)} -- "
                       f"{'MEETS' if meets_chirp_ece else 'does NOT meet'} |r|>0.7 & p<0.05.")
                 if N_eff_chirp_ece_sig <= 3.05:
-                    print("       ⚠️ N_eff hit the floor (~3): the heavily-smoothed chirp-rate series is so "
+                    print("       ️ N_eff hit the floor (~3): the heavily-smoothed chirp-rate series is so "
                           "autocorrelated that this test has essentially NO statistical power -- 'does NOT "
                           "meet' here means 'inconclusive', not 'no relationship'. Do not report this as a "
                           "null result; a coarser/less-smoothed chirp-rate estimate would be needed to test "
@@ -787,7 +789,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
                       f"peak |correlation| = {r_chirp_pressure_peak:+.4f} at lag = {lag_chirp_pressure_ms:+.2f} ms "
                       f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
                 if abs(lag_chirp_pressure_ms) >= 0.9 * args.m6_max_lag_ms:
-                    print(f"    ⚠️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search "
+                    print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search "
                           "window edge; widen --m6-max-lag-ms before trusting this number.")
                 r_chirp_pressure_sig, p_chirp_pressure_std, p_chirp_pressure_adj, n_chirp_pressure_sig, N_eff_chirp_pressure_sig = lagged_pearson_significance(
                     chirp_corr, pressure_proxy_active_corr, dt_corr, lag_chirp_pressure_ms
@@ -798,7 +800,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
                           f"N_eff={N_eff_chirp_pressure_sig:.1f}), p_adj = {format_p_value(p_chirp_pressure_adj)} -- "
                           f"{'MEETS' if meets_chirp_pressure else 'does NOT meet'} |r|>0.7 & p<0.05.")
                     if N_eff_chirp_pressure_sig <= 3.05:
-                        print("       ⚠️ N_eff hit the floor (~3): same caveat as above -- this test has "
+                        print("       ️ N_eff hit the floor (~3): same caveat as above -- this test has "
                               "essentially no statistical power, so treat 'does NOT meet' as inconclusive.")
                 else:
                     p_chirp_pressure_adj = 1.0
@@ -947,7 +949,7 @@ def load_obj1_reference_window(shot, args, fl_hz, fu_hz):
         with open(json_path) as fjson:
             obj1_data = json.load(fjson)
     except Exception as exc:
-        print(f"  ⚠️ [M9][OBJ1-XREF] Failed to read/parse '{json_path}': {exc}; ignoring cross-reference.")
+        print(f"  ️ [M9][OBJ1-XREF] Failed to read/parse '{json_path}': {exc}; ignoring cross-reference.")
         return None
 
     modes = obj1_data.get("discrete_modes", [])
@@ -955,20 +957,20 @@ def load_obj1_reference_window(shot, args, fl_hz, fu_hz):
     band_center_hz = 0.5 * (fl_hz + fu_hz)
     in_band = [m for m in modes if (fl_hz - tol_hz) <= m.get("frequency_hz", -1e30) <= (fu_hz + tol_hz)]
     if not in_band:
-        print(f"  ⚠️ [M9][OBJ1-XREF] '{json_path}' has no mode within {args.lower:.1f}-{args.upper:.1f} kHz "
+        print(f"  ️ [M9][OBJ1-XREF] '{json_path}' has no mode within {args.lower:.1f}-{args.upper:.1f} kHz "
               f"(+/- {args.obj1_mode_freq_tol_khz:.1f} kHz tolerance); ignoring cross-reference.")
         return None
 
     confirmed = [m for m in in_band if m.get("dual_criterion_pass")]
     pool = confirmed if confirmed else in_band
     if not confirmed:
-        print(f"  ⚠️ [M9][OBJ1-XREF] No dominant+coherent-CONFIRMED mode in-band in '{json_path}'; using "
+        print(f"  ️ [M9][OBJ1-XREF] No dominant+coherent-CONFIRMED mode in-band in '{json_path}'; using "
               "the closest in-band mode anyway (dominant-only), lower confidence.")
 
     chosen = min(pool, key=lambda m: abs(m.get("frequency_hz", 0.0) - band_center_hz))
     intervals = chosen.get("active_intervals_ms", [])
     if not intervals:
-        print(f"  ⚠️ [M9][OBJ1-XREF] Matched mode at {chosen.get('frequency_hz', 0.0)/1000.0:.2f} kHz in "
+        print(f"  ️ [M9][OBJ1-XREF] Matched mode at {chosen.get('frequency_hz', 0.0)/1000.0:.2f} kHz in "
               f"'{json_path}' has no recorded active_intervals_ms; ignoring cross-reference.")
         return None
 
@@ -1142,7 +1144,7 @@ def detect_flat_frequency_subwindow(ifreq_khz, t_ms, dt, i0_domain, i1_domain, a
     scan_window_ms = getattr(args, 'flat_scan_window_ms', 8.0)
     scan_samples = max(3, int(round(scan_window_ms / (dt * 1000.0))))
     if scan_samples >= n_domain:
-        print(f"  ⚠️ [M9] Search domain ({n_domain} samples, {n_domain * dt * 1000.0:.1f} ms) is shorter "
+        print(f"  ️ [M9] Search domain ({n_domain} samples, {n_domain * dt * 1000.0:.1f} ms) is shorter "
               f"than --flat-scan-window-ms ({scan_window_ms:.1f} ms); using full domain.")
         return fallback
 
@@ -1252,7 +1254,7 @@ def process_shot(shot, args):
     print(f"\n{'=' * 93}")
     print(f"--- Loading Mirnov Coil magnetic signal: {mag_file} (Shot {shot}) ---")
     if not mag_file.exists():
-        print(f"  ⚠️ Warning: file {mag_file} does not exist; skipping shot {shot}.")
+        print(f"  ️ Warning: file {mag_file} does not exist; skipping shot {shot}.")
         return None
 
     edf_mag = TE.edf()
@@ -1303,7 +1305,7 @@ def process_shot(shot, args):
         else:
             probe_missing.append(probe)
     if probe_missing:
-        print(f"  ⚠️ [M8] Warning: no file(s) found for Mirnov probe(s) {probe_missing}; any inter-probe "
+        print(f"  ️ [M8] Warning: no file(s) found for Mirnov probe(s) {probe_missing}; any inter-probe "
               "coherence pair involving a missing probe will be skipped in the modal-structure panels below.")
 
     # -----------------------------------------------------------------------------------------
@@ -1352,7 +1354,7 @@ def process_shot(shot, args):
         labeled, n_components = ndi.label(mask_closed)
         if n_components == 0:
             mask_mode_active = np.zeros_like(mask_raw_threshold)
-            print("  ⚠️ No mode-active burst found after gap-bridging (envelope never sustained above threshold).")
+            print("  ️ No mode-active burst found after gap-bridging (envelope never sustained above threshold).")
         else:
             sizes = ndi.sum(mask_closed, labeled, index=np.arange(1, n_components + 1))
             best_label = int(np.argmax(sizes)) + 1
@@ -1360,7 +1362,7 @@ def process_shot(shot, args):
             burst_duration_ms = float(np.sum(mask_burst)) * dt * 1000.0
             if burst_duration_ms < args.mode_active_min_duration_ms:
                 mask_mode_active = np.zeros_like(mask_raw_threshold)
-                print(f"  ⚠️ Largest contiguous burst is only {burst_duration_ms:.1f} ms "
+                print(f"  ️ Largest contiguous burst is only {burst_duration_ms:.1f} ms "
                       f"(< --mode-active-min-duration-ms={args.mode_active_min_duration_ms:.0f} ms); rejecting as noise.")
             else:
                 mask_mode_active = mask_burst
@@ -1373,7 +1375,7 @@ def process_shot(shot, args):
 
     n_mode_active = int(np.sum(mask_mode_active))
     if n_mode_active < 200:
-        print(f"  ⚠️ Only {n_mode_active} mode-active samples found; instantaneous-frequency-vs-heating "
+        print(f"  ️ Only {n_mode_active} mode-active samples found; instantaneous-frequency-vs-heating "
               "correlation ([M7]) and the [M6] chirp-rate analysis will be SKIPPED for this shot.")
         active_idx_mode = np.array([], dtype=int)
     else:
@@ -1436,7 +1438,7 @@ def process_shot(shot, args):
                 print(f"  [M9] Search domain = Objective-1 reference window intersect [M7] burst = "
                       f"{t_ms[i0_domain]:.1f}-{t_ms[i1_domain-1]:.1f} ms.")
             else:
-                print("  ⚠️ [M9] Objective-1 reference window does not overlap the [M7] burst at all "
+                print("  ️ [M9] Objective-1 reference window does not overlap the [M7] burst at all "
                       f"(obj1: {ref_start_ms:.1f}-{ref_end_ms:.1f} ms vs. [M7]: {t_ms[i0_mode]:.1f}-"
                       f"{t_ms[i1_mode-1]:.1f} ms); falling back to searching the full [M7] burst.")
                 i0_domain, i1_domain = i0_mode, i1_mode
@@ -1466,7 +1468,7 @@ def process_shot(shot, args):
             t_ech = t_ech * 1000.0
         ech_power = np.interp(t_ms, t_ech, dat_ech[:, 1])
     else:
-        print(f"  ⚠️ Warning: expected ECH file not found at {ech_file}; a null")
+        print(f"  ️ Warning: expected ECH file not found at {ech_file}; a null")
         print("     ECH channel (all zeros) will be used, which invalidates any conclusion about correlation with ECH.")
 
     # NBI Injectors (Loading S3, S4, S9, S10)
@@ -1503,7 +1505,7 @@ def process_shot(shot, args):
             nbi_missing.append(nbi)
 
     if nbi_missing:
-        print(f"  ⚠️ Warning: no files found for NBI channels: {nbi_missing}")
+        print(f"  ️ Warning: no files found for NBI channels: {nbi_missing}")
 
     print(f"  NBI channels loaded: {list(nbi_signals.keys())} (of {nbi_channels} requested). Confirm with")
     print("  the diagnostics team whether this list of injectors is complete; otherwise, 'Total NBI'")
@@ -1512,7 +1514,7 @@ def process_shot(shot, args):
     first_t_on = min(nbi_turn_on_times.values()) if nbi_turn_on_times else None
 
     if nbi_mismatch_detected:
-        print("\n⚠️ PHYSICAL CONFIGURATION ALERT:")
+        print("\n️ PHYSICAL CONFIGURATION ALERT:")
         print(f"  The NBI pulse turns on after the magnetic acquisition ends ({t_ms[-1]:.1f} ms).")
         print("  The NBI signals are flat throughout the MHD measurement window for this shot.")
         margin_ms = min(nbi_turn_on_times.values()) - t_ms[-1]
@@ -1524,7 +1526,7 @@ def process_shot(shot, args):
                 print(f"  Cross-reference: ECH turns on at {t_ech_on:.1f} ms (it DOES fall within the Mirnov window).")
                 print("  -> The heating and Mirnov timebases appear aligned; the NBI offset is real.")
         if margin_ms < 5.0:
-            print(f"  ⚠️ Margin of only {margin_ms:.2f} ms: manually confirm against the shot {shot} logbook.")
+            print(f"  ️ Margin of only {margin_ms:.2f} ms: manually confirm against the shot {shot} logbook.")
 
     # 3b. Loading line-averaged electron density (nave) for Alfvenic validation
     nave_file = data_dir / f"nave@{shot}.edf"
@@ -1555,12 +1557,12 @@ def process_shot(shot, args):
             valid_idx = np.where(~invalid_mask)[0]
             if len(valid_idx) > 0:
                 raw_density = np.interp(np.arange(len(raw_density)), valid_idx, raw_density[valid_idx])
-                print(f"  ⚠️ DENSITY CLEANUP: {n_invalid} samples with negative or zero density were detected "
+                print(f"  ️ DENSITY CLEANUP: {n_invalid} samples with negative or zero density were detected "
                       f"(physically impossible minimum = {np.min(dat_den[:, 1]):.6g}).")
                 print("     These samples were corrected via linear interpolation from neighboring valid samples.")
             else:
                 raw_density = np.clip(raw_density, 1e-5, None)
-                print("  ⚠️ DENSITY CLEANUP: All density samples were non-positive; clipping to 1e-5 was applied.")
+                print("  ️ DENSITY CLEANUP: All density samples were non-positive; clipping to 1e-5 was applied.")
 
         med_kernel = args.nave_medfilt if args.nave_medfilt % 2 == 1 else args.nave_medfilt + 1
         if med_kernel >= 3 and len(raw_density) > med_kernel:
@@ -1585,7 +1587,7 @@ def process_shot(shot, args):
 
         density_detected = True
     else:
-        print(f"  ⚠️ Warning: expected density file 'nave' not found at {nave_file}; ")
+        print(f"  ️ Warning: expected density file 'nave' not found at {nave_file}; ")
         print("     the Alfven scaling validation (Section 2.3 of the proposal) will be completely")
         print("     skipped in this run.")
 
@@ -1604,7 +1606,7 @@ def process_shot(shot, args):
         print(f"  'Ip15' metadata: ValUnit = '{ip_val_unit}', "
               f"range: min={np.min(ip_signal):.4g}, max={np.max(ip_signal):.4g}")
     else:
-        print(f"  ⚠️ Warning: expected Ip15 file not found at {ip_file}; Ip correlation will be skipped.")
+        print(f"  ️ Warning: expected Ip15 file not found at {ip_file}; Ip correlation will be skipped.")
 
     # 3d. Loading stored energy (Wp) for correlation analysis
     wp_file = data_dir / f"Wp@{shot}.edf"
@@ -1621,7 +1623,7 @@ def process_shot(shot, args):
         print(f"  'Wp' metadata: ValUnit = '{wp_val_unit}', "
               f"range: min={np.min(wp_signal):.4g}, max={np.max(wp_signal):.4g}")
     else:
-        print(f"  ⚠️ Warning: expected Wp file not found at {wp_file}; Wp correlation will be skipped.")
+        print(f"  ️ Warning: expected Wp file not found at {wp_file}; Wp correlation will be skipped.")
 
     # 3e. Loading fast H-alpha signal (HAFAST7.5) for correlation analysis
     ha_file = data_dir / f"HAFAST7.5@{shot}.edf"
@@ -1638,7 +1640,7 @@ def process_shot(shot, args):
         print(f"  'HAFAST7.5' metadata: ValUnit = '{ha_val_unit}', "
               f"range: min={np.min(hafast_signal):.4g}, max={np.max(hafast_signal):.4g}")
     else:
-        print(f"  ⚠️ Warning: expected HAFAST7.5 file not found at {ha_file}; HAFAST correlation will be skipped.")
+        print(f"  ️ Warning: expected HAFAST7.5 file not found at {ha_file}; HAFAST correlation will be skipped.")
 
     # 4. Decimation for Correlation Analysis
     decimate_factor = 100
@@ -1857,7 +1859,7 @@ def process_shot(shot, args):
         print("    on/off step -- this supports the 'shared-step artifact' conclusion from the partial-")
         print("    correlation test above.")
     else:
-        print(f"  - ⚠️ Note: the ECH peak lag ({lag_ech_ms:+.2f} ms) is NOT close to 0 ms. A pure shared-")
+        print(f"  - ️ Note: the ECH peak lag ({lag_ech_ms:+.2f} ms) is NOT close to 0 ms. A pure shared-")
         print("    step artifact should peak at lag ~ 0, so this does not, by itself, support that")
         print("    explanation, and should not be cited as if it did. It may instead reflect a genuine")
         print("    delayed response, or a secondary feature (e.g. a transient near the ECH edge) driving")
@@ -1914,7 +1916,7 @@ def process_shot(shot, args):
             print(f"  - Partial Correlation (Freq vs. ECH, ECH-step-controlled): r_partial = {r_partial_freq:.4f}, "
                   f"p_std = {format_p_value(p_partial_freq_std)}, p_adj = {format_p_value(p_partial_freq_adj)}")
             if abs(r_ifreq_ech) > 0.3 and abs(r_partial_freq) < 0.5 * abs(r_ifreq_ech):
-                print("    ⚠️ The raw Freq-vs-ECH correlation drops by more than half once the ECH on/off step is")
+                print("    ️ The raw Freq-vs-ECH correlation drops by more than half once the ECH on/off step is")
                 print("    controlled for -- consistent with it being driven largely by the shared ECH-turn-off /")
                 print("    frequency-termination-transient edge coincidence rather than a sustained relationship.")
         else:
@@ -1933,10 +1935,10 @@ def process_shot(shot, args):
         print(f"  - Lagged (b1): Freq vs ECH Power: peak |correlation| = {r_ifreq_ech_peak:+.4f} at lag = {lag_ifreq_ech_ms:+.2f} ms "
               f"(search window: +/-{args.m7_max_lag_ms:.0f} ms)")
         if abs(lag_ifreq_nbi_ms) >= 0.9 * args.m7_max_lag_ms:
-            print(f"    ⚠️ BOUNDARY WARNING: NBI lag is within 10% of the +/-{args.m7_max_lag_ms:.0f} ms search "
+            print(f"    ️ BOUNDARY WARNING: NBI lag is within 10% of the +/-{args.m7_max_lag_ms:.0f} ms search "
                   "window edge -- this peak is likely clipped, not a true maximum. Widen --m7-max-lag-ms before trusting it.")
         if abs(lag_ifreq_ech_ms) >= 0.9 * args.m7_max_lag_ms:
-            print(f"    ⚠️ BOUNDARY WARNING: ECH lag is within 10% of the +/-{args.m7_max_lag_ms:.0f} ms search "
+            print(f"    ️ BOUNDARY WARNING: ECH lag is within 10% of the +/-{args.m7_max_lag_ms:.0f} ms search "
                   "window edge -- this peak is likely clipped, not a true maximum. Widen --m7-max-lag-ms before trusting it.")
 
         freq_heating_results = {
@@ -1983,7 +1985,7 @@ def process_shot(shot, args):
             bfield_requested = bfield_file_this_shot is not None
             bfield_available = bfield_requested and os.path.exists(bfield_file_this_shot)
             if bfield_requested and not bfield_available:
-                print(f"  ⚠️ Warning: bfield file '{bfield_file_this_shot}' was specified but does not")
+                print(f"  ️ Warning: bfield file '{bfield_file_this_shot}' was specified but does not")
                 print("     exist; the SIMPLIFIED 1/sqrt(n_e) scaling is used as fallback.")
 
             if bfield_available:
@@ -1992,7 +1994,7 @@ def process_shot(shot, args):
                 b_val_unit = getattr(edf_b, 'ValUnit', ['?'])[0]
                 b_unit_ok = any(tag in str(b_val_unit).lower() for tag in ('tesla', ' t', 't)', 't]')) or str(b_val_unit).strip().lower() == 't'
                 print(f"  B(t) metadata: ValUnit = '{b_val_unit}' -> "
-                      f"{'looks consistent with Tesla.' if b_unit_ok else '⚠️ NOT clearly recognized as Tesla; verify manually before trusting v_A.'}")
+                      f"{'looks consistent with Tesla.' if b_unit_ok else '️ NOT clearly recognized as Tesla; verify manually before trusting v_A.'}")
                 print(f"  Assumed ion mass: {args.ion_mass_amu:.2f} amu. CONFIRM that it corresponds to the real")
                 print(f"  working gas of shot {shot} (the default value assumes Hydrogen, amu=1.0).")
 
@@ -2004,7 +2006,7 @@ def process_shot(shot, args):
                 b_var_rel = (np.max(b_val_active) - np.min(b_val_active)) / b_mean if b_mean > 0 else 0.0
                 if b_var_rel < 0.01:
                     b_is_constant = True
-                    print(f"  ✅ CONSTANT TOROIDAL FIELD CONFIRMED (Relative variation of B: {b_var_rel*100:.2f}% < 1%):")
+                    print(f"   CONSTANT TOROIDAL FIELD CONFIRMED (Relative variation of B: {b_var_rel*100:.2f}% < 1%):")
                     print(f"     Consistent with the real, confirmed flat-top of Heliotron J (~{b_mean:.2f} T)")
                     print("     for this shot. Since B(t) is constant by physical construction, the full")
                     print("     scaling (with B) and the simplified one (1/sqrt(n_e)) are mathematically")
@@ -2017,7 +2019,7 @@ def process_shot(shot, args):
             else:
                 f_alfven_scaling = 1.0 / np.sqrt(density_val_clean)
                 print("  Using simplified scaling 1/sqrt(n_e) (no bfield file); interpret r with caution.")
-                print("  ⚠️ INCOMPLETE VALIDATION: this run does NOT include the dependence on the magnetic")
+                print("  ️ INCOMPLETE VALIDATION: this run does NOT include the dependence on the magnetic")
                 print("     field B required by Section 2.3 of the proposal (v_A = B/sqrt(mu0*n_i*m_i)).")
                 print("     Treat the conclusion as PRELIMINARY until this shot is run with a bfield file.")
 
@@ -2054,7 +2056,7 @@ def process_shot(shot, args):
                     w_start_str, w_end_str = pair.split(":")
                     w_start, w_end = float(w_start_str), float(w_end_str)
                 except ValueError:
-                    print(f"    ⚠️ Skipping malformed --alfven-cal-sweep entry: '{pair}'")
+                    print(f"    ️ Skipping malformed --alfven-cal-sweep entry: '{pair}'")
                     continue
                 nc_sweep, r_sweep = _alfven_calib_for_window(w_start, w_end)
                 is_default = (abs(w_start - args.alfven_cal_start) < 1e-9 and abs(w_end - args.alfven_cal_end) < 1e-9)
@@ -2074,7 +2076,7 @@ def process_shot(shot, args):
 
         mask_scaling_win = (t_ms >= args.alfven_cal_start) & (t_ms <= args.alfven_cal_end)
         if np.sum(mask_scaling_win) < 5:
-            print(f"  ⚠️ Warning: the calibration window ({args.alfven_cal_start}-{args.alfven_cal_end} ms) "
+            print(f"  ️ Warning: the calibration window ({args.alfven_cal_start}-{args.alfven_cal_end} ms) "
                   f"has very few samples; check the shot's time range.")
         mean_measured_f = np.mean(ifreq_khz[mask_scaling_win])
         mean_scaling_val = np.mean(f_alfven_scaling[mask_scaling_win])
@@ -2193,14 +2195,14 @@ def process_shot(shot, args):
                       "(not pinned to the search-range edge) -- consistent with a converged result, "
                       "though real-data noise still means this is not a certainty on its own.")
         else:
-            print("  ⚠️ [M10] Poloidal mode-number fit could not be computed (window too short "
+            print("  ️ [M10] Poloidal mode-number fit could not be computed (window too short "
                   "for the requested --pmp-nfft, or no EPM-band content found).")
     elif len(pmp_signals) < 3:
-        print(f"  ⚠️ [M10] Only {len(pmp_signals)} poloidal probe(s) found (< 3 needed); "
+        print(f"  ️ [M10] Only {len(pmp_signals)} poloidal probe(s) found (< 3 needed); "
               "poloidal mode-number decomposition SKIPPED for this shot.")
         poloidal_result = None
     else:
-        print("  ⚠️ [M10] No mode-active/flat-frequency window available; poloidal mode-number "
+        print("  ️ [M10] No mode-active/flat-frequency window available; poloidal mode-number "
               "decomposition SKIPPED for this shot (same window requirement as [M8]/[M9]).")
         poloidal_result = None
 
@@ -2371,7 +2373,7 @@ def process_shot(shot, args):
             print(f"    {model_name:<32} r = {r_m:+.4f}, p_adj = {format_p_value(p_adj_m)} | {phys_desc:<32} "
                   f"({'MEETS' if meets_m else 'does not meet'} |r|>0.7)")
 
-        print(f"  ⭐ Best-Fitting EP/MHD Model: '{best_model_name}' (|r| = {max_abs_r:.4f})")
+        print(f"   Best-Fitting EP/MHD Model: '{best_model_name}' (|r| = {max_abs_r:.4f})")
         ep_scaling_results["best_model"] = best_model_name
         ep_scaling_results["eval_window"] = (t_eval_start, t_eval_end)
         ep_scaling_results["window_type_label"] = window_type_label
@@ -2941,7 +2943,7 @@ def process_shot(shot, args):
     print(f"  Figure 3 (Spatial Modal Structure) successfully saved to: '{output_png3}'")
 
     # --- Per-shot summary printout ---
-    print(f"\n🔬 SHOT {shot} SUMMARY 🔬")
+    print(f"\n SHOT {shot} SUMMARY ")
     if nbi_mismatch_detected:
         print("  - NBI out of Mirnov acquisition window for this shot; NBI correlation not evaluable.")
     else:
@@ -3045,8 +3047,8 @@ def cross_discharge_analysis(results_list, args):
         return
 
     print(f"\n{'=' * 93}")
-    print("🔬 CROSS-DISCHARGE ANALYSIS (main.md requirement (c): 'across different experimental")
-    print("   discharges under varying NBI power levels') [M1] 🔬")
+    print(" CROSS-DISCHARGE ANALYSIS (main.md requirement (c): 'across different experimental")
+    print("   discharges under varying NBI power levels') [M1] ")
     print(f"{'=' * 93}")
 
     # --- (i) Pooled correlation across all discharges ---
@@ -3096,7 +3098,7 @@ def cross_discharge_analysis(results_list, args):
             r_scaling, p_scaling = stats.pearsonr(nbi_levels, env_levels)
             print(f"\n    - Discharge-level Pearson r (mean NBI power vs. mean envelope AMPLITUDE, "
                   f"N={len(scaling_points)} discharges): r = {r_scaling:.4f}, {format_p_value(p_scaling)}")
-            print(f"      ⚠️ With only {len(scaling_points)} discharges (df={len(scaling_points)-2}), this result is "
+            print(f"      ️ With only {len(scaling_points)} discharges (df={len(scaling_points)-2}), this result is "
                   f"suggestive at best; do not report it as meeting the |r|>0.7 & p<0.05 significance bar")
             print("      without substantially more discharges spanning a wider range of NBI power levels.")
     else:
@@ -3115,7 +3117,7 @@ def cross_discharge_analysis(results_list, args):
             r_scaling_f, p_scaling_f = stats.pearsonr(nbi_levels_f, freq_levels)
             print(f"    - Discharge-level Pearson r (mean NBI power vs. mean measured FREQUENCY, "
                   f"N={len(freq_scaling_points)} discharges): r = {r_scaling_f:.4f}, {format_p_value(p_scaling_f)}")
-            print(f"      ⚠️ Same caveat as above: with only {len(freq_scaling_points)} discharges "
+            print(f"      ️ Same caveat as above: with only {len(freq_scaling_points)} discharges "
                   f"(df={len(freq_scaling_points)-2}), do not report this as meeting |r|>0.7 & p<0.05 "
                   "without more discharges spanning a wider NBI power range.")
     else:
@@ -3143,7 +3145,7 @@ def cross_discharge_analysis(results_list, args):
 
     _tally("r_ece_sig", "p_ece_adj", "Envelope vs. ECE-core-proxy (Zhong Fig. 2 analogue)")
     _tally("r_pressure_sig", "p_pressure_adj", "Envelope vs. pressure proxy (Zhong Fig. 3 analogue)")
-    print("      ⚠️ Chirp-rate (frequency-sweep) readings of [M6] are excluded from this tally -- see the")
+    print("      ️ Chirp-rate (frequency-sweep) readings of [M6] are excluded from this tally -- see the")
     print("      per-shot [METROLOGY] notes: their N_eff hits the statistical-power floor in every shot,")
     print("      so a MEETS/does-NOT-meet count for them would not be meaningful.")
 
@@ -3155,7 +3157,7 @@ def cross_discharge_analysis(results_list, args):
     if n_alfven_evaluated > 0:
         print(f"    - [M4] Alfven velocity-scaling (f_measured vs f_theoretical): MEETS |r|>0.7 & p<0.05 in "
               f"{n_alfven_meets} of {n_alfven_evaluated} evaluated discharge(s) (out of {n_shots_total} total).")
-    print("      ⚠️ N=4 discharges is a very small sample for a physics claim meant to generalize beyond")
+    print("      ️ N=4 discharges is a very small sample for a physics claim meant to generalize beyond")
     print("      these specific shots; report per-shot AND aggregate numbers together in the thesis, not")
     print("      the aggregate alone.")
 
@@ -3447,7 +3449,7 @@ def main():
                 l_str, u_str = band_str.split(":")
                 b_lower, b_upper = float(l_str), float(u_str)
             except ValueError:
-                print(f"⚠️ Invalid band format '{band_str}'; expected lower:upper in kHz (e.g. 80:120)")
+                print(f"️ Invalid band format '{band_str}'; expected lower:upper in kHz (e.g. 80:120)")
                 continue
             args.lower = b_lower
             args.upper = b_upper

@@ -227,7 +227,7 @@ def load_poloidal_array(shot, data_dir, t_ms, invert_channels=PMP_INVERT_CHANNEL
         plab_rad[ch] = np.deg2rad(angle_deg)
 
     if missing:
-        print(f"  ⚠️ [M10] Warning: no file(s) found for poloidal probe(s) {missing}; using {len(signals)} channels.")
+        print(f"  ️ [M10] Warning: no file(s) found for poloidal probe(s) {missing}; using {len(signals)} channels.")
     inverted_found = [ch for ch in invert_channels if ch in signals]
     if inverted_found:
         print(f"  [M10] Loaded poloidal array: {len(signals)}/{len(PMP_CHANNELS)} channels found. "
@@ -263,10 +263,10 @@ def poloidal_array_self_test(plab_rad, max_m_test=10, k_search_margin=6):
           f"(search range +/-{k_search}), using this array's {len(channels)}-probe geometry:")
     first_failure_abs_m = None
     if not failures:
-        print(f"    ✅ All {len(test_modes)} synthetic mode numbers recovered correctly.")
+        print(f"     All {len(test_modes)} synthetic mode numbers recovered correctly.")
     else:
         first_failure_abs_m = min(abs(m) for m, _ in failures)
-        print(f"    ⚠️ {len(failures)}/{len(test_modes)} synthetic mode numbers recovered INCORRECTLY "
+        print(f"    ️ {len(failures)}/{len(test_modes)} synthetic mode numbers recovered INCORRECTLY "
               f"(first failure at |m_true| = {first_failure_abs_m}): {failures}")
     return {"test_modes": test_modes, "failures": failures, "max_m_test": max_m_test,
             "k_search": k_search, "first_failure_abs_m": first_failure_abs_m}
@@ -521,7 +521,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
     if args.ece_core_channel is not None:
         ece_signals, missing_ece = load_ece_channels(shot, args, t_ms, channels=[args.ece_core_channel])
         if not ece_signals:
-            print(f"  ⚠️ Requested core channel {args.ece_core_channel} was specified but its file is missing; skipping.")
+            print(f"  ️ Requested core channel {args.ece_core_channel} was specified but its file is missing; skipping.")
             return None
         core_ch = args.ece_core_channel
         core_r = None
@@ -529,9 +529,9 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
     else:
         ece_signals_raw, missing_ece = load_ece_channels(shot, args, t_ms)
         if missing_ece:
-            print(f"  ⚠️ Warning: {len(missing_ece)} of {len(args.ece_channels)} requested ECE channels not found.")
+            print(f"  ️ Warning: {len(missing_ece)} of {len(args.ece_channels)} requested ECE channels not found.")
         if not ece_signals_raw:
-            print("  ⚠️ No ECE channels found for this shot; [M6] validation SKIPPED.")
+            print("  ️ No ECE channels found for this shot; [M6] validation SKIPPED.")
             return None
 
         ece_signals, saturated_report = filter_saturated_channels(
@@ -542,7 +542,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
         if saturated_report:
             print(f"  [SAT-DETECT] Excluded {len(saturated_report)} saturated channel(s): {list(saturated_report.keys())}")
         if not ece_signals:
-            print("  ⚠️ Every candidate ECE channel was flagged saturated; [M6] validation SKIPPED.")
+            print("  ️ Every candidate ECE channel was flagged saturated; [M6] validation SKIPPED.")
             return None
 
         core_ch, core_r, per_channel_r = select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor)
@@ -834,7 +834,7 @@ def process_shot(shot, args):
     print(f"\n{'=' * 93}")
     print(f"--- Loading Mirnov Coil magnetic signal: {mag_file} (Shot {shot}, 80-120 kHz Primary Mode) ---")
     if not mag_file.exists():
-        print(f"  ⚠️ Warning: file {mag_file} does not exist; skipping shot {shot}.")
+        print(f"  ️ Warning: file {mag_file} does not exist; skipping shot {shot}.")
         return None
 
     edf_mag = TE.edf()
@@ -921,7 +921,7 @@ def process_shot(shot, args):
     else:
         active_idx_mode = np.array([], dtype=int)
         i0_mode, i1_mode = 0, 0
-        print(f"  ⚠️ Only {n_mode_active} mode-active samples found.")
+        print(f"  ️ Only {n_mode_active} mode-active samples found.")
 
     # Flat-frequency window
     if n_mode_active >= 200:

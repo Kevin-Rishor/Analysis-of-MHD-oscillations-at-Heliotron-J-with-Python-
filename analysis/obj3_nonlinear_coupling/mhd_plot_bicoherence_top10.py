@@ -1,31 +1,35 @@
-"""
-mhd_plot_bicoherence_top10.py
-Clean, publication-ready plot of the 10 leading non-linear couplings in Heliotron J #88653 (MP1).
-Features:
-  - 10 local peaks marked with unobtrusive arrows and non-overlapping labels.
-  - Subharmonic cascade line (f2 = -0.5 f1, slope -0.5) showing 7 of 10 peaks.
-  - Primary pump column (f1 = 89.0 kHz) showing Peak #3 (89.8 - 41.0 = 48.8 kHz).
-  - Compact info badge summarizing the dual-regime physics.
-  - Matched linear PSD showing the physical mode frequencies.
-"""
-
+import sys
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
 from scipy.ndimage import maximum_filter
 
-import sys
-sys.path.append(str(Path(__file__).parent.parent / "jpack"))
-sys.path.append(r"c:\TFG\jpack")
-sys.path.append(r"c:\TFG\analysis")
+current = Path(__file__).resolve().parent
+root_dir = None
+for p in [current] + list(current.parents):
+    if (p / "jpack").exists():
+        root_dir = p
+        break
+if root_dir is None:
+    root_dir = Path("c:/TFG")
+
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
+    if str(p_add) not in sys.path:
+        sys.path.append(str(p_add))
+
 import turnelib as TE
 import libana_signal as LAS
 from mhd_analysis_obj3 import load_edf_signal, slice_window
 
-def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
-    out_dir = Path(out_dir)
-    data_path = Path(r"c:\TFG\data") / f"hj{shot}" / f"MP1@{shot}.edf"
+
+def generate_top10_plot(shot=88653, out_dir=None):
+    if out_dir is None:
+        out_dir = root_dir
+    else:
+        out_dir = Path(out_dir)
+
+    data_path = root_dir / "data" / f"hj{shot}" / f"MP1@{shot}.edf"
 
     t_start, t_end = 259.1, 275.0
     t_sec, ys, dt, fs = load_edf_signal(data_path)
@@ -73,13 +77,11 @@ def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
     cbar = fig.colorbar(c, ax=ax1, label=r"Squared Auto-Bicoherence $b^2(f_1, f_2)$", pad=0.02)
     cbar.ax.axhline(b2_thresh_95, color='cyan', ls=':', lw=1.5, label="95% Stat. Floor")
 
-    # Reference lines
     ax1.plot([0, 150], [0, -150], color='white', ls='--', lw=1.3, alpha=0.7, label=r"Boundary $f_1 - f_2' = 0$ (Slope $-1$)")
     ax1.plot([0, 150], [0, -75], color='cyan', ls='-.', lw=1.8, alpha=0.95,
              label=r"Subharmonic Line $f_2 = -0.5 f_1$ (7 of Top 10 Peaks)")
     ax1.axvline(89.0, color='gold', ls='--', lw=1.4, alpha=0.85, label=r"Primary Pump Column $f_1 = 89$ kHz (#3, #7)")
 
-    # Custom offsets to avoid overlap among the 10 peaks
     offsets_map = {
         1: (8, 6),
         2: (-22, -10),
@@ -95,7 +97,6 @@ def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
 
     for rank, idx in enumerate(order[:10], 1):
         c_pt = coords[idx]
-        v = sub_b2[c_pt[0], c_pt[1]]
         pf1 = sub_f1[c_pt[0]]
         pf2 = sub_f2[c_pt[1]]
         off_x, off_y = offsets_map.get(rank, (8, 6))
@@ -115,7 +116,6 @@ def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
     ax1.grid(True, ls=":", alpha=0.35, color="gray")
     ax1.legend(loc="lower left", fontsize=8.0, framealpha=0.9, facecolor="white", edgecolor="gray")
 
-    # Compact info badge in lower right
     box_text = (
         "Non-Linear Triad Clustering:\n"
         "• Subharmonic Line (Slope -0.5):\n"
@@ -128,7 +128,6 @@ def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
     ax1.text(0.98, 0.03, box_text, transform=ax1.transAxes, fontsize=8.2,
              va="bottom", ha="right", bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="gray", alpha=0.9))
 
-    # Panel 2: PSD
     mask_psd = (f_psd_khz >= 0) & (f_psd_khz <= 150)
     ax2.semilogy(f_psd_khz[mask_psd], Pxx[mask_psd], color="tab:blue", lw=1.8, label="Linear PSD (MP1)")
     ax2.axvline(89.8, color="gold", ls="--", lw=1.5, label=r"Primary Pump $f_1 = 89.8$ kHz")
@@ -136,7 +135,6 @@ def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
     f_diff = 89.8 - 41.0
     ax2.axvline(f_diff, color="tab:green", ls="-.", lw=1.4, label=rf"Daughter Wave $f_3 = {f_diff:.1f}$ kHz")
 
-    # Mark representative subharmonic frequencies on PSD
     ax2.axvline(98.6, color="cyan", ls=":", lw=1.2, alpha=0.75, label="Subharmonic #1 ($f_1=98.6$ kHz)")
     ax2.axvline(53.7, color="cyan", ls="--", lw=1.2, alpha=0.75, label="Subharmonic #4 ($f_1=53.7$ kHz)")
     ax2.axvline(15.6, color="cyan", ls="-.", lw=1.2, alpha=0.75, label="Subharmonic #5 ($f_1=15.6$ kHz)")
@@ -155,5 +153,7 @@ def generate_top10_plot(shot=88653, out_dir="c:/TFG"):
     print(f"Top 10 bicoherence figure saved to: '{out_png}'")
     return str(out_png)
 
+
 if __name__ == "__main__":
     generate_top10_plot(88653)
+
