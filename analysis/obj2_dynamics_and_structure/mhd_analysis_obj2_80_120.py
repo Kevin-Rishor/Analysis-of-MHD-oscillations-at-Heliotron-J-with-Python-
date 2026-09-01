@@ -78,19 +78,14 @@ from mhd_common import OPTIMAL_SG_WIN, extract_instantaneous_frequency, anti_ali
 def estimate_acf(x, nlags=50):
     """Natively estimates the autocorrelation function (ACF) of a signal."""
     n = len(x)
-    mean = np.mean(x)
     var = np.var(x)
     if var == 0:
         return np.ones(nlags + 1)
-    xp = x - mean
-    acf_vals = []
-    for lag in range(nlags + 1):
-        if lag == 0:
-            r = 1.0
-        else:
-            r = np.sum(xp[:-lag] * xp[lag:]) / (n * var)
-        acf_vals.append(r)
-    return np.array(acf_vals)
+    xp = x - np.mean(x)
+    corr = np.correlate(xp, xp, mode='full')
+    center = len(xp) - 1
+    return corr[center:center + nlags + 1] / (n * var)
+
 
 
 def conservative_p_value(r, N_eff, n_control=0):
@@ -284,14 +279,13 @@ def _poloidal_power_map(sig_matrix, angles, fs, fl_hz, fu_hz, max_m, nfft_use):
 
     k_grid = np.arange(-max_m, max_m + 1)
     f_idx_band = np.where(band_mask)[0]
-    P2d = np.zeros((len(k_grid), len(f_idx_band)))
-    for jf, fidx in enumerate(f_idx_band):
-        for it in range(S.shape[2]):
-            Sk = _nudft_poloidal(angles, S[:, fidx, it], k_grid)
-            P2d[:, jf] += (Sk * Sk.conj()).real
-    P2d /= S.shape[2]
+    S_band = S[:, f_idx_band, :]
+    E = np.exp(-1j * k_grid[:, None] * angles[None, :]) / len(angles)
+    Sk = np.tensordot(E, S_band, axes=(1, 0))
+    P2d = np.mean((Sk * Sk.conj()).real, axis=2)
     f_band_khz = f[f_idx_band] / 1000.0
     return k_grid, f_band_khz, P2d
+
 
 
 def poloidal_mode_number_analysis(pmp_signals, plab_rad, dt, i0, i1, fl_hz, fu_hz, args):

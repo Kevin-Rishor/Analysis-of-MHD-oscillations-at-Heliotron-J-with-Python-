@@ -38,10 +38,18 @@ def setup_logging(verbose, log_file):
         log.addHandler(file_handler)
         log.info(f"(Full diagnostic detail for this run is being written to: {log_file})")
 
-# Add the jpack library path to the Python path
-jpack_path = str(Path(__file__).parent.parent.resolve() / "jpack")
-if jpack_path not in sys.path:
-    sys.path.append(jpack_path)
+current = Path(__file__).resolve().parent
+ROOT_DIR = None
+for p in [current] + list(current.parents):
+    if (p / "jpack").exists():
+        ROOT_DIR = p
+        break
+if ROOT_DIR is None:
+    ROOT_DIR = Path("c:/TFG")
+
+for p_add in [ROOT_DIR / "jpack", ROOT_DIR / "analysis", ROOT_DIR / "analysis" / "common"]:
+    if str(p_add) not in sys.path:
+        sys.path.append(str(p_add))
 
 # -------------------------------------------------------------
 # SHOT CONFIGURATION 
