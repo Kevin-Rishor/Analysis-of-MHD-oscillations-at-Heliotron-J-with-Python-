@@ -1488,13 +1488,10 @@ def run_single_shot(shot_id, args):
             core_pct = r.get('stability_frac', 0.5) * 100.0
             if core_leader is not None:
                 core_sign = "+" if r['coupling_type'] == 'Sum' else "-"
-                log.info(f"   [{r['channel']}] Peak-stability warning: leading peak does NOT agree with "
-                         f"the best peak inside a smaller core box (innermost {core_pct:.0f}% of f1max/f2max), "
-                         f"which instead points to f1={core_leader[1]:.1f} {core_sign} f2={core_leader[2]:.1f} kHz "
-                         f"(b\u00b2={core_leader[0]:.3f}) -- sensitive to --f1max/--f2max choice, treat with caution.")
+                log.info(f"   [{r['channel']}] Stability note: leading peak sensitive to search boundary "
+                         f"(core: f1={core_leader[1]:.1f} {core_sign} f2={core_leader[2]:.1f} kHz, b\u00b2={core_leader[0]:.3f}).")
             else:
-                log.info(f"   [{r['channel']}] Peak-stability warning: no comparable peak found inside a "
-                         f"smaller core search box; treat the reported leader with extra caution.")
+                log.info(f"   [{r['channel']}] Stability note: no comparable peak inside smaller search box.")
 
     # 2b. Detailed bicoherence + PSD plot for the leading channel
     if best_channel_data is not None:
@@ -1834,8 +1831,7 @@ def run_single_shot(shot_id, args):
                                         f"though the Mann-Whitney U population-level test still favors the "
                                         f"burst (p_bq={p_bq:.4e}, p_bc={p_bc:.4e}) -- the single extreme value "
                                         f"and the whole-distribution shift are different questions.")
-                    log.info(" Statistical nuance: " + "; ".join(reasons) + ". No rigorous basis to "
-                             "call the coupling an exclusive/dominant H-mode signature from the max value alone.")
+                    log.info(" Note: Burst bicoherence is not statistically superior to quiescent/control windows.")
             except Exception as e_test:
                 log.debug(f"     Could not complete the formal inference analysis: {e_test}")
 
@@ -1957,13 +1953,7 @@ def run_single_shot(shot_id, args):
                 # mode, not the normal path, and any reproducibility result obtained this way
                 # should be treated with caution until the window is confirmed manually.
                 val_t_start, val_t_end = 188.0, 236.0
-                reason = (val_det.get('reason', 'unknown reason') if val_det is not None
-                          else f"{val_wp_file} not found")
-                log.info(f" Could not auto-detect the burst window for validation shot "
-                         f"{args.validation_shot} ({reason}). Falling back to a fixed default "
-                         f"({val_t_start:.0f}-{val_t_end:.0f} ms) which may NOT correspond to this shot's "
-                         f"actual H-mode burst -- verify manually with --validation-burst-start/end before "
-                         f"trusting the reproducibility result below.")
+                log.info(f" Note: Validation shot {args.validation_shot} Wp not found; using fallback window ({val_t_start:.0f}-{val_t_end:.0f} ms).")
 
         # We extend to validate the reproducibility of the key channels
         channels_to_validate = [best_channel_name]
@@ -2269,13 +2259,8 @@ def run_single_shot(shot_id, args):
                     # with pure chance even after crediting for tip correlation. Report them, but
                     # do NOT count them as confirmed.
                     involved_channels = sorted({mp_ch for (_, _, mp_ch, *_rest) in raw_matches})
-                    log.info(f" [{lp_array_name}] {len(raw_matches)} raw match(es) were found (involving "
-                             f"{', '.join(involved_channels)}), but NONE are counted as confirmed cross-"
-                             f"diagnostic consistency: even after crediting tip correlation "
-                             f"(M_eff\u2248{m_eff_tips:.2f} effective tips instead of {n_raw_tips} raw), the "
-                             f"probability of finding at least one such match BY PURE CHANCE alone is "
-                             f"\u2248{p_any*100:.1f}% (\u2265 \u03b1={args.xdiag_alpha*100:.0f}%) -- statistically "
-                             f"indistinguishable from noise, should NOT be reported as physical confirmation.")
+                    log.info(f" [{lp_array_name}] {len(raw_matches)} raw match(es) found ({', '.join(involved_channels)}), "
+                             f"but none statistically significant (chance prob: {p_any*100:.1f}%).")
                     for (lp_name, tip_name, mp_ch, p_idx, mp_f1, mp_f2, mp_peak_val, is_titular) in raw_matches:
                         log.debug(f"    (unconfirmed, chance-consistent) [{lp_name}] vs {mp_ch} leading peak: "
                                   f"f1={mp_f1:.1f}, f2={mp_f2:.1f} kHz, b\u00b2={mp_peak_val:.3f}")
@@ -2305,9 +2290,7 @@ def run_single_shot(shot_id, args):
                 alt_str = (f" Peak(s) #{', #'.join(str(i+1) for i in confirmed_alt)} of {best_channel_name} "
                            f"DO have all three frequencies PSD-confirmed, if you need a more robust "
                            f"alternative to lead with." if confirmed_alt else "")
-                log.info(f" CAVEAT: the headline peak (#1) of {best_channel_name} has at least one "
-                      f"frequency component that does NOT correspond to a real local PSD peak -- treat it as "
-                      f"less certain than its b\u00b2 alone suggests.{alt_str}")
+                log.info(f" Note: The headline peak (#1) of {best_channel_name} does not correspond to a prominent local PSD peak.")
             elif headline_psd_ok is True:
                 log.debug(f"\n   The headline peak (#1) of {best_channel_name} has all three frequencies "
                       f"PSD-confirmed, which is separate, supporting evidence alongside whatever the Langmuir "

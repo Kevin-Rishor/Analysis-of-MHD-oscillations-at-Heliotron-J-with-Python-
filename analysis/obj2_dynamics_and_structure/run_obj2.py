@@ -15,15 +15,19 @@ if root_dir is None:
 def main():
     print(f"Running Objective 2 pipeline in: {root_dir}")
 
+    is_verbose = "--verbose" in sys.argv or "-v" in sys.argv
+
     scripts = [
         ("Heating & Confinement vs. Mirnov", [sys.executable, str(current / "heating_vs_mirnov.py")]),
-        ("Secondary Band (40-80 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "-l", "40", "-u", "80"]),
-        ("Primary Band (80-120 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "-l", "80", "-u", "120"]),
+        ("Secondary Band (40-80 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "--bands", "40:80"]),
+        ("Primary Band (80-120 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "--bands", "80:120"]),
         ("2D Magnetic Surface Map", [sys.executable, str(current / "mhd_plot_2d_torus_maps.py")]),
         ("Self-Coupling Coherence", [sys.executable, str(current / "mhd_plot_self_coupling_coherence.py")])
     ]
 
     for desc, cmd in scripts:
+        if is_verbose and "mhd_analysis_obj2.py" in cmd[1]:
+            cmd.append("--verbose")
         print(f"Executing {desc}...")
         res = subprocess.run(cmd, cwd=str(root_dir))
         if res.returncode != 0:

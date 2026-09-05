@@ -28,19 +28,50 @@ import sys
 import os
 import argparse
 import json
+import logging
 from pathlib import Path
 
-# Ensure UTF-8 stdout/stderr encoding on Windows to prevent UnicodeEncodeError
-if hasattr(sys.stdout, 'reconfigure'):
-    try:
-        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
-    except Exception:
-        pass
-if hasattr(sys.stderr, 'reconfigure'):
-    try:
-        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
-    except Exception:
-        pass
+log = logging.getLogger("mhd_obj2")
+
+def setup_logging(verbose=False, log_file=None):
+    log.setLevel(logging.DEBUG)
+    log.handlers.clear()
+
+    if hasattr(sys.stdout, 'reconfigure'):
+        try:
+            sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        except Exception:
+            pass
+    if hasattr(sys.stderr, 'reconfigure'):
+        try:
+            sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+        except Exception:
+            pass
+
+    console = logging.StreamHandler(sys.stdout)
+    console.setLevel(logging.DEBUG if verbose else logging.INFO)
+    console.setFormatter(logging.Formatter("%(message)s"))
+    log.addHandler(console)
+
+    if log_file:
+        file_handler = logging.FileHandler(log_file, mode='w', encoding='utf-8')
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(logging.Formatter("%(message)s"))
+        log.addHandler(file_handler)
+        log.info(f"(Full diagnostic detail for this run is being written to: {log_file})")
+
+def print_result(*args, **kwargs):
+    sep = kwargs.get('sep', ' ')
+    msg = sep.join(str(a) for a in args)
+    log.info(msg)
+
+def log_debug_print(*args, **kwargs):
+    sep = kwargs.get('sep', ' ')
+    msg = sep.join(str(a) for a in args)
+    log.debug(msg)
+
+setup_logging(verbose=False, log_file=None)
+print = log_debug_print
 
 import numpy as np
 import scipy.signal as dsp
@@ -894,7 +925,7 @@ def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, 
     output_png = f"mhd_analysis_objective2_zhong_{shot}{suffix}.png"
     plt.savefig(output_png, dpi=150)
     plt.close(fig)
-    print(f"  Zhong-et-al.-style delay/hysteresis figure saved to: '{output_png}'")
+    print_result(f"  Zhong-et-al.-style delay/hysteresis figure saved to: '{output_png}'")
 
     return {
         "core_ece_channel": core_ch,
@@ -1251,10 +1282,10 @@ def process_shot(shot, args):
     data_dir = Path(args.data_dir_pattern.format(shot=shot))
     mag_file = data_dir / f"MP1@{shot}.edf"
 
-    print(f"\n{'=' * 93}")
-    print(f"--- Loading Mirnov Coil magnetic signal: {mag_file} (Shot {shot}) ---")
+    print_result(f"\n{'=' * 93}")
+    print_result(f"--- Loading Mirnov Coil magnetic signal: {mag_file} (Shot {shot}) ---")
     if not mag_file.exists():
-        print(f"  ️ Warning: file {mag_file} does not exist; skipping shot {shot}.")
+        print_result(f"  Warning: file {mag_file} does not exist; skipping shot {shot}.")
         return None
 
     edf_mag = TE.edf()
@@ -1271,10 +1302,10 @@ def process_shot(shot, args):
     dt = (t_sec[100] - t_sec[0]) / 100.0
     fs = 1.0 / dt
     t_ms = t_sec * 1000.0
-    print(f"Mirnov signal: {len(ys)} points, fs = {fs/1e6:.2f} MHz (Time range: {t_ms[0]:.1f} - {t_ms[-1]:.1f} ms)")
+    print_result(f"Mirnov signal: {len(ys)} points, fs = {fs/1e6:.2f} MHz (Time range: {t_ms[0]:.1f} - {t_ms[-1]:.1f} ms)")
 
     
-    print(f"\nApplying Bessel bandpass filter ({args.lower} - {args.upper} kHz) and Hilbert Transform...")
+    print_result(f"\nApplying Bessel bandpass filter ({args.lower} - {args.upper} kHz) and Hilbert Transform...")
     fl_hz = args.lower * 1000.0
     fu_hz = args.upper * 1000.0
 
@@ -2167,10 +2198,7 @@ def process_shot(shot, args):
             pmp_signals, pmp_plab_rad, dt, i0_flat, i1_flat, fl_hz, fu_hz, args
         )
         if poloidal_result is not None:
-            print(f"  [M10] Dominant poloidal mode number: m = {poloidal_result['m_dominant']:+d} "
-                  f"at {poloidal_result['f_peak_khz']:.2f} kHz "
-                  f"(using {len(poloidal_result['channels'])} poloidal probes: "
-                  f"{poloidal_result['channels']}).")
+            print_result(f"Poloidal Mode Decomposition (PMP array): dominant m = {poloidal_result['m_dominant']:+d} at {poloidal_result['f_peak_khz']:.2f} kHz")
             if poloidal_result["verdict"] == "boundary_artifact":
                 print(f"   m = {poloidal_result['m_dominant']:+d} is a BOUNDARY "
                       "ARTIFACT (see [M10-AUTOEXPAND] above) -- do NOT report this as the physical "
@@ -2373,7 +2401,7 @@ def process_shot(shot, args):
             print(f"    {model_name:<32} r = {r_m:+.4f}, p_adj = {format_p_value(p_adj_m)} | {phys_desc:<32} "
                   f"({'MEETS' if meets_m else 'does not meet'} |r|>0.7)")
 
-        print(f"   Best-Fitting EP/MHD Model: '{best_model_name}' (|r| = {max_abs_r:.4f})")
+        print_result(f"Best-Fitting EP/MHD Model: '{best_model_name}' (|r| = {max_abs_r:.4f})")
         ep_scaling_results["best_model"] = best_model_name
         ep_scaling_results["eval_window"] = (t_eval_start, t_eval_end)
         ep_scaling_results["window_type_label"] = window_type_label
@@ -2439,6 +2467,8 @@ def process_shot(shot, args):
     n_tests = len(test_pvalues)
     alpha_bonferroni = 0.05 / n_tests
     bh_significant, bh_p_adjusted = benjamini_hochberg(test_pvalues, alpha=0.05)
+    n_sig_fdr = int(np.sum(bh_significant))
+    print_result(f"Multiple comparisons: {n_sig_fdr} of {n_tests} tests significant under FDR-BH (alpha=0.05)")
 
     print(f"\n--- Multiple Comparisons Correction (n = {n_tests} tests) [EXT] ---")
     for label, r_v, p_v, p_bh, sig_bh in zip(test_labels, test_rvalues, test_pvalues, bh_p_adjusted, bh_significant):
@@ -2585,7 +2615,7 @@ def process_shot(shot, args):
     output_png1 = f"mhd_analysis_objective2_{shot}{suffix}.png"
     plt.savefig(output_png1, dpi=150)
     plt.close(fig1)
-    print(f"  Figure 1 (Macroscopic Correlations) successfully saved to: '{output_png1}'")
+    print_result(f"  Figure 1 (Macroscopic Correlations) successfully saved to: '{output_png1}'")
 
     # ===================================================================================
     # FIGURE 2: HEATING SYNCHRONIZATION & EP MODE IDENTIFICATION (4 panels)
@@ -2749,7 +2779,7 @@ def process_shot(shot, args):
     output_png2 = f"mhd_analysis_objective2_heating_{shot}{suffix}.png"
     plt.savefig(output_png2, dpi=150)
     plt.close(fig2)
-    print(f"  Figure 2 (Heating & EP Mode Identification) successfully saved to: '{output_png2}'")
+    print_result(f"  Figure 2 (Heating & EP Mode Identification) successfully saved to: '{output_png2}'")
 
     # ===================================================================================
     # FIGURE 3: SPATIAL MODAL STRUCTURE ANALYSIS (4 panels)
@@ -2940,50 +2970,50 @@ def process_shot(shot, args):
     output_png3 = f"mhd_analysis_objective2_structure_{shot}{suffix}.png"
     plt.savefig(output_png3, dpi=150)
     plt.close(fig3)
-    print(f"  Figure 3 (Spatial Modal Structure) successfully saved to: '{output_png3}'")
+    print_result(f"  Figure 3 (Spatial Modal Structure) successfully saved to: '{output_png3}'")
 
     # --- Per-shot summary printout ---
-    print(f"\n SHOT {shot} SUMMARY ")
+    print_result(f"\n SHOT {shot} SUMMARY ")
     if nbi_mismatch_detected:
-        print("  - NBI out of Mirnov acquisition window for this shot; NBI correlation not evaluable.")
+        print_result("  - NBI out of Mirnov acquisition window for this shot; NBI correlation not evaluable.")
     else:
-        print(f"  - Envelope vs. Combined NBI: r = {r_nbi_tot:.3f} ({'validated' if significant_nbi else 'NOT validated'} at |r|>0.7 + corrected p<0.05)")
-    print(f"  - Envelope vs. ECH (full range): r = {r_ech:.3f}; partial (step-controlled): r_partial = {r_partial:.3f}")
+        print_result(f"  - Envelope vs. Combined NBI: r = {r_nbi_tot:.3f} ({'validated' if significant_nbi else 'NOT validated'} at |r|>0.7 + corrected p<0.05)")
+    print_result(f"  - Envelope vs. ECH (full range): r = {r_ech:.3f}; partial (step-controlled): r_partial = {r_partial:.3f}")
     if density_detected:
-        print(f"  - Alfven scaling validation: r = {r_val_scaling:.3f} ({'FINAL' if (bfield_available and b_is_constant) else 'PRELIMINARY (simplified scaling)' if not bfield_available else 'FINAL'})")
+        print_result(f"  - Alfven scaling validation: r = {r_val_scaling:.3f} ({'FINAL' if (bfield_available and b_is_constant) else 'PRELIMINARY (simplified scaling)' if not bfield_available else 'FINAL'})")
     if zhong_results is not None:
         chan_status = "explicit" if args.ece_core_channel is not None else "heuristic"
         calib_status = "Te-calibrated" if zhong_results.get("tau_s_ms") is not None else "qualitative, uncalibrated"
-        print(f"  - Zhong et al. [M6]: core ECE ch.{zhong_results['core_ece_channel']} ({chan_status}), "
+        print_result(f"  - Zhong et al. [M6]: core ECE ch.{zhong_results['core_ece_channel']} ({chan_status}), "
               f"envelope-vs-ECE lag = {zhong_results['lag_ece_ms']:+.1f} ms ({calib_status})")
         if zhong_results.get("r_ece_sig") is not None:
             meets_ece_summary = abs(zhong_results["r_ece_sig"]) > 0.7 and zhong_results["p_ece_adj"] < 0.05
-            print(f"    -> proper r = {zhong_results['r_ece_sig']:.3f}, p_adj = {format_p_value(zhong_results['p_ece_adj'])} "
+            print_result(f"    -> proper r = {zhong_results['r_ece_sig']:.3f}, p_adj = {format_p_value(zhong_results['p_ece_adj'])} "
                   f"({'MEETS' if meets_ece_summary else 'does NOT meet'} |r|>0.7 & p<0.05: primary validation criterion)")
         if zhong_results.get("r_pressure_sig") is not None:
             meets_pressure_summary = abs(zhong_results["r_pressure_sig"]) > 0.7 and zhong_results["p_pressure_adj"] < 0.05
-            print(f"    Envelope-vs-pressure-proxy -> proper r = {zhong_results['r_pressure_sig']:.3f}, "
+            print_result(f"    Envelope-vs-pressure-proxy -> proper r = {zhong_results['r_pressure_sig']:.3f}, "
                   f"p_adj = {format_p_value(zhong_results['p_pressure_adj'])} "
                   f"({'MEETS' if meets_pressure_summary else 'does NOT meet'} |r|>0.7 & p<0.05)")
         if zhong_results.get("lag_chirp_ece_ms") is not None:
-            print(f"    Chirp-rate-vs-ECE lag [M6/frequency-sweep reading]: {zhong_results['lag_chirp_ece_ms']:+.1f} ms "
+            print_result(f"    Chirp-rate-vs-ECE lag [M6/frequency-sweep reading]: {zhong_results['lag_chirp_ece_ms']:+.1f} ms "
                   f"(peak |r| = {zhong_results['r_chirp_ece_peak']:+.3f})")
     else:
-        print("  - Zhong et al. [M6]: SKIPPED (no ECE channels found for this shot)")
+        print_result("  - Zhong et al. [M6]: SKIPPED (no ECE channels found for this shot)")
     if freq_heating_results is not None:
-        print(f"  - Freq vs. NBI/ECH [M7]: r_NBI = {freq_heating_results['r_ifreq_nbi']:.3f} "
+        print_result(f"  - Freq vs. NBI/ECH [M7]: r_NBI = {freq_heating_results['r_ifreq_nbi']:.3f} "
               f"(lag {freq_heating_results['lag_ifreq_nbi_ms']:+.1f} ms), "
               f"r_ECH = {freq_heating_results['r_ifreq_ech']:.3f} "
               f"(lag {freq_heating_results['lag_ifreq_ech_ms']:+.1f} ms), "
               f"r_ECH_step-controlled = {freq_heating_results['r_partial_freq']:.3f} "
               f"[mode-active window only]")
     else:
-        print("  - Freq vs. NBI/ECH [M7]: SKIPPED (too few mode-active samples for this shot)")
+        print_result("  - Freq vs. NBI/ECH [M7]: SKIPPED (too few mode-active samples for this shot)")
     for (pa, pb) in PROBE_PAIRS:
         carrier_res = carrier_coh_results[(pa, pb)]
         envelope_res = envelope_coh_results[(pa, pb)]
         if carrier_res is None or envelope_res is None:
-            print(f"  - [M8] {pa}-{pb} inter-probe coherence: SKIPPED (missing probe file)")
+            print_result(f"  - [M8] {pa}-{pb} inter-probe coherence: SKIPPED (missing probe file)")
             continue
         f_carrier, mean_coh2_carrier = carrier_res
         f_envelope, mean_coh2_envelope = envelope_res
@@ -2991,7 +3021,7 @@ def process_shot(shot, args):
         mask_band_e = (f_envelope >= fl_hz) & (f_envelope <= fu_hz)
         peak_carrier = float(np.max(mean_coh2_carrier[mask_band_c])) if np.any(mask_band_c) else float('nan')
         peak_envelope = float(np.max(mean_coh2_envelope[mask_band_e])) if np.any(mask_band_e) else float('nan')
-        print(f"  - [M8] {pa}-{pb} inter-probe coherence: carrier peak (in-band) = {peak_carrier:.3f}, "
+        print_result(f"  - [M8] {pa}-{pb} inter-probe coherence: carrier peak (in-band) = {peak_carrier:.3f}, "
               f"envelope peak (in-band) = {peak_envelope:.3f}")
     nbi_max = np.max(total_nbi_power)
     if nbi_max > 0:
@@ -3431,57 +3461,57 @@ def main():
                               "When provided, enables the theoretical electron-drag slowing-down-time estimate.")
     parser.add_argument("--te-calib-offset-ev", type=float, default=0.0,
                          help="[M6] Te calibration offset (eV), used with --te-calib-scale-ev-per-v (def: 0.0).")
-    parser.add_argument("--bands", type=str, nargs="+", default=["40:80", "80:120"],
-                         help="List of frequency bands in lower:upper format (kHz), e.g. --bands 40:80 80:120 (def: ['40:80', '80:120']). "
+    parser.add_argument("--bands", type=str, nargs="+", default=None,
+                         help="List of frequency bands in lower:upper format (kHz), e.g. --bands 40:80 80:120. "
                               "Runs the full analysis for each frequency window (40-80 kHz secondary mode, 80-120 kHz primary mode).")
     parser.add_argument("--output-suffix", type=str, default=None,
                          help="Optional explicit suffix for output image filenames (e.g. '_40_80kHz')")
+    parser.add_argument("--verbose", "-v", action="store_true", default=False,
+                         help="Enable verbose diagnostic terminal output (default: False)")
+    parser.add_argument("--log-file", type=str, default=None,
+                         help="Path to full diagnostic log file")
     args = parser.parse_args()
+
+    shot_str = str(args.shots[0]) if args.shots else "run"
+    log_file = args.log_file if args.log_file is not None else f"mhd_obj2_{shot_str}.log"
+    setup_logging(args.verbose, log_file)
 
     if args.bfield_constant_tesla is not None and args.bfield_constant_tesla < 0:
         args.bfield_constant_tesla = None  # explicit opt-out, falls back to --bfield-pattern/file or simplified scaling
     if args.ece_core_channel is not None and not (1 <= args.ece_core_channel <= 16):
         args.ece_core_channel = None  # falls back to the auto-select heuristic
 
-    if args.bands:
-        for band_str in args.bands:
-            try:
-                l_str, u_str = band_str.split(":")
-                b_lower, b_upper = float(l_str), float(u_str)
-            except ValueError:
-                print(f"️ Invalid band format '{band_str}'; expected lower:upper in kHz (e.g. 80:120)")
-                continue
-            args.lower = b_lower
-            args.upper = b_upper
-            args.output_suffix = f"_{int(b_lower)}_{int(b_upper)}kHz"
-            print(f"\n{'#' * 93}")
-            print(f"=== RUNNING ANALYSIS FOR FREQUENCY BAND: {b_lower:.1f} - {b_upper:.1f} kHz ===")
-            print(f"{'#' * 93}")
-            print(f"=== Objective 2 Multi-Shot Analysis: shots {args.shots} (Band: {b_lower:.1f}-{b_upper:.1f} kHz) ===")
-            results_list = []
-            for shot in args.shots:
-                result = process_shot(shot, args)
-                results_list.append(result)
+    bands_to_run = args.bands
+    if not bands_to_run:
+        if "-l" in sys.argv or "--lower" in sys.argv or "-u" in sys.argv or "--upper" in sys.argv:
+            bands_to_run = [f"{args.lower}:{args.upper}"]
+        else:
+            bands_to_run = ["40:80", "80:120"]
 
-            n_ok = sum(1 for r in results_list if r is not None)
-            n_fail = len(results_list) - n_ok
-            print(f"\n{'=' * 93}")
-            print(f"Per-shot processing complete for band {b_lower:.1f}-{b_upper:.1f} kHz: {n_ok} shot(s) succeeded, {n_fail} shot(s) skipped.")
-            cross_discharge_analysis(results_list, args)
-        return
+    for band_str in bands_to_run:
+        try:
+            l_str, u_str = band_str.split(":")
+            b_lower, b_upper = float(l_str), float(u_str)
+        except ValueError:
+            print_result(f"Invalid band format '{band_str}'; expected lower:upper in kHz (e.g. 80:120)")
+            continue
+        args.lower = b_lower
+        args.upper = b_upper
+        args.output_suffix = f"_{int(b_lower)}_{int(b_upper)}kHz"
+        print_result(f"\n{'#' * 93}")
+        print_result(f"=== RUNNING ANALYSIS FOR FREQUENCY BAND: {b_lower:.1f} - {b_upper:.1f} kHz ===")
+        print_result(f"{'#' * 93}")
+        print_result(f"=== Objective 2 Multi-Shot Analysis: shots {args.shots} (Band: {b_lower:.1f}-{b_upper:.1f} kHz) ===")
+        results_list = []
+        for shot in args.shots:
+            result = process_shot(shot, args)
+            results_list.append(result)
 
-    print(f"=== Objective 2 Multi-Shot Analysis: shots {args.shots} ===")
-    results_list = []
-    for shot in args.shots:
-        result = process_shot(shot, args)
-        results_list.append(result)
-
-    n_ok = sum(1 for r in results_list if r is not None)
-    n_fail = len(results_list) - n_ok
-    print(f"\n{'=' * 93}")
-    print(f"Per-shot processing complete: {n_ok} shot(s) succeeded, {n_fail} shot(s) skipped (missing data).")
-
-    cross_discharge_analysis(results_list, args)
+        n_ok = sum(1 for r in results_list if r is not None)
+        n_fail = len(results_list) - n_ok
+        print_result(f"\n{'=' * 93}")
+        print_result(f"Per-shot processing complete for band {b_lower:.1f}-{b_upper:.1f} kHz: {n_ok} shot(s) succeeded, {n_fail} shot(s) skipped.")
+        cross_discharge_analysis(results_list, args)
 
 
 if __name__ == "__main__":

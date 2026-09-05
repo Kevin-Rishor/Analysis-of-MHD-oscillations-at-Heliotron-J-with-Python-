@@ -21,7 +21,7 @@ for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" /
 import turnelib as TE
 
 
-def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0, mode_freq=89.0, out_dir=None):
+def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0, mode_freq=89.0, out_dir=None, verbose=False):
     if data_dir is None:
         data_dir = root_dir / "data" / f"hj{shot}"
     else:
@@ -99,13 +99,18 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
             sq_err += diff_rad ** 2
         rmse_deg = float(np.degrees(np.sqrt(sq_err / len(pairs))))
         n_fit_results[n] = {"rmse_deg": rmse_deg, "pair_diffs_deg": pair_diffs}
-        status = " [BEST]" if rmse_deg < 10.0 else ""
-        print(f"  n = {n:+2d}: RMSE = {rmse_deg:5.1f} deg | Residuals: {[f'{d:+5.1f}' for d in pair_diffs]} deg{status}")
 
     best_n_list = sorted(n_fit_results.keys(), key=lambda n: n_fit_results[n]["rmse_deg"])
     best_n = best_n_list[0]
     second_best_n = best_n_list[1]
-    print(f"Toroidal fit: min RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg at n = {best_n:+d} (aliased: {second_best_n:+d})")
+    third_best_n = best_n_list[2]
+
+    if verbose:
+        for n in n_candidates:
+            status = " [BEST]" if n_fit_results[n]["rmse_deg"] < 10.0 else ""
+            print(f"  n = {n:+2d}: RMSE = {n_fit_results[n]['rmse_deg']:5.1f} deg | Residuals: {[f'{d:+5.1f}' for d in n_fit_results[n]['pair_diffs_deg']]} deg{status}")
+
+    print(f"Toroidal fit: best n = {best_n:+d} (min RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg; aliased: n = {second_best_n:+d}, {third_best_n:+d})")
 
     # 2. Radial Profile & Localization
     x_mp1 = probe_data["MP1"][1][idx_win]
@@ -152,12 +157,15 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
         })
 
     ece_results.sort(key=lambda d: d["freq_ghz"])
-    print(f"\n{'Channel':<12} {'Freq (GHz)':<12} {'Coh gamma^2':<14} {'Phase (deg)':<14} {'RMS Fluct (V)':<16} {'Rel Fluct ~T/T':<16}")
-    for d in ece_results:
-        print(f"{d['channel']:<12} {d['freq_ghz']:<12.1f} {d['gamma2']:<14.4f} {d['phase_deg']:<+14.1f} {d['fluc_rms']:<16.4e} {d['relative_fluc']:<16.4e}")
-
     peak_fluc_ece = max(ece_results, key=lambda d: d["fluc_rms"])
     peak_coh_ece = max(ece_results, key=lambda d: d["gamma2"])
+
+    if verbose:
+        print(f"\n{'Channel':<12} {'Freq (GHz)':<12} {'Coh gamma^2':<14} {'Phase (deg)':<14} {'RMS Fluct (V)':<16} {'Rel Fluct ~T/T':<16}")
+        for d in ece_results:
+            print(f"{d['channel']:<12} {d['freq_ghz']:<12.1f} {d['gamma2']:<14.4f} {d['phase_deg']:<+14.1f} {d['fluc_rms']:<16.4e} {d['relative_fluc']:<16.4e}")
+    else:
+        print(f"Radial Localization: peak fluctuation at {peak_fluc_ece['channel']} ({peak_fluc_ece['freq_ghz']:.1f} GHz, RMS = {peak_fluc_ece['fluc_rms']:.3f} V), peak coherence at {peak_coh_ece['channel']} ({peak_coh_ece['freq_ghz']:.1f} GHz, gamma^2 = {peak_coh_ece['gamma2']:.3f})")
 
     # 3. Edge Emission Coupling (HAFAST)
     ha_results = []
@@ -180,7 +188,13 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
             "phase_deg": phase_ha,
             "fluc_rms": rms_ha,
         })
-        print(f"  HAFAST{ha:<4}: gamma^2(89kHz) = {gamma2_ha:.4f} | Phase = {phase_ha:+6.1f} deg | RMS = {rms_ha:.4e} V")
+
+    dominant_ha = max(ha_results, key=lambda d: d["gamma2"]) if ha_results else None
+    if verbose:
+        for d in ha_results:
+            print(f"  {d['name']:<10}: gamma^2(89kHz) = {d['gamma2']:.4f} | Phase = {d['phase_deg']:+6.1f} deg | RMS = {d['fluc_rms']:.4e} V")
+    elif dominant_ha:
+        print(f"Edge Fluctuation (HAFAST): dominant at {dominant_ha['name']} (gamma^2 = {dominant_ha['gamma2']:.4f}, phase = {dominant_ha['phase_deg']:+6.1f} deg, RMS = {dominant_ha['fluc_rms']:.2e} V)")
 
     # 4. Plot Toroidal Structure
     plt.rcdefaults()
@@ -326,5 +340,10 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
 
 
 if __name__ == "__main__":
-    identify_primary_mode()
+    import argparse
+    parser = argparse.ArgumentParser(description="Primary Mode Toroidal and Radial Identification")
+    parser.add_argument("-s", "--shots", type=int, default=88653, help="Shot number to analyze (default: 88653)")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Print full candidate and ECE channel tables")
+    args = parser.parse_args()
+    identify_primary_mode(shot=args.shots, verbose=args.verbose)
 

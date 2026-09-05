@@ -20,7 +20,11 @@ def main():
         ("Toroidal & Radial Localization", [sys.executable, str(current / "mhd_primary_mode_id.py"), "--shots", "88653"])
     ]
 
+    is_verbose = "--verbose" in sys.argv or "-v" in sys.argv
+
     for desc, cmd in scripts:
+        if is_verbose:
+            cmd.append("--verbose")
         print(f"Executing {desc}...")
         res = subprocess.run(cmd, cwd=str(root_dir))
         if res.returncode != 0:
