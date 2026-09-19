@@ -265,9 +265,11 @@
         \item The $-0.5$ subharmonic ridge (strongest in the NBI-only phase,
         $b^2=0.88$) clears this stricter threshold by $>4\times$.
         \item After excluding low-SNR samples, \textbf{all 16} valid high-SNR
-        measurements (two episodes: 6 windows at 295.3--297.1\,ms during NBI,
-        10 windows at 301.8--304.6\,ms during post-NBI slowing-down) show
-        $\mathrm{Im}[B_{\text{sum}}]>0$ -- the direction never reverses.
+        measurements show $\mathrm{Im}[B_{\text{sum}}]>0$ -- the direction never reverses.
+        These form two episodes: 6 windows at 295.3--297.1\,ms (NBI on), and
+        10 windows at 301.8--304.6\,ms (straddling and following the
+        ${\sim}\SI{300.6}{ms}$ beam turn-off, into the slowing-down phase).
+        Due to 97\% window overlap, this is effectively $\sim 2$ independent samples.
     \end{itemize}
 \end{frame}
 
@@ -279,7 +281,7 @@
         % high-SNR windows with the power-law fit overlaid (exponent 1.54)
         % and a reference line at exponent 2 (pure harmonic generation).
         % See chat message for exact plotting spec and suggested filename.
-        \includegraphics[height=0.3\textheight]{Images/mhd_amplitude_scaling_A100_vs_A50_shot_88653.png}
+        \includegraphics[height=0.3\textheight]{Images/amplitude_scaling_valid16.png}
     \end{figure}
     \footnotesize
     \begin{itemize}
@@ -287,11 +289,13 @@
         $\sim$\SI{50}{kHz} drives, $\sim$\SI{100}{kHz} is a passive harmonic;
         (B) $\sim$\SI{100}{kHz} is independently driven and
         $\sim$\SI{50}{kHz} merely feeds it.
-        \item Amplitude scaling: OLS slope ${\approx}\,2.1$ (band-integrated)
-        to $2.3$ (peak PSD); reference: passive harmonic $= 2.0$, shared
-        envelope $= 1.0$. Block-bootstrap 95\% CI for the 16-window band
-        fit: $[0.96,\;2.63]$; broadband-power-selected (37 windows) CI:
-        $[2.12,\;2.54]$. Consistent with (A); slope${\approx}1$ disfavored.
+        \item Amplitude scaling: OLS pooled slope is $2.10$ (band-integrated)
+        to $2.26$ (peak PSD) on the 16 valid windows. A low all-window slope
+        ($0.81$) was confirmed to be a noise-floor flattening artifact.
+        \item Block-bootstrap 95\% CI (8\,ms blocks): $[0.94,\;2.37]$. The
+        scaling is consistent with passive harmonic generation ($2.0$), but a
+        linear shared-envelope model ($1.0$) is \textbf{not excluded} given
+        the $\sim 2$ effective independent samples.
         \item \textbf{Not stationary:} integrated bicoherence over the full
         burst collapses \emph{below} the noise floor ($\sim$38 vs.\ 64), even
         though short 8 ms sub-windows show the ridge above -- short,
@@ -628,11 +632,24 @@
     \vspace{0.2cm}
     \normalsize
     Note: the amplitude-scaling analysis (main deck, Slide~12) yields
-    OLS slopes ${\approx}\,2.1$--$2.3$ for band-integrated and peak
-    extraction methods across valid windows, consistent with harmonic
-    self-coupling ($A_{100}\propto A_{50}^2$) and disfavoring
-    independent-mode predictions (slope${\approx}1$). Both remain
+    OLS slopes $2.10$--$2.26$ across valid windows, consistent with harmonic
+    self-coupling ($A_{100}\propto A_{50}^2$). However, rigorous block-bootstrap
+    intervals show a shared-envelope model (slope $1.0$) is not definitively
+    excluded due to the low effective sample size ($\sim 2$). Both remain
     compatible with the confirmed unidirectional (upward) energy flow.
+\end{frame}
+
+\begin{frame}{Backup: Why the noise floor flattens the slope}
+    \begin{figure}
+        \centering
+        \includegraphics[height=0.6\textheight]{Images/amplitude_scaling_all_vs_valid.png}
+    \end{figure}
+    \vspace{-0.2cm}
+    \begin{itemize}
+        \item Across all 75 sliding windows, the OLS slope drops to $0.81$.
+        \item Subtracting a quiet-time background PSD removes this flattening, recovering steeper scaling.
+        \item The $0.81$ slope is a numerical artifact of low-SNR intervals clustering at the measurement limit, not physical coupling.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Backup: Objective 3 -- Total (Integrated) Bicoherence}
