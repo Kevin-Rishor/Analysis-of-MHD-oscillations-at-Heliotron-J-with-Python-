@@ -55,6 +55,25 @@ def find_active_intervals(bool_series, time_s, min_duration_ms=0.0):
     return intervals
 
 
+def safe_savefig(fig, out_path, dpi=150):
+    out_path = Path(out_path)
+    try:
+        if out_path.exists():
+            try:
+                out_path.unlink()
+            except Exception:
+                pass
+        fig.savefig(str(out_path), dpi=dpi)
+    except Exception as e:
+        import shutil
+        tmp_file = out_path.parent / f"tmp_{out_path.name}"
+        fig.savefig(str(tmp_file), dpi=dpi)
+        try:
+            shutil.move(str(tmp_file), str(out_path))
+        except Exception:
+            pass
+
+
 def parse_args():
     p = argparse.ArgumentParser(description="MHD Analysis - Objective 1 (Mode Identification)")
     p.add_argument("-s", "--shots", type=int, nargs="+", default=SHOTS_DEFAULT,
@@ -181,14 +200,12 @@ def process_shot(shot, args):
         for c1, c2 in target_pairs:
             if c1 not in signals or c2 not in signals:
                 continue
-            f_c, Pxy, Pyy, Pxx = LAS.csd(
-                signals[c1], time_sec, signals[c2], dt=dt, nfft=nfft,
-                noverlap=nfft // 2, nensemble=args.ensemble,
-                window='hann', detrend='constant'
+            f_c, coh2 = dsp.coherence(
+                signals[c1], signals[c2], fs=fs, window='hann',
+                nperseg=nfft, noverlap=nfft // 2
             )
-            coh2 = LAS.xcoh2(Pxy, Pyy, Pxx)
             pair_key = f"{c1}_{c2}"
-            coherence_spectra[pair_key] = np.mean(coh2, axis=1) if coh2.ndim > 1 else coh2
+            coherence_spectra[pair_key] = coh2
             if f_csd is None:
                 f_csd = f_c
 
@@ -325,7 +342,7 @@ def process_shot(shot, args):
 
         plt.tight_layout()
         output_png = f"mhd_analysis_objective1_{shot}.png"
-        plt.savefig(output_png, dpi=150)
+        safe_savefig(fig, output_png, dpi=150)
         plt.close(fig)
         print(f"Objective 1 overview saved to '{output_png}'.")
 
@@ -347,4 +364,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main()

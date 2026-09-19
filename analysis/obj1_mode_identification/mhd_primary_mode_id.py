@@ -20,6 +20,33 @@ for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" /
 
 import turnelib as TE
 
+import logging
+
+log = logging.getLogger("mhd_obj1_primary")
+
+def setup_logging(verbose=False, log_file=None):
+    log.setLevel(logging.DEBUG)
+    log.handlers.clear()
+    
+    console = logging.StreamHandler(sys.stdout)
+    console.setLevel(logging.DEBUG if verbose else logging.INFO)
+    console.setFormatter(logging.Formatter("%(message)s"))
+    log.addHandler(console)
+
+    if log_file:
+        file_handler = logging.FileHandler(log_file, mode='a', encoding='utf-8')
+        file_handler.setLevel(logging.DEBUG)
+        file_handler.setFormatter(logging.Formatter("%(message)s"))
+        log.addHandler(file_handler)
+        log.info(f"(Appending primary mode ID output to: {log_file})")
+
+def log_print(*args, **kwargs):
+    msg = " ".join(str(a) for a in args)
+    log.info(msg)
+
+setup_logging()
+print = log_print
+
 
 def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0, mode_freq=89.0, out_dir=None, verbose=False):
     if data_dir is None:
@@ -344,6 +371,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Primary Mode Toroidal and Radial Identification")
     parser.add_argument("-s", "--shots", type=int, default=88653, help="Shot number to analyze (default: 88653)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Print full candidate and ECE channel tables")
+    parser.add_argument("--log-file", type=str, default=None, help="Path to output log file (appended)")
     args = parser.parse_args()
+    
+    shot_str = str(args.shots)
+    log_file = args.log_file if args.log_file is not None else f"mhd_obj1_{shot_str}.log"
+    setup_logging(args.verbose, log_file)
+    
     identify_primary_mode(shot=args.shots, verbose=args.verbose)
 

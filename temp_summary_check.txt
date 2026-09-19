@@ -1,0 +1,173 @@
+################################################################################
+                          MASTER SUMMARY OF ALL LOGS                            
+################################################################################
+
+[mhd_obj1_88653.log] Summaries Extracted:
+--------------------------------------------------------------------------------
+Summary JSON exported to: 'C:\TFG\primary_mode_identification_shot_88653.json'
+--------------------------------------------------------------------------------
+
+[mhd_obj2_88653.log] Summaries Extracted:
+--------------------------------------------------------------------------------
+Multiple comparisons: 5 of 12 tests significant under FDR-BH (alpha=0.05)
+
+--- Multiple Comparisons Correction (n = 12 tests) [EXT] ---
+    Total NBI                        r = +0.606, p = 1.37e-04     Bonferroni: Sig.     | FDR-BH: p_adj = 4.369e-04 (Sig.)
+    Full ECH                         r = +0.289, p = 9.69e-02     Bonferroni: Not sig. | FDR-BH: p_adj = 1.938e-01 (Not sig.)
+    Partial ECH (Step)               r = +0.061, p = 7.36e-01     Bonferroni: Not sig. | FDR-BH: p_adj = 8.024e-01 (Not sig.)
+    Active ECH (170-290ms)           r = +0.090, p = 7.27e-01     Bonferroni: Not sig. | FDR-BH: p_adj = 8.024e-01 (Not sig.)
+    Individual NBI (NBIS3I)          r = +0.597, p = 1.83e-04     Bonferroni: Sig.     | FDR-BH: p_adj = 4.395e-04 (Sig.)
+    Individual NBI (NBIS4I)          r = +0.610, p = 1.23e-04     Bonferroni: Sig.     | FDR-BH: p_adj = 4.369e-04 (Sig.)
+    Individual NBI (NBIS9I)          r = +0.609, p = 1.28e-04     Bonferroni: Sig.     | FDR-BH: p_adj = 4.369e-04 (Sig.)
+    Individual NBI (NBIS10I)         r = +0.604, p = 1.46e-04     Bonferroni: Sig.     | FDR-BH: p_adj = 4.369e-04 (Sig.)
+    Alfven (f_measured vs f_theoretical) r = +0.161, p = 6.86e-01     Bonferroni: Not sig. | FDR-BH: p_adj = 8.024e-01 (Not sig.)
+    Freq vs NBI (mode-active) [M7]   r = +0.186, p = 5.89e-01     Bonferroni: Not sig. | FDR-BH: p_adj = 8.024e-01 (Not sig.)
+    Freq vs ECH (mode-active) [M7]   r = +0.472, p = 1.48e-01     Bonferroni: Not sig. | FDR-BH: p_adj = 2.532e-01 (Not sig.)
+    Freq vs ECH, step-ctrl [M7]      r = +0.076, p = 8.36e-01     Bonferroni: Not sig. | FDR-BH: p_adj = 8.363e-01 (Not sig.)
+
+--- Generating Figure 1: Macroscopic Correlations (mhd_analysis_objective2_88653_80_120kHz.png) ---
+  Figure 1 (Macroscopic Correlations) successfully saved to: 'mhd_analysis_objective2_88653_80_120kHz.png'
+
+--- Generating Figure 2: Heating & EP Mode Identification (mhd_analysis_objective2_heating_88653_80_120kHz.png) ---
+  Figure 2 (Heating & EP Mode Identification) successfully saved to: 'mhd_analysis_objective2_heating_88653_80_120kHz.png'
+
+--- Generating Figure 3: Spatial Modal Structure (mhd_analysis_objective2_structure_88653_80_120kHz.png) ---
+  Figure 3 (Spatial Modal Structure) successfully saved to: 'mhd_analysis_objective2_structure_88653_80_120kHz.png'
+
+ SHOT 88653 SUMMARY 
+  - Envelope vs. Combined NBI: r = 0.606 (NOT validated at |r|>0.7 + corrected p<0.05)
+  - Envelope vs. ECH (full range): r = 0.289; partial (step-controlled): r_partial = 0.061
+  - Alfven scaling validation: r = 0.161 (FINAL)
+  - Freq vs. NBI/ECH [M7]: r_NBI = 0.186 (lag -36.3 ms), r_ECH = 0.472 (lag -28.9 ms), r_ECH_step-controlled = 0.076 [mode-active window only]
+  - [M8] MP1-MP3 inter-probe coherence: carrier peak (in-band) = 0.824, envelope peak (in-band) = 0.651
+  - [M8] MP1-MP4 inter-probe coherence: carrier peak (in-band) = 0.898, envelope peak (in-band) = 0.728
+  - [M8] MP3-MP4 inter-probe coherence: carrier peak (in-band) = 0.937, envelope peak (in-band) = 0.754
+
+--------------------------------------------------------------------------------
+
+[mhd_obj3_88653.log] Summaries Extracted:
+--------------------------------------------------------------------------------
+NOTE (multiple-comparisons context): under the null hypothesis of total
+     independence, we would expect by pure chance that ~5.0% of the bins exceed b²_95.
+     The '>Stat.95%' percentages reported below should be compared against that
+     baseline of 5.0%, not interpreted in absolute terms.
+
+Processing 3 channels simultaneously for bicoherence (nensemble=30)...
+Channel MP1: fs = 1.000 MHz, nfft = 1024, N_window_samples = 15901 -> Spectral resolution df = 0.977 kHz
+Channel MP1          (Sum ) -> Max b² = 0.3858 at f1=118.2 + f2=42.0 kHz | 5/62750 (0.01%) > physical threshold (0.5) | 3179/62750 (5.07%) > 95% statistical threshold (0.100)
+Channel MP1          (Diff) -> Max b² = 0.5150 at f1=98.6 - f2=48.8 kHz | 12/125250 (0.01%) > physical threshold (0.5) | 6790/125250 (5.42%) > 95% statistical threshold (0.100)  <- dominant/reported type
+      [Domain-size caveat] Sum domain = 62750 bins vs. Diff domain = 125250 bins (ratio 2.00x). Percentages above are each self-normalized; do NOT directly compare a Diff-domain percentage against a Sum-domain percentage from another channel without confirming both domains use an equivalent non-redundant (deduplicated) convention.
+Channel MP3: fs = 1.000 MHz, nfft = 1024, N_window_samples = 15901 -> Spectral resolution df = 0.977 kHz
+Channel MP3          (Sum ) -> Max b² = 0.4064 at f1=88.9 + f2=13.7 kHz | 1/62750 (0.00%) > physical threshold (0.5) | 3466/62750 (5.52%) > 95% statistical threshold (0.100)  <- dominant/reported type
+Channel MP3          (Diff) -> Max b² = 0.3714 at f1=145.5 - f2=14.6 kHz | 8/125250 (0.01%) > physical threshold (0.5) | 7738/125250 (6.18%) > 95% statistical threshold (0.100)
+      [Domain-size caveat] Sum domain = 62750 bins vs. Diff domain = 125250 bins (ratio 2.00x). Percentages above are each self-normalized; do NOT directly compare a Diff-domain percentage against a Sum-domain percentage from another channel without confirming both domains use an equivalent non-redundant (deduplicated) convention.
+Channel MP4: fs = 1.000 MHz, nfft = 1024, N_window_samples = 15901 -> Spectral resolution df = 0.977 kHz
+Channel MP4          (Sum ) -> Max b² = 0.4358 at f1=70.3 + f2=66.4 kHz | 4/62750 (0.01%) > physical threshold (0.5) | 3349/62750 (5.34%) > 95% statistical threshold (0.100)
+Channel MP4          (Diff) -> Max b² = 0.4521 at f1=102.5 - f2=51.8 kHz | 18/125250 (0.01%) > physical threshold (0.5) | 7591/125250 (6.06%) > 95% statistical threshold (0.100)  <- dominant/reported type
+      [Domain-size caveat] Sum domain = 62750 bins vs. Diff domain = 125250 bins (ratio 2.00x). Percentages above are each self-normalized; do NOT directly compare a Diff-domain percentage against a Sum-domain percentage from another channel without confirming both domains use an equivalent non-redundant (deduplicated) convention.
+   * MP1: RMS = 0.2433 V
+   * MP3: RMS = 0.2369 V
+   * MP4: RMS = 0.3001 V
+
+==========================================================================================
+📊 BICOHERENCE COMPARISON: BURST vs. QUIESCENT vs. CONTROL (Leading Channel)
+==========================================================================================
+📈 ENERGY TRANSPORT WINDOW COMPARISON (W_p) -- FINAL CONFIRMATION CRITERION:
+  - Verified metadata for W_p (Wp@88653.edf): DimUnit (time) = 'ms', ValUnit (energy) = 'kJ'
+  - Average values in the burst / quiescent / control windows:
+  Window Burst      (259-275 ms): <W_p> = 2.07 kJ | <dW_p/dt> = -83.24 kJ/s | <ECH> = 0.50 V | Max b² = 0.515 | Bins > Stat.95% = 5.42%
+  Window Quiescent  (153-178 ms): <W_p> = -0.05 kJ | <dW_p/dt> = +6.70 kJ/s | <ECH> = 0.12 V | Max b² = 0.366 | Bins > Stat.95% = 48.02%
+  Window Control    (317-342 ms): <W_p> = -0.05 kJ | <dW_p/dt> = +1.59 kJ/s | <ECH> = -0.01 V | Max b² = 0.459 | Bins > Stat.95% = 31.19%
+Read this table alongside the Burst vs. Quiescent vs. Control comparison above: agreement between elevated bicoherence and a degraded/negative <dW_p/dt> specifically during the burst window is what the proposal defines as the final confirmation criterion.
+==========================================================================================
+==========================================================================================
+DOUBLE-VALIDATION SUMMARY (Objective 3: reproducibility AND cross-diagnostic consistency)
+==========================================================================================
+--------------------------------------------------------------------------------
+
+[run_all_objectives.log] Summaries Extracted:
+--------------------------------------------------------------------------------
+Multiple comparisons: 6 of 12 tests significant under FDR-BH (alpha=0.05)
+  Figure 1 (Macroscopic Correlations) successfully saved to: 'mhd_analysis_objective2_88653_40_80kHz.png'
+  Figure 2 (Heating & EP Mode Identification) successfully saved to: 'mhd_analysis_objective2_heating_88653_40_80kHz.png'
+  Figure 3 (Spatial Modal Structure) successfully saved to: 'mhd_analysis_objective2_structure_88653_40_80kHz.png'
+
+ SHOT 88653 SUMMARY 
+  - Envelope vs. Combined NBI: r = 0.641 (NOT validated at |r|>0.7 + corrected p<0.05)
+  - Envelope vs. ECH (full range): r = 0.445; partial (step-controlled): r_partial = 0.120
+  - Alfven scaling validation: r = -0.439 (FINAL)
+  - Freq vs. NBI/ECH [M7]: r_NBI = -0.060 (lag -4.9 ms), r_ECH = -0.109 (lag -22.6 ms), r_ECH_step-controlled = -0.044 [mode-active window only]
+  - [M8] MP1-MP3 inter-probe coherence: carrier peak (in-band) = 0.962, envelope peak (in-band) = 0.572
+  - [M8] MP1-MP4 inter-probe coherence: carrier peak (in-band) = 0.960, envelope peak (in-band) = 0.505
+  - [M8] MP3-MP4 inter-probe coherence: carrier peak (in-band) = 0.954, envelope peak (in-band) = 0.694
+
+Multiple comparisons: 5 of 12 tests significant under FDR-BH (alpha=0.05)
+  Figure 1 (Macroscopic Correlations) successfully saved to: 'mhd_analysis_objective2_88653_80_120kHz.png'
+  Figure 2 (Heating & EP Mode Identification) successfully saved to: 'mhd_analysis_objective2_heating_88653_80_120kHz.png'
+  Figure 3 (Spatial Modal Structure) successfully saved to: 'mhd_analysis_objective2_structure_88653_80_120kHz.png'
+
+ SHOT 88653 SUMMARY 
+  - Envelope vs. Combined NBI: r = 0.606 (NOT validated at |r|>0.7 + corrected p<0.05)
+  - Envelope vs. ECH (full range): r = 0.289; partial (step-controlled): r_partial = 0.061
+  - Alfven scaling validation: r = 0.161 (FINAL)
+  - Freq vs. NBI/ECH [M7]: r_NBI = 0.186 (lag -36.3 ms), r_ECH = 0.472 (lag -28.9 ms), r_ECH_step-controlled = 0.076 [mode-active window only]
+  - [M8] MP1-MP3 inter-probe coherence: carrier peak (in-band) = 0.824, envelope peak (in-band) = 0.651
+  - [M8] MP1-MP4 inter-probe coherence: carrier peak (in-band) = 0.898, envelope peak (in-band) = 0.728
+  - [M8] MP3-MP4 inter-probe coherence: carrier peak (in-band) = 0.937, envelope peak (in-band) = 0.754
+
+################################################################################
+  PIPELINE EXECUTION SUMMARY
+################################################################################
+--------------------------------------------------------------------------------
+
+[NBI vs NBI and ECH\nbi_vs_ech_nbi_comparison.log] Summaries Extracted:
+--------------------------------------------------------------------------------
+--- Mode Identification Overview Comparison (Shot 88653) ---
+  Processing ECH + NBI Phase (259.1 - 291.3 ms)...
+    Saved JSON: discrete_modes_ECH_NBI.json
+    Saved figure: mhd_analysis_objective1_88653_ECH_NBI.png
+  Processing Just NBI Phase (291.3 - 300.0 ms)...
+    Saved JSON: discrete_modes_NBI_only.json
+    Saved figure: mhd_analysis_objective1_88653_NBI_only.png
+--- Spatial Modal Structure (m) Comparison (Shot 88653) ---
+  Processing Secondary Band (40-80 kHz) - ECH+NBI...
+    Saved figure: mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png
+  Processing Secondary Band (40-80 kHz) - Just NBI...
+    Saved figure: mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png
+  Processing Primary Band (80-120 kHz) - ECH+NBI...
+    Saved figure: mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png
+  Processing Primary Band (80-120 kHz) - Just NBI...
+    Saved figure: mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png
+--- Objective 3 Bicoherence Matrix Comparison (Shot 88653) ---
+  Processing Bicoherence: ECH + NBI Phase (259.1 - 291.3 ms)...
+    Saved figure: mhd_bicoherence_objective3_88653_ECH_NBI.png
+  Processing Bicoherence: Just NBI Phase (291.3 - 300.0 ms)...
+    Saved figure: mhd_bicoherence_objective3_88653_NBI_only.png
+--- Toroidal Mode (n) & Radial Profile Comparison (Shot 88653) ---
+  Processing ECH + NBI Phase (Target: 89.0 kHz)...
+    Saved figure: mhd_primary_mode_toroidal_n_shot_88653_ECH_NBI.png
+    Saved figure: mhd_primary_mode_radial_profile_shot_88653_ECH_NBI.png
+    Saved JSON: primary_mode_identification_ECH_NBI.json
+  Processing Just NBI Phase (Target: 86.0 kHz)...
+    Saved figure: mhd_primary_mode_toroidal_n_shot_88653_NBI_only.png
+    Saved figure: mhd_primary_mode_radial_profile_shot_88653_NBI_only.png
+    Saved JSON: primary_mode_identification_NBI_only.json
+--- Self-Coupling Coherence Comparison (Shot 88653) ---
+  Processing Self-Coupling: ECH + NBI Phase (259.1 - 291.3 ms)...
+    Saved figure: mhd_self_coupling_coherence_shot_88653_ECH_NBI.png
+  Processing Self-Coupling: Just NBI Phase (291.3 - 300.0 ms)...
+    Saved figure: mhd_self_coupling_coherence_shot_88653_NBI_only.png
+--- Mode Envelopes & Ip Evolution Comparison (Shot 88653) ---
+Saved NBI comparison plot to C:\TFG\NBI vs NBI and ECH\mhd_mode_envelopes_and_ip_ECH_NBI_comparison.png
+    Saved figure: mhd_mode_envelopes_and_ip_ECH_NBI_comparison.png
+--- Sliding Window Bicoherence & Biphase Trace (Shot 88653) ---
+    Saved figure: bicoherence_sliding_trace_snr.png
+
+Comparative heating phase analysis completed successfully.
+All figures and summary JSON files saved to: 'C:\TFG\NBI vs NBI and ECH'
+
+--------------------------------------------------------------------------------
+
+
+################################################################################
+                          

@@ -1,0 +1,13 @@
+{
+  "shot": 88653,
+  "window_ms": [
+    259.1,
+    291.3
+  ],
+  "mode_freq_khz": 89.0,
+  "best_n": -5,
+  "second_best_n": -1,
+  "best_rmse_deg": 5.195000830161011,
+  "ece_peak_channel": "ECE13FAST",
+  "ha_peak_channel": "HAFAST3.5"
+}

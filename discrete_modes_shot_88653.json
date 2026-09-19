@@ -13,9 +13,9 @@
       "snr_threshold": 1.1726590829962614e-09,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.8554548352950656,
-        "MP1_MP4": 0.8768503891025773,
-        "MP3_MP4": 0.8789224620114561
+        "MP1_MP3": 0.9595092795601546,
+        "MP1_MP4": 0.9715198855644558,
+        "MP3_MP4": 0.9764933497092021
       },
       "confirming_pairs": [
         "MP1_MP3",
@@ -44,14 +44,18 @@
       "snr_threshold": 2.6083335782355444e-09,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.016594068262630685,
-        "MP1_MP4": 0.07400599051829405,
-        "MP3_MP4": 0.003968137845789256
+        "MP1_MP3": 0.8981766829807881,
+        "MP1_MP4": 0.8686231923836945,
+        "MP3_MP4": 0.8887544932271191
       },
-      "confirming_pairs": [],
-      "coherence_confirmed": false,
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "coherence_confirmed": true,
       "confirmation_rule": "any single coil pair > threshold",
-      "dual_criterion_pass": false,
+      "dual_criterion_pass": true,
       "baseline_calibration_contaminated": true,
       "active_intervals_ms": [
         [
@@ -79,14 +83,18 @@
       "snr_threshold": 6.112846817568823e-10,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.0500955991350907,
-        "MP1_MP4": 0.02855871249052042,
-        "MP3_MP4": 0.13379895775224668
+        "MP1_MP3": 0.8816316501482885,
+        "MP1_MP4": 0.922820695557473,
+        "MP3_MP4": 0.9000831689430685
       },
-      "confirming_pairs": [],
-      "coherence_confirmed": false,
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "coherence_confirmed": true,
       "confirmation_rule": "any single coil pair > threshold",
-      "dual_criterion_pass": false,
+      "dual_criterion_pass": true,
       "baseline_calibration_contaminated": false,
       "active_intervals_ms": [
         [
@@ -122,11 +130,13 @@
       "snr_threshold": 1.2635955457625784e-09,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.6487617225163417,
-        "MP1_MP4": 0.6478220976253288,
-        "MP3_MP4": 0.7100704649224044
+        "MP1_MP3": 0.8920891231238314,
+        "MP1_MP4": 0.9212337285052169,
+        "MP3_MP4": 0.943059642967069
       },
       "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
         "MP3_MP4"
       ],
       "coherence_confirmed": true,
@@ -159,14 +169,18 @@
       "snr_threshold": 1.7137580418652712e-09,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.17786727046078807,
-        "MP1_MP4": 0.25560981017094003,
-        "MP3_MP4": 0.2941393909553462
+        "MP1_MP3": 0.7964462070092676,
+        "MP1_MP4": 0.8819013115205052,
+        "MP3_MP4": 0.8784917183449489
       },
-      "confirming_pairs": [],
-      "coherence_confirmed": false,
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "coherence_confirmed": true,
       "confirmation_rule": "any single coil pair > threshold",
-      "dual_criterion_pass": false,
+      "dual_criterion_pass": true,
       "baseline_calibration_contaminated": false,
       "active_intervals_ms": [
         [
@@ -186,9 +200,9 @@
       "snr_threshold": 1.110277552024467e-09,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.058705155480885535,
-        "MP1_MP4": 0.04342722061605201,
-        "MP3_MP4": 0.006039443681960074
+        "MP1_MP3": 0.5467304624310224,
+        "MP1_MP4": 0.5506353817214361,
+        "MP3_MP4": 0.6673801345283386
       },
       "confirming_pairs": [],
       "coherence_confirmed": false,
@@ -237,9 +251,9 @@
       "snr_threshold": 8.345784841848359e-10,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.01333046924109028,
-        "MP1_MP4": 0.09888337439347708,
-        "MP3_MP4": 0.11633216383481794
+        "MP1_MP3": 0.3297088769392771,
+        "MP1_MP4": 0.5519803222528421,
+        "MP3_MP4": 0.5267573188593262
       },
       "confirming_pairs": [],
       "coherence_confirmed": false,
@@ -272,9 +286,9 @@
       "snr_threshold": 1.7052461216946558e-09,
       "is_above_noise_floor": true,
       "coherence": {
-        "MP1_MP3": 0.08951663897297082,
-        "MP1_MP4": 0.0468560589919586,
-        "MP3_MP4": 0.03603294213061927
+        "MP1_MP3": 0.07522490200154966,
+        "MP1_MP4": 0.09561999515673655,
+        "MP3_MP4": 0.029772345384551705
       },
       "confirming_pairs": [],
       "coherence_confirmed": false,

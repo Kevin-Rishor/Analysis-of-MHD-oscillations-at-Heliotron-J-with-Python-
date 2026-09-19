@@ -1,0 +1,773 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{Madrid}
+\usecolortheme{default}
+
+% Essential Packages
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{tabularx}
+
+% Title and Author Information
+\title[MHD Oscillations at Heliotron J]{Analysis of magnetohydrodynamics oscillations \\ at Heliotron J with Python}
+\author[K. Rishor Villalobos]{Kevin Enrique Rishor Villalobos}
+\institute[TEC \& IAE Kyoto]{
+    Physics School, Tecnológico de Costa Rica (TEC) \\
+    \vspace{0.2cm}
+    Institute of Advanced Energy, Kyoto University
+}
+\date{September, 2026}
+
+% Logos on Title Page
+\titlegraphic{
+    \includegraphics[height=1.5cm]{Images/Tec.png} \hspace{2cm}
+    \includegraphics[height=1.5cm]{Images/IAE.jpg}
+}
+
+\begin{document}
+
+% --- Title Slide ---
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% --- Section: Preliminary Results ---
+\section{Preliminary Results}
+
+% Slide: Plasma Heating Image
+\begin{frame}{Plasma Heating and Confinement vs. Mirnov Signal}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/heating_vs_mirnov (Shot_88653).png}
+    \end{figure}
+\end{frame}
+
+% --- Objective 1 ---
+\section{Objective 1: Dominant Mode Identification}
+
+% --- Divider: Objective 1 ---
+\begin{frame}
+    \vspace{0.3cm}
+    \begin{center}
+        {\usebeamerfont{title}\structure{\Huge Objective 1}}\\[0.3cm]
+        {\Large Dominant Mode Identification}
+    \end{center}
+    \vspace{0.7cm}
+    \begin{itemize}
+        \item Identify the dominant coherent MHD mode(s) present in the Mirnov coil array using a dual criterion: amplitude above a $3\sigma$ noise threshold \emph{and} spatial coherence $\gamma^2 > 0.7$ across at least one coil pair.
+        \item Determine the toroidal mode number $n$ and localize the fluctuation radially using the ECE and PMP diagnostics.
+        \item Repeat the analysis separately for the ECH+NBI and NBI-only phases of shot \#88653, to check whether mode identity and localization survive the loss of ECH heating.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 1 Parameters
+\begin{frame}{Objective 1: Signal Processing Parameters}
+    \textbf{Time-Frequency Analysis Settings (Shot \#88653)}
+    \begin{itemize}
+        \item \textbf{FFT Spectrogram:} Hann window applied, segment length $T = \SI{2.00}{\milli\second}$, achieving a frequency resolution of $\Delta f = \SI{500.0}{\hertz}$.
+        \item \textbf{Wavelet Transform:} Morlet continuous wavelet transform (CWT) evaluated across 150 frequencies (\SI{10}{\kilo\hertz} -- \SI{150}{\kilo\hertz}).
+        \item \textbf{Noise Baseline:} Calibrated between \SI{150}{\milli\second} and \SI{175}{\milli\second}.
+        \item \textbf{Validation:} Dominant modes must exceed a $3\sigma$ threshold above the baseline and demonstrate spatial coherence ($\gamma^2 > 0.7$) across at least one coil pair.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 1 Dominant Mode Identification
+\begin{frame}{Objective 1: Dominant Mode Identification}
+    \textbf{Confirmed Dominant and Coherent Modes (Shot \#88653)}
+    \begin{itemize}
+        \item \textbf{\SI{89.0}{\kilo\hertz} Mode:} Passed dual-criterion test with robust spatial coherence across all pairs (MP1-MP3: 0.855, MP1-MP4: 0.876, MP3-MP4: 0.878).
+        \item \textbf{\SI{95.5}{\kilo\hertz} Mode:} Passed dual-criterion test, confirmed by MP3-MP4 coherence (0.710).
+        \item \textbf{Observation:} Both modes initiate sharply just after \SI{175}{\milli\second}, consistent with a rapid MHD onset during the discharge.
+    \end{itemize}
+\end{frame}
+
+% Slide: Re-evaluating Objective 1 Modes
+\begin{frame}{Objective 1: Justification for a Single Primary Mode}
+    \textbf{Evidence for a Single High-Frequency Instability}
+    \begin{itemize}
+        \item \textbf{Unified poloidal structure:} the \SI{80.0}{\kilo\hertz}--\SI{120.0}{\kilo\hertz} band contains only one dominant poloidal mode ($m = +3$ at \SI{89.84}{\kilo\hertz}).
+        \item \textbf{Frequency sweeping (chirping):} the analysis flags a frequency-sweep interval and isolates a flat-frequency sub-window for further processing. The apparent \SI{95.5}{\kilo\hertz} detection is most likely the spectral footprint of the \SI{89.0}{\kilo\hertz} mode drifting in frequency during the discharge, rather than a separate instability.
+        \item \textbf{Sensitivity to the search boundary:} closely spaced spectral peaks can appear or disappear depending on how the search window is defined, so such detections are not necessarily distinct physical modes.
+        \item On this basis, the \SI{89.0}{\kilo\hertz} signal is taken as the primary mode for the $n = -5$ toroidal fit and radial localization that follow.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 1 Spatial & Radial Localization
+\begin{frame}{Objective 1: Spatial and Radial Localization}
+    \textbf{Structural Profile of the \SI{89.0}{\kilo\hertz} Target Mode}
+    \begin{itemize}
+        \item The best-fit toroidal mode number was identified as $n = -5$ (aliased as $n = -1$) with a minimum Root Mean Square Error (RMSE) of \SI{6.6}{\degree}.
+        \item Radial fluctuation amplitudes peaked near the plasma edge/core boundary on the ECE13FAST channel (\SI{66.5}{\giga\hertz}) reaching a Root Mean Square (RMS) of \SI{0.478}{\volt}.
+        \item Maximum radial coherence was observed deeper within the plasma on the ECE03FAST channel (\SI{61.5}{\giga\hertz}) with $\gamma^2 = 0.187$.
+        \item Edge fluctuation coupling was confirmed dominantly at HAFAST7.5 ($\gamma^2 = 0.2335$, RMS = \SI{1.25e-4}{\volt}), demonstrating core-edge mode linkage.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 1 Spectrogram Image
+\begin{frame}{Objective 1: Spectrogram and Spatial Coherence}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective1_88653.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 1 Toroidal Image
+\begin{frame}{Objective 1: Primary Mode Toroidal Identification}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_primary_mode_toroidal_n_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 1 2D Spatial Structure Image
+\begin{frame}{Objective 1: Primary Mode 2D Spatial Structure}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_mode_spatial_map_2d_88653.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 1 Radial Fluctuation Profile Image
+\begin{frame}{Objective 1: Radial Fluctuation Profile}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_primary_mode_radial_profile_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+% --- Sub-divider: Objective 1 Comparative Analysis ---
+\begin{frame}{Objective 1: Comparative Analysis --- ECH+NBI vs. NBI-only}
+    \textbf{Extending Mode Identification Across Heating Regimes (Shot \#88653)}
+    \begin{itemize}
+        \item ECH is disconnected at $t = \SI{291.300}{\milli\second}$. Two windows are compared: \textbf{ECH+NBI} (\SIrange{259.1}{291.3}{\milli\second}, \SI{32.2}{\milli\second} duration) and \textbf{NBI-only} (\SIrange{291.3}{300.0}{\milli\second}, \SI{8.7}{\milli\second} duration).
+        \item \textit{Caveat 1:} The NBI beams turn off at $\sim\SI{300.5}{\milli\second}$. Any dynamic features analyzed past \SI{300.0}{\milli\second} (e.g., sliding-window traces) straddle this turn-off and extend into the fast-ion slowing-down phase, and are thus not strictly "NBI-only."
+        \item \textit{Caveat 2:} The \SIrange{291.3}{300.0}{\milli\second} window is roughly $3.7\times$ shorter than the ECH phase, so it yields fewer independent segments for statistical estimators — absolute magnitudes should be compared with this in mind.
+        \item The same dual-criterion ($3\sigma$ amplitude + $\gamma^2 > 0.7$) pipeline is re-applied independently to each window.
+    \end{itemize}
+\end{frame}
+
+% Slide: Zoomed spectrogram comparison (text)
+\begin{frame}{Objective 1 Comparative: Continuous vs. Bursty Dynamics}
+    \footnotesize
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \textbf{ECH+NBI (259.1--291.3 ms)}
+            \begin{itemize}
+                \item Primary (70--110 kHz): $\SI{87.60(5.33)}{\kilo\hertz}$, range 74.2--97.7 kHz
+                \item Secondary (30--65 kHz): $\SI{45.47(5.85)}{\kilo\hertz}$, range 30.3--64.5 kHz
+                \item $3\sigma$ occupancy: 100.0\% (both modes)
+                \item Jump rate: 1.06 (primary) / 1.27 (secondary) jumps/ms
+                \item Coexisting branches: secondary only, at 40.5 \& 51.5 kHz
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{NBI-only (291.3--300.0 ms)}
+            \begin{itemize}
+                \item Primary (70--110 kHz): $\SI{86.69(3.02)}{\kilo\hertz}$, range 81.1--95.7 kHz
+                \item Secondary (30--65 kHz): $\SI{40.26(4.27)}{\kilo\hertz}$, range 35.2--50.8 kHz
+                \item $3\sigma$ occupancy: 100.0\% (both modes)
+                \item Jump rate: 1.26 (primary) / 0.46 (secondary) jumps/ms
+                \item Coexisting branches: primary at 86.0 kHz; secondary at 37.3 kHz
+            \end{itemize}
+        \end{column}
+    \end{columns}
+    \vspace{0.3cm}
+    \normalsize
+    \textbf{Classification:} Bursty / multi-branch hopping in both windows -- mode energy is continuously sustained by the NBI fast-ion drive rather than decaying, but the instantaneous frequency hops discretely between 2--3 branches instead of drifting smoothly.
+\end{frame}
+
+% Slide: zoomed spectrogram images side by side
+\begin{frame}{Objective 1 Comparative: Zoomed Spectrograms (3$\sigma$ Dominance)}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \centering ECH+NBI (259.1--291.3 ms)\\
+            \includegraphics[width=\textwidth]{Images/zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering NBI-only (291.3--300.0 ms)\\
+            \includegraphics[width=\textwidth]{Images/zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: Objective 1 overview images side by side
+\begin{frame}{Objective 1 Comparative: Mode Identification Overview}
+    \begin{columns}[T]
+        \begin{column}{0.4\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_analysis_objective1_88653_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_analysis_objective1_88653_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: discrete modes tables
+\begin{frame}{Objective 1 Comparative: Confirmed Discrete Modes}
+    \tiny
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \centering \normalsize\textbf{ECH+NBI}\tiny
+            \begin{tabular}{ccccc}
+                \toprule
+                $f$ (kHz) & Amp. (a.u.) & $\gamma^2_{13}$ & $\gamma^2_{14}$ & $\gamma^2_{34}$ \\
+                \midrule
+                89.0 & \num{5.36e-6} & 0.962 & 0.975 & 0.983 \\
+                49.0 & \num{3.05e-6} & 0.950 & 0.972 & 0.964 \\
+                40.0 & \num{2.89e-6} & 0.962 & 0.952 & 0.953 \\
+                95.0 & \num{1.78e-6} & 0.854 & 0.904 & 0.939 \\
+                \bottomrule
+            \end{tabular}
+            \vspace{0.15cm}
+            \raggedright 4 additional candidates (80.5, 26.0, 76.0, 31.0 kHz) were above the noise floor but failed the coherence criterion.
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \centering \normalsize\textbf{NBI-only}\tiny
+            \begin{tabular}{ccccc}
+                \toprule
+                $f$ (kHz) & Amp. (a.u.) & $\gamma^2_{13}$ & $\gamma^2_{14}$ & $\gamma^2_{34}$ \\
+                \midrule
+                37.5 & \num{8.24e-6} & 0.997 & 0.997 & 0.999 \\
+                87.0 & \num{6.76e-6} & 0.998 & 0.996 & 0.997 \\
+                83.0 & \num{3.90e-6} & 0.996 & 0.996 & 0.998 \\
+                92.0 & \num{3.43e-6} & 0.998 & 0.997 & 0.999 \\
+                42.5 & \num{2.41e-6} & 0.984 & 0.995 & 0.989 \\
+                31.5 & \num{1.85e-6} & 0.990 & 0.997 & 0.989 \\
+                46.5 & \num{1.21e-6} & 0.981 & 0.988 & 0.982 \\
+                51.0 & \num{2.17e-7} & 0.829 & 0.916 & 0.872 \\
+                \bottomrule
+            \end{tabular}
+        \end{column}
+    \end{columns}
+    \vspace{0.2cm}
+    \normalsize
+    \textbf{Observation:} every candidate mode passes the dual criterion once ECH switches off, and coherence pairs are systematically higher ($\gamma^2 \gtrsim 0.98$ vs.\ $\sim 0.85$--$0.98$) -- consistent with a cleaner, more coherent fluctuation spectrum in the NBI-only phase.
+\end{frame}
+
+% Slide: toroidal images
+\begin{frame}{Objective 1 Comparative: Toroidal Mode Identification}
+    \begin{columns}[T]
+        \begin{column}{0.4\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_primary_mode_toroidal_n_shot_88653_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_primary_mode_toroidal_n_shot_88653_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: radial profile images
+\begin{frame}{Objective 1 Comparative: Radial Fluctuation Profile}
+    \begin{columns}[T]
+        \begin{column}{0.4\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_primary_mode_radial_profile_shot_88653_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_primary_mode_radial_profile_shot_88653_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: toroidal fit numeric comparison
+\begin{frame}{Objective 1 Comparative: Toroidal Fit Persists Across Regimes}
+    \begin{itemize}
+        \item \textbf{ECH+NBI} (target \SI{89.0}{\kilo\hertz}): best fit $n = -5$ (aliased $n=-1$), RMSE $= \SI{5.2}{\degree}$; pair coherences $\gamma^2 = 0.962$ (MP1-MP3), $0.974$ (MP1-MP4), $0.982$ (MP3-MP4).
+        \item \textbf{NBI-only} (target \SI{86.0}{\kilo\hertz}): best fit $n = -5$ (aliased $n=-1$), RMSE $= \SI{6.7}{\degree}$; pair coherences $\gamma^2 = 0.997$, $0.997$, $0.998$.
+        \item \textbf{Physical reading:} the primary mode retains the \emph{same} toroidal mode number and helicity across the ECH shut-off, even though its central frequency shifts -- consistent with the same underlying instability persisting under a purely NBI-driven fast-ion population.
+    \end{itemize}
+\end{frame}
+
+% --- Objective 2 ---
+\section{Objective 2: Spatial Structure \& Dynamics}
+
+% --- Divider: Objective 2 ---
+\begin{frame}
+    \vspace{0.3cm}
+    \begin{center}
+        {\usebeamerfont{title}\structure{\Huge Objective 2}}\\[0.3cm]
+        {\Large Spatial Structure \& Dynamics}
+    \end{center}
+    \vspace{0.7cm}
+    \begin{itemize}
+        \item Separate MHD activity into a low-frequency band (\SIrange{40}{80}{\kilo\hertz}) and a high-frequency band (\SIrange{80}{120}{\kilo\hertz}), and characterize the dominant poloidal mode number in each.
+        \item Test candidate physical scaling models (current-driven, Alfvénic, BAE/GAM) against the observed correlation behavior of each band.
+        \item Quantify non-linear self-coupling between the fluctuation carrier and its own envelope.
+        \item Compare spatial structure, envelope dynamics, and macroscopic correlations between the ECH+NBI and NBI-only phases.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 2 Dual-Band Dynamic Structure
+\begin{frame}{Objective 2: Dual-Band Dynamic Structure}
+    \textbf{Separation of MHD Phenomena (Shot \#88653)}
+    \begin{itemize}
+        \item \textbf{Low-Frequency Band (\SI{40.0}{\kilo\hertz} -- \SI{80.0}{\kilo\hertz}):}
+        \begin{itemize}
+            \item Dominant poloidal mode identified as $m = +2$ at \SI{42.97}{\kilo\hertz}.
+            \item The optimal physical model fit is the "Current-induced ($I_p$)" model, yielding a strong correlation of $|r| = 0.8465$.
+            \item Theoretical Alfvén scaling validation returned a negative correlation ($r = -0.439$).
+        \end{itemize}
+        \item \textbf{High-Frequency Band (\SI{80.0}{\kilo\hertz} -- \SI{120.0}{\kilo\hertz}):}
+        \begin{itemize}
+            \item Dominant poloidal mode identified as $m = +3$ at \SI{89.84}{\kilo\hertz}.
+            \item Best-fitting energetic particle/MHD behavior aligns with the "BAE Acoustic / GAM ($\sqrt{T_e}$)" model ($|r| = 0.4789$).
+            \item Alfvén scaling validation remains weak ($r = 0.161$).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 2 LF Band Macroscopic Correlations Image
+\begin{frame}{Objective 2: LF Band Macroscopic Correlations}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective2_88653_40_80kHz.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 2 LF Band Heating Synchronization Image
+\begin{frame}{Objective 2: LF Band Heating Synchronization}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective2_heating_88653_40_80kHz.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 2 LF Band Spatial Modal Structure Image
+\begin{frame}{Objective 2: LF Band Spatial Modal Structure}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective2_structure_88653_40_80kHz.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 2 HF Band Macroscopic Correlations Image
+\begin{frame}{Objective 2: HF Band Macroscopic Correlations}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective2_88653_80_120kHz.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 2 HF Band Heating Synchronization Image
+\begin{frame}{Objective 2: HF Band Heating Synchronization}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective2_heating_88653_80_120kHz.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 2 HF Band Spatial Modal Structure Image
+\begin{frame}{Objective 2: HF Band Spatial Modal Structure}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_analysis_objective2_structure_88653_80_120kHz.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 2 Self-Coupling Coherence Text
+\begin{frame}{Objective 2: Self-Coupling Coherence}
+    \textbf{Non-linear Interaction of the Mode Envelope}
+    \begin{itemize}
+        \item Self-coherence ($\gamma^2$) between the carrier oscillation ($\tilde{B}$) and its mode envelope reveals a distinct coupling band between \SI{0.8}{\kilo\hertz} and \SI{2.5}{\kilo\hertz}.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 2 Self-Coupling Coherence Image
+\begin{frame}{Objective 2: Self-Coupling Visualization}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.85\textheight]{Images/mhd_self_coupling_coherence_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+% --- Sub-divider: Objective 2 Comparative Analysis ---
+\begin{frame}{Objective 2: Comparative Analysis --- ECH+NBI vs. NBI-only}
+    \textbf{Does Spatial Structure Survive the Loss of ECH Heating?}
+    \begin{itemize}
+        \item Same windows as Objective 1: \textbf{ECH+NBI} (\SIrange{259.1}{291.3}{\milli\second}) vs. \textbf{NBI-only} (\SIrange{291.3}{300.0}{\milli\second}).
+        \item Repeats the poloidal mode fit, self-coupling coherence, and adds new macroscopic envelope/correlation diagnostics generated for this update.
+    \end{itemize}
+\end{frame}
+
+% Slide: LF structure comparison images
+\begin{frame}{Objective 2 Comparative: LF Band Spatial Structure (40--80 kHz)}
+    \begin{columns}[T]
+        \begin{column}{0.3\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: HF structure comparison images
+\begin{frame}{Objective 2 Comparative: HF Band Spatial Structure (80--120 kHz)}
+    \begin{columns}[T]
+        \begin{column}{0.3\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.3\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: poloidal mode comparison table
+\begin{frame}{Objective 2 Comparative: Poloidal Mode Number \& Phase Alignment}
+    \small
+    \centering
+    \begin{tabular}{llccccc}
+        \toprule
+        Band & Window & $m$ & $f$ (kHz) & $r_{\text{circ}}$ & Mean Err. (\si{\degree}) & Status \\
+        \midrule
+        LF (40--80 kHz) & ECH+NBI  & $+6$ & 48.8 & 0.216 & 92.3 & Unconfirmed \\
+        LF (40--80 kHz) & NBI-only & $+2$ & 41.0 & 0.632 & 81.1 & Unconfirmed \\
+        HF (80--120 kHz) & ECH+NBI  & $+3$ & 89.8 & 0.882 & 26.7 & \textbf{Confirmed} \\
+        HF (80--120 kHz) & NBI-only & $+3$ & 85.9 & 0.902 & 22.2 & \textbf{Confirmed} \\
+        \bottomrule
+    \end{tabular}
+    \vspace{0.3cm}
+    \normalsize
+    \begin{itemize}
+        \item The high-frequency, primary mode's $m=+3$ structure is confirmed and stable in both regimes.
+        \item The low-frequency, secondary mode's poloidal number is \emph{not} robustly confirmed in either window ($r_{\text{circ}} < 0.7$) and even changes candidate value ($+6 \to +2$) -- this band should be treated as tentative, not as a validated result.
+    \end{itemize}
+\end{frame}
+
+% Slide: mode envelope vs Ip comparison image
+\begin{frame}{Objective 2 Comparative: Mode Envelopes vs. Plasma Current}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.8\textheight]{Images/mhd_mode_envelopes_and_ip_ECH_NBI_comparison.png}
+    \end{figure}
+\end{frame}
+
+% Slide: self coupling comparison images
+\begin{frame}{Objective 2 Comparative: Self-Coupling Coherence}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_self_coupling_coherence_shot_88653_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_self_coupling_coherence_shot_88653_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: self coupling numeric comparison
+\begin{frame}{Objective 2 Comparative: Self-Coupling --- Numeric Summary}
+    \begin{itemize}
+        \item \textbf{ECH+NBI:} 59 independent segments analyzed; 95\% noise floor at $\gamma^2 = 0.050$.
+        \item \textbf{NBI-only:} 13 independent segments analyzed; 95\% noise floor at $\gamma^2 = 0.221$.
+        \item \textbf{Caveat:} the shorter NBI-only window yields far fewer segments, which mechanically raises its noise floor. A higher noise floor does not by itself indicate weaker coupling -- direct comparison of raw $\gamma^2$ values between the two windows should be treated with caution.
+    \end{itemize}
+\end{frame}
+
+% --- New modulation/correlation plots ---
+\begin{frame}{Objective 2: Macroscopic Modulation \& Correlation Diagnostics}
+    \textbf{Envelope, Current, and H$\alpha$ Correlation Analysis}
+    \begin{itemize}
+        \item Complements the self-coupling result above with direct time-domain views of the carrier, its envelope, and macroscopic plasma quantities.
+        \item Includes envelope--$I_p$ evolution, dual-mode hysteresis, dual-mode envelope coherence, a carrier-vs-envelope view, and SNR--H$\alpha$ correlation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Evolution of Mode Envelopes vs. Plasma Current}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.8\textheight]{Images/mhd_mode_envelopes_and_ip_evolution_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Hysteresis Loop: Plasma Current vs. Mode Envelope}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.8\textheight]{Images/mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Dual-Mode Envelope Coherence (Inter-Mode Modulation)}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.8\textheight]{Images/mhd_modulator_dual_mode_coherence_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Carrier ($\tilde{B}$) vs. Envelope}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.8\textheight]{Images/mhd_b_tilde_vs_envelope_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+\begin{frame}{SNR vs. H$\alpha$ Emission Correlation}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.8\textheight]{Images/mhd_snr_halpha_correlation_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+% --- Objective 3 ---
+\section{Objective 3: Non-linear Coupling (Bicoherence)}
+
+% --- Divider: Objective 3 ---
+\begin{frame}
+    \vspace{0.3cm}
+    \begin{center}
+        {\usebeamerfont{title}\structure{\Huge Objective 3}}\\[0.3cm]
+        {\Large Non-linear Coupling (Bicoherence)}
+    \end{center}
+    \vspace{0.7cm}
+    \begin{itemize}
+        \item Detect the mode-active burst window and apply auto-bicoherence analysis to search for three-wave (quadratic) non-linear coupling.
+        \item Apply a strict double-validation criterion -- statistical significance against control/quiescent periods \emph{and} reproducibility/cross-diagnostic corroboration -- before claiming a genuine physical interaction.
+        \item Compare bicoherence structure and triad strength between the ECH+NBI and NBI-only phases, and revisit the physical interpretation of the $-0.5$ bicoherence slope.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 3 Window Detection & Bicoherence
+\begin{frame}{Objective 3: Window Detection \& Bicoherence (Shot \#88653)}
+    \textbf{Mode-Active Window}
+    \begin{itemize}
+        \item \textbf{Burst Window:} Detected between \SI{198.8}{\milli\second} and \SI{311.8}{\milli\second} with a peak stored energy of $W_p \approx \SI{3.250}{\kilo\joule}$.
+        \item \textbf{Sub-window Selection:} A flat-frequency sub-window was identified at \SI{259.1}{\milli\second}--\SI{275.0}{\milli\second} (\SI{15.9}{\milli\second} duration) to satisfy bicoherence minimum sample requirements.
+    \end{itemize}
+    \vspace{0.3cm}
+    \textbf{Nonlinear Coupling Breakdown}
+    \begin{itemize}
+        \item The maximum squared bicoherence peaked at $b^2 = 0.5150$ for the difference mode ($f_1 = \SI{98.6}{\kilo\hertz}$, $f_2 = \SI{-48.8}{\kilo\hertz}$), with the leading triads clustering along the locus $f_2 \approx -0.5 f_1$.
+        \item \textbf{Caveat:} the reported peak components do not fully correspond to real local PSD peaks and remain sensitive to the spectral search boundaries.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 3 Bicoherence interpretation, part 1 -- derivation (per bispectral_analysis_conclusion.md)
+\begin{frame}{Objective 3: Origin of the $-0.5$ Bicoherence Slope}
+    \textbf{From the Resonant Triad Condition to the Observed Locus}
+    \begin{itemize}
+        \item Three-wave coupling requires the resonant matching condition $f_3 = f_1 + f_2$.
+        \item The leading triad clusters along $f_2 \approx -0.5\,f_1$, peaking at $f_1 = \SI{98.6}{\kilo\hertz}$, $f_2 = \SI{-48.8}{\kilo\hertz}$. Substituting into the matching condition:
+    \end{itemize}
+    \[
+        f_3 = f_1 + f_2 = f_1 - 0.5\,f_1 = 0.5\,f_1
+        \quad\Longrightarrow\quad
+        |f_2| = |f_3| = \tfrac{1}{2}f_1
+    \]
+    \begin{itemize}
+        \item This is the algebraic signature of an exact $f \leftrightarrow f/2$ phase lock -- a frequency and its own half-harmonic.
+        \item The geometry alone does not say \emph{why} $f_1$ and $f_1/2$ are locked; that requires a physical mechanism.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 3 Bicoherence interpretation, part 2 -- four candidate mechanisms (table)
+\begin{frame}{Objective 3: Four Candidate Mechanisms for the $f \leftrightarrow f/2$ Lock}
+    \tiny
+    \renewcommand{\arraystretch}{1.1}
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabularx}{\textwidth}{@{}p{1.9cm}XXX@{}}
+        \toprule
+        \textbf{Mechanism} & \textbf{Core idea} & \textbf{Support / precedent} & \textbf{Fit to this locus} \\
+        \midrule
+        Harmonic self-coupling &
+        Chirping mode at $f_0$ produces $2f_0$; read as pump ($f_1$), $f_0$ as $f_2=-0.5f_1$. &
+        Arises \emph{by construction} from one oscillator -- no second wave needed. &
+        Consistent with \SI{89.0}{\kilo\hertz} mode's observed chirping; simplest option. \\
+        \addlinespace
+        Degenerate PDI &
+        Pump at $f_1$ decays into two \emph{identical} daughters, $f_1 \rightarrow f_1/2+f_1/2$. &
+        Non-degenerate AE$\to$GAM/kTAE decay has theory support (Chen \& Zonca, 2016); non-degenerate Alfv\'enic/EP decay bicoherence-confirmed on HL-2A. &
+        \emph{Degenerate} case established mainly in microwave/upper-hybrid plasmas -- different regime; treated as analogy, not direct precedent. \\
+        \addlinespace
+        Period-doubling bifurcation &
+        Limit cycle bifurcates past an amplitude threshold, spontaneously generating $f_1/2$ -- first Feigenbaum step to chaos. &
+        Seen in MHD dynamo sims (Taylor--Green forcing) and double-layer dynamics in lab plasmas. &
+        Phase-locked to $f_1$ by construction, same locus; not yet reported in a fusion-MHD bicoherence context. \\
+        \addlinespace
+        EPM/BAE sidebands (Berk--Breizman) &
+        Explosive saturation of an EP-driven mode splits energy into spectral components as holes/clumps form. &
+        Theoretically native to this NBI fast-ion mode class; already invoked for Objective~1 frequency hopping. &
+        Fits multi-branch sidebands better than a clean exact-half locus -- context, not a headline option here. \\
+        \bottomrule
+    \end{tabularx}
+\end{frame}
+
+% Slide: Obj 3 Bicoherence interpretation, part 2c -- plausibility for this discharge
+\begin{frame}{Objective 3: Plausibility of Each Mechanism for Shot \#88653}
+    \scriptsize
+    \renewcommand{\arraystretch}{1.25}
+    \setlength{\tabcolsep}{4pt}
+    \begin{tabularx}{\textwidth}{@{}p{2.4cm}p{2.3cm}X@{}}
+        \toprule
+        \textbf{Mechanism} & \textbf{Plausibility here} & \textbf{Discharge-specific basis} \\
+        \midrule
+        Harmonic self-coupling &
+        \textcolor{green!50!black}{\textbf{High}} &
+        Requires nothing beyond what is already established: the \SI{89.0}{\kilo\hertz} primary mode is confirmed continuously present (100\% $3\sigma$ occupancy) and actively chirping -- exactly the behavior that trivially generates its own second harmonic. \\
+        \addlinespace
+        Degenerate PDI &
+        \textcolor{orange!80!black}{\textbf{Low / unconfirmed}} &
+        The candidate ``pump'' (\SI{98.6}{\kilo\hertz}) differs from the validated primary mode by $\sim$10\%; no independent second wave matching $f_1/2$ in spatial structure ($n$, $m$) is reported; fails both legs of the double-validation test. \\
+        \addlinespace
+        Period-doubling bifurcation &
+        \textcolor{orange!80!black}{\textbf{Unconfirmed / open}} &
+        Not contradicted by anything measured, but nothing measured supports it either: no threshold-crossing amplitude signature or subharmonic cascade ($f_1/4$, etc.) is reported, and the observed frequency hopping is already attributed to phase-space (hole-clump) kinetics rather than a limit-cycle bifurcation. \\
+        \addlinespace
+        EPM/BAE sidebands (Berk--Breizman) &
+        \textcolor{green!50!black}{\textbf{Active, but for a different feature}} &
+        The underlying hole-clump/avalanche physics is directly confirmed in this discharge (multi-branch hopping, 0.4--1.3/ms jump rates) -- but such sidebands are typically continuum-spaced and chirp-correlated, not locked to an exact 1:2 ratio, so it explains the hopping better than this specific locus. \\
+        \bottomrule
+    \end{tabularx}
+\end{frame}
+
+% Slide: Obj 3 Bicoherence interpretation, part 3 -- verdict
+\begin{frame}{Objective 3: Verdict --- Self-Coupling over Independent PDI}
+    \begin{itemize}
+        \item \textbf{Frequency mismatch:} the candidate \SI{98.6}{\kilo\hertz} ``pump'' differs from the validated \SI{89.0}{\kilo\hertz} primary mode by $\sim$10\%, suggesting sensitivity to the spectral search window rather than a stable physical pump.
+        \item \textbf{Failed double-validation:} the triad lacks cross-diagnostic corroboration and shot-to-shot reproducibility (see ``Double-Validation Summary'').
+        \item \textbf{What is confirmed:} the asymptotic convergence check on the next slides shows this is a real quadratic phase coupling, not a finite-sample artifact -- but that test cannot by itself distinguish between the four candidate mechanisms above.
+        \item \textbf{Most parsimonious explanation:} \textbf{harmonic self-coupling} of a single anharmonic or chirping mode remains favored over independent PDI or a period-doubling bifurcation, since it requires no independent second wave or amplitude-threshold transition and is fully consistent with the \SI{89.0}{\kilo\hertz} mode's observed chirping; EPM/BAE sideband generation is treated as context rather than a competing explanation for this specific exact-half-frequency locus.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 3 Window selection Image
+\begin{frame}{Objective 3: Burst Window Detection}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.75\textheight]{Images/mhd_burst_window_detection_88653.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 3 Bicoherence Visuals Image
+\begin{frame}{Objective 3: Auto-Bicoherence and PSD Analysis}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.7\textheight]{Images/mhd_bicoherence_objective3_88653.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 3 Asymptotic Scaling Text
+\begin{frame}{Objective 3: Asymptotic Noise Convergence}
+    \textbf{Verification of Stability}
+    \begin{itemize}
+        \item Asymptotic convergence analysis ($1/N \rightarrow 0$) validating bicoherence stability against the noise baseline.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 3 Asymptotic Scaling Image
+\begin{frame}{Objective 3: Asymptotic Bias Scaling}
+    \begin{figure}[h!]
+        \centering
+        \includegraphics[height=0.7\textheight]{Images/mhd_asymptotic_bias_scaling_shot_88653.png}
+    \end{figure}
+\end{frame}
+
+% Slide: Obj 3 Energy & Statistics
+\begin{frame}{Objective 3: Statistical Nuance \& Energy Context}
+    \textbf{Burst vs. Quiescent \& Control Comparisons}
+    \begin{itemize}
+        \item \textbf{Energy Transport:} The burst window demonstrated elevated stored energy ($\langle W_p \rangle = \SI{2.07}{\kilo\joule}$) accompanied by a heavily degraded derivative ($\langle dW_p/dt \rangle = \SI{-83.24}{\kilo\joule\per\second}$).
+        \item \textbf{Statistical Inference:} During the burst, 5.42\% of the analysis bins exceeded the strict 95\% statistical threshold of $b^2 > 0.100$.
+        \item \textbf{Comparative Nuance:} The maximum $b^2$ values were comparable in the quiescent (0.3656) and control (0.4585) windows. 
+        \item \textbf{Conclusion:} The burst is not statistically superior to quiescent or control periods, providing no rigorous basis to call this coupling an exclusive H-mode signature.
+    \end{itemize}
+\end{frame}
+
+% Slide: Obj 3 Double Validation
+\begin{frame}{Objective 3: Double-Validation Summary}
+    \textbf{Reproducibility and Cross-Diagnostic Constraints}
+    \begin{itemize}
+        \item \textbf{Shot-to-Shot Reproducibility:} Validation failed for all channels (MP1, MP3, MP4) because the data for validation shot \#88654 could not be located or auto-detected.
+        \item \textbf{Cross-Diagnostic Validation:} A scan of 36 Langmuir probe tips resulted in zero tips exceeding the physical threshold ($b^2 > 0.5$) with a match to a magnetic channel's leading triad.
+        \item \textbf{Final result:} Objective 3 is \emph{not} validated under the strict double criterion, due to simultaneous failures in reproducibility and cross-diagnostic consistency.
+    \end{itemize}
+\end{frame}
+
+% --- Sub-divider: Objective 3 Comparative Analysis ---
+\begin{frame}{Objective 3: Comparative Analysis --- ECH+NBI vs. NBI-only}
+    \textbf{Does Non-linear Coupling Strengthen After ECH Shut-off?}
+    \begin{itemize}
+        \item Same windows as Objectives 1 \& 2: \textbf{ECH+NBI} (\SIrange{259.1}{291.3}{\milli\second}) vs. \textbf{NBI-only} (\SIrange{291.3}{300.0}{\milli\second}).
+        \item Ensemble count fixed at 30 segments in both windows; 95\% significance threshold $b^2 = 0.0999$.
+    \end{itemize}
+\end{frame}
+
+% Slide: bicoherence comparison images
+\begin{frame}{Objective 3 Comparative: Bicoherence Matrices}
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \centering ECH+NBI\\
+            \includegraphics[width=\textwidth]{Images/mhd_bicoherence_objective3_88653_ECH_NBI.png}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering NBI-only\\
+            \includegraphics[width=\textwidth]{Images/mhd_bicoherence_objective3_88653_NBI_only.png}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+% Slide: bicoherence triad table comparison
+\begin{frame}{Objective 3 Comparative: Leading Bicoherence Triads}
+    \small
+    \centering
+    \begin{tabular}{lcc}
+        \toprule
+        Window & Triad $f_1 - f_2 = f_3$ (kHz) & $b^2$ \\
+        \midrule
+        ECH+NBI  & $82.0 - 41.0 = 41.0$   & 0.2937 \\
+        ECH+NBI  & $44.9 - 21.5 = 23.4$   & 0.2660 \\
+        ECH+NBI  & $148.4 - 72.3 = 76.2$  & 0.2381 \\
+        \midrule
+        NBI-only & $101.6 - 50.8 = 50.8$  & \textbf{0.8811} \\
+        NBI-only & $148.4 - 50.8 = 97.7$  & 0.6962 \\
+        NBI-only & $148.4 - 95.7 = 52.7$  & 0.6517 \\
+        \bottomrule
+    \end{tabular}
+    \vspace{0.3cm}
+    \normalsize
+    \begin{itemize}
+        \item Leading NBI-only triads reach $b^2$ up to $\sim$3$\times$ higher than the strongest ECH+NBI triads, suggesting substantially stronger three-wave coupling once ECH is switched off.
+        \item As with Slide "Window Detection \& Bicoherence," statistical significance above the 95\% threshold is a necessary but not sufficient condition for a confirmed physical interaction -- the same double-validation caution applies here.
+    \end{itemize}
+\end{frame}
+
+% --- Comparative Conclusions ---
+\section{Comparative Conclusions}
+
+\begin{frame}{Comparative Conclusions: Frequency Downshift at ECH Shut-off}
+    \begin{itemize}
+        \item \textbf{Primary mode:} drops from $\sim$89.0--93.7 kHz (ECH+NBI) to $\sim$84.5--86.4 kHz (NBI-only), $\Delta f \sim -4.5$ to $-7.3$ kHz.
+        \item \textbf{Secondary mode:} drops from $\sim$47.4--50.8 kHz (ECH+NBI) to $\sim$35.2--40.5 kHz (NBI-only), $\Delta f \sim -10.0$ to $-12.2$ kHz.
+        \item \textbf{Candidate cause 1 -- Thermal electron cooling:} BAE/EPM eigenfrequencies scale with sound speed, $\omega_{\text{BAE}} \sim (c_s/R)\sqrt{7/4 + T_i/T_e}$. Loss of \SI{53.2}{\giga\hertz} ECH power at $t=\SI{291.3}{\milli\second}$ cools $T_e$, lowering $c_s$ and shifting the geodesic acoustic continuum gap downward.
+        \item \textbf{Candidate cause 2 -- Rotation/Doppler shift:} loss of ECH alters the radial electric field $E_r$ and bulk rotation $v_\phi$, changing the Doppler contribution $\omega_{\text{lab}} = \omega_{\text{plasma}} + n\,\omega_{\text{rot}}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Comparative Conclusions: Persistence of Structure \& Dynamics}
+    \begin{itemize}
+        \item \textbf{Continuity vs.\ bursty dynamics:} $3\sigma$ dominance occupancy is 100\% in both windows -- the mode is continuously sustained by the NBI fast-ion drive, not decaying. Both windows instead show quasi-discrete frequency hopping among 2--3 branches (jump rates $\sim$0.4--1.3/ms), a hallmark of non-linear energetic-particle-mode (EPM)/BAE avalanche and hole-clump behavior in fast-ion phase space.
+        \item \textbf{Spatial structure:} the confirmed high-frequency mode retains poloidal number $m = +3$ and toroidal number $n = -5$ (aliased $n=-1$) across both windows -- same helicity before and after ECH shut-off.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Comparative Conclusions: Non-linear Coupling \& Self-Modulation}
+    \begin{itemize}
+        \item Strong bicoherence ($b^2 > 0.60$) connects the secondary mode ($f_2 \sim 40$--50 kHz) and primary mode ($f_1 \sim 85$--90 kHz) via the sum triad $f_3 \sim 125$--140 kHz.
+        \item Self-coupling coherence shows clear low-frequency modulation peaks at $f_{\text{mod}} \sim 1.2$--$2.2$ kHz in both regimes, supporting a real non-linear wave-envelope coupling.
+        \item Taken together with Objective 3's double-validation result, these non-linear signatures are statistically present but \textbf{not yet independently confirmed} as a specific physical mechanism (e.g., PDI) -- Harmonic Self-Coupling remains the most defensible interpretation pending cross-diagnostic corroboration.
+    \end{itemize}
+\end{frame}
+
+\end{document}

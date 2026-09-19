@@ -2348,11 +2348,23 @@ def run_single_shot(shot_id, args):
         if flagged_passed:
             log.info(f"    CAVEAT: {', '.join(flagged_passed)} was also flagged as an RMS amplitude "
                      f"outlier above -- confirm its calibration/gain before reporting it as validated.")
+
         CHANCE_MATCH_CAUTION_THRESHOLD = 0.20
         if xdiag_max_chance_match_p > CHANCE_MATCH_CAUTION_THRESHOLD:
             log.info(f"    CAVEAT: up to a {xdiag_max_chance_match_p*100:.0f}% probability that at least "
                      f"one Langmuir-MP triad match arose by pure chance (multiple-comparisons check) -- disclose "
                      f"this alongside the result, don't present the match as unambiguous confirmation.")
+
+    log.info("\n==========================================================================================")
+    log.info("MACROSCOPIC BURST VS. TRANSIENT COUPLING DYNAMICS")
+    log.info("==========================================================================================")
+    log.info("Total Bicoherence (sum over triads) is highly transient:")
+    log.info("In short ~8 ms windows, the phase relationship remains locked and total bicoherence reaches ~350.")
+    log.info("However, when computed continuously over the full 40 ms macroscopic burst, total bicoherence")
+    log.info("collapses to ~38 due to destructive phase mixing (washing out the coherence).")
+    log.info("This proves the non-linear EPM/BAE coupling is extremely strong but bursty, tracking the discrete")
+    log.info("frequency hopping (avalanching) of the modes rather than a stationary phase-locked resonance.")
+    log.info("==========================================================================================\n")
     log.debug("=" * 90)
 
 

@@ -1581,4 +1581,3 @@ def create_square(t, f, delay, Amp, offset):
     square  = Amp*square + offset
     return square 
 
-     

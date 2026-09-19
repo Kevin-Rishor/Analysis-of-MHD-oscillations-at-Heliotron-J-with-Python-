@@ -538,7 +538,7 @@ def poloidal_phase_structure_analysis(pmp_signals, plab_rad, dt, i0, i1, f_peak_
 
 
 # =============================================================================================
-# "Energetic-Particle Distribution-Function Variations" validation (Zhong et al. approach
+# Core ECE Proxy Loading for BAE Mode Identification
 # =============================================================================================
 
 def load_ece_channels(shot, args, t_ms, channels=None):
@@ -645,308 +645,34 @@ def get_output_suffix(args):
     return ""
 
 
-def zhong_distribution_function_analysis(shot, args, t_ms, envelope, ech_power, density_val,
-                                          density_detected, mask_active_win, decimate_factor, dt_corr,
-                                          chirp_rate_khz_per_ms=None):
-    print("\n--- Energetic-Particle Distribution-Function Response Validation (Zhong et al. approach) [M6] ---")
+def load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor):
+    """
+    Loads and selects the core-proxy ECE signal for BAE acoustic scaling identification.
+    """
+    if getattr(args, "ece_core_channel", None) is not None:
+        ece_signals, _ = load_ece_channels(shot, args, t_ms, channels=[args.ece_core_channel])
+        if args.ece_core_channel in ece_signals:
+            return ece_signals[args.ece_core_channel]
+        return None
 
-    if args.ece_core_channel is not None:
-        ece_signals, missing_ece = load_ece_channels(shot, args, t_ms, channels=[args.ece_core_channel])
-        if not ece_signals:
-            print(f"  ️ Requested core channel {args.ece_core_channel} was specified but its file is")
-            print("     missing for this shot; [M6] validation SKIPPED for this shot.")
-            return None
-        core_ch = args.ece_core_channel
-        core_r = None
-        print(f"  Using explicitly requested ECE channel {core_ch}.")
-    else:
-        ece_signals_raw, missing_ece = load_ece_channels(shot, args, t_ms)
-        if missing_ece:
-            print(f"  ️ Warning: {len(missing_ece)} of {len(args.ece_channels)} requested ECE channels not found "
-                  f"(missing: {missing_ece[:5]}{'...' if len(missing_ece) > 5 else ''}).")
-        if not ece_signals_raw:
-            print("  ️ No ECE channels found for this shot; [M6] validation SKIPPED. main.md's requirement to")
-            print("     compare against energetic-particle distribution-function models remains UNADDRESSED for this shot.")
-            return None
+    ece_signals_raw, _ = load_ece_channels(shot, args, t_ms)
+    if not ece_signals_raw:
+        return None
 
-        ece_signals, saturated_report = filter_saturated_channels(
-            ece_signals_raw,
-            rail_frac_threshold=args.sat_rail_frac_threshold,
-            plateau_run_threshold=args.sat_plateau_run_threshold,
-        )
-        if saturated_report:
-            sat_list = ", ".join(
-                f"{ch} (rail_hi={diag.get('rail_frac_hi', 0):.1%}, rail_lo={diag.get('rail_frac_lo', 0):.1%}, "
-                f"flat_run={diag.get('max_flat_run', 0)}spl)"
-                if "reason" not in diag else f"{ch} ({diag['reason']})"
-                for ch, diag in sorted(saturated_report.items())
-            )
-            print(f"  [SAT-DETECT] Excluded {len(saturated_report)} saturated/railed channel(s) from "
-                  f"consideration: {sat_list}")
-        if not ece_signals:
-            print("  ️ Every candidate ECE channel was flagged saturated for this shot; [M6] validation")
-            print("     SKIPPED. Try --ece-core-channel to force a specific channel, or relax")
-            print("     --sat-rail-frac-threshold / --sat-plateau-run-threshold if this looks like a false positive.")
-            return None
-
-        core_ch, core_r, per_channel_r = select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor)
-        print(f"  [M6-HEURISTIC] Auto-selected ECE channel {core_ch} as core-proxy "
-              f"(r vs. ECH power = {core_r:+.3f}, highest among {len(per_channel_r)} non-saturated channels "
-              f"checked).")
-        print("     This is a HEURISTIC choice, NOT a confirmed core/magnetic-axis measurement. Pass")
-        print("     --ece-core-channel to use a specific channel directly and skip this heuristic.")
-
-    ece_core = ece_signals[core_ch]
-
-    if args.beam_species not in ("H", "D"):
-        raise ValueError("--beam-species must be 'H' or 'D'")
-
-    # --- Optional Te calibration (V -> eV). Not available yet -- see note below when absent. ---
-    te_core_ev = None
-    if args.te_calib_scale_ev_per_v is not None:
-        te_core_ev = args.te_calib_scale_ev_per_v * ece_core + args.te_calib_offset_ev
-        print(f"  Te calibration applied: Te[eV] = {args.te_calib_scale_ev_per_v:g} * V + {args.te_calib_offset_ev:g} "
-              f"(--te-calib-scale-ev-per-v / --te-calib-offset-ev).")
-    else:
-        print("  ECE channel remains UNCALIBRATED (no --te-calib-scale-ev-per-v provided): only the")
-        print("     DIRECTION and RELATIVE TIMING of the response are validated below, matching Zhong et")
-        print("     al.'s own level of rigor (their Fig. 1d also plots raw, uncalibrated ECE intensity).")
-
-    print("  Note: Zhong et al. modulate ECH periodically (many on/off cycles), which is what produces a")
-    print("     clean hysteresis loop in their Fig. 2/3. Your ECH is a single on/off step, so the 'Fig. 2")
-    print("     analogue' scatter below is expected to show a scattered blob near ECH's plateau rather")
-    print("     than a loop -- the lagged cross-correlation numbers are the more meaningful comparison here.")
-
-    envelope_corr = anti_alias_decimate(envelope, decimate_factor)
-    ece_core_corr = anti_alias_decimate(ece_core, decimate_factor)
-    lag_ece_ms, r_ece_peak, lags_ece_curve, corr_ece_curve = lagged_cross_correlation(
-        envelope_corr, ece_core_corr, dt_corr, max_lag_ms=args.m6_max_lag_ms
+    sat_rail = getattr(args, "sat_rail_frac_threshold", 0.02)
+    sat_run = getattr(args, "sat_plateau_run_threshold", 20)
+    ece_signals, _ = filter_saturated_channels(
+        ece_signals_raw,
+        rail_frac_threshold=sat_rail,
+        plateau_run_threshold=sat_run,
     )
-    print(f"  - Envelope vs. ECE-core-proxy: peak |correlation| = {r_ece_peak:+.4f} at lag = {lag_ece_ms:+.2f} ms "
-          f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
-    if abs(lag_ece_ms) >= 0.9 * args.m6_max_lag_ms:
-        print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search")
-        print("       window edge -- the true peak may lie OUTSIDE this window. Re-run with a larger")
-        print("       --m6-max-lag-ms before trusting this number.")
-    print("    (Zhong et al. report ~6.0 ms excitation delay, ~1.5 ms suppression delay for their EPM;")
-    print(f"     compare order of magnitude only -- their mode was 95-103 kHz, yours is filtered to "
-          f"{args.lower:.0f}-{args.upper:.0f} kHz, so this may not be the same mode.)")
-    r_ece_sig, p_ece_std, p_ece_adj, n_ece_sig, N_eff_ece_sig = lagged_pearson_significance(
-        envelope_corr, ece_core_corr, dt_corr, lag_ece_ms
-    )
-    if r_ece_sig is not None:
-        meets_ece = abs(r_ece_sig) > 0.7 and p_ece_adj < 0.05
-        print(f"    -> At that lag: proper Pearson r = {r_ece_sig:.4f} (N={n_ece_sig}, N_eff={N_eff_ece_sig:.1f}), "
-              f"p_std = {format_p_value(p_ece_std)}, p_adj = {format_p_value(p_ece_adj)} "
-              f"-- {'MEETS' if meets_ece else 'does NOT meet'} |r|>0.7 & p<0.05.")
-    else:
-        p_ece_adj = 1.0
+    if not ece_signals:
+        return None
 
-    pressure_proxy = None
-    lag_pressure_ms, r_pressure_peak = None, None
-    lags_pressure_curve, corr_pressure_curve = None, None
-    if density_detected:
-        pressure_proxy = density_val * ece_core
-        pressure_proxy_corr = anti_alias_decimate(pressure_proxy, decimate_factor)
-        lag_pressure_ms, r_pressure_peak, lags_pressure_curve, corr_pressure_curve = lagged_cross_correlation(
-            envelope_corr, pressure_proxy_corr, dt_corr, max_lag_ms=args.m6_max_lag_ms
-        )
-        print(f"  - Envelope vs. (density x ECE-core-proxy) [pressure proxy, Zhong Fig. 3 analogue]: "
-              f"peak |correlation| = {r_pressure_peak:+.4f} at lag = {lag_pressure_ms:+.2f} ms "
-              f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
-        if abs(lag_pressure_ms) >= 0.9 * args.m6_max_lag_ms:
-            print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search")
-            print("       window edge -- the true peak may lie OUTSIDE this window. Re-run with a larger")
-            print("       --m6-max-lag-ms before trusting this number.")
-        r_pressure_sig, p_pressure_std, p_pressure_adj, n_pressure_sig, N_eff_pressure_sig = lagged_pearson_significance(
-            envelope_corr, pressure_proxy_corr, dt_corr, lag_pressure_ms
-        )
-        if r_pressure_sig is not None:
-            meets_pressure = abs(r_pressure_sig) > 0.7 and p_pressure_adj < 0.05
-            print(f"    -> At that lag: proper Pearson r = {r_pressure_sig:.4f} (N={n_pressure_sig}, "
-                  f"N_eff={N_eff_pressure_sig:.1f}), p_std = {format_p_value(p_pressure_std)}, "
-                  f"p_adj = {format_p_value(p_pressure_adj)} -- "
-                  f"{'MEETS' if meets_pressure else 'does NOT meet'} |r|>0.7 & p<0.05.")
-        else:
-            p_pressure_adj = 1.0
-    else:
-        print("  - (density x ECE-core-proxy) pressure-proxy analysis skipped: density ('nave') unavailable for this shot.")
-        r_pressure_sig, p_pressure_adj, N_eff_pressure_sig = None, 1.0, None
-
-    # -------------------------------------------------------------------------------------------
-    # Chirp-rate (d(f_inst)/dt) vs. ECE-core-proxy and vs. the pressure proxy, 
-    # restricted to the mode-active mask.
-    # -------------------------------------------------------------------------------------------
-    lag_chirp_ece_ms, r_chirp_ece_peak = None, None
-    lag_chirp_pressure_ms, r_chirp_pressure_peak = None, None
-    lags_chirp_ece_curve, corr_chirp_ece_curve = None, None
-    lags_chirp_pressure_curve, corr_chirp_pressure_curve = None, None
-    if chirp_rate_khz_per_ms is not None:
-        chirp_active = chirp_rate_khz_per_ms[mask_active_win]
-        chirp_corr = anti_alias_decimate(chirp_active, decimate_factor)
-        ece_core_active_corr = anti_alias_decimate(ece_core[mask_active_win], decimate_factor)
-        if len(chirp_corr) > 4 and np.std(chirp_corr) > 0:
-            lag_chirp_ece_ms, r_chirp_ece_peak, lags_chirp_ece_curve, corr_chirp_ece_curve = lagged_cross_correlation(
-                chirp_corr, ece_core_active_corr, dt_corr, max_lag_ms=args.m6_max_lag_ms
-            )
-            print(f"  - [Frequency-sweep reading] Chirp rate (d(f_inst)/dt) vs. ECE-core-proxy: "
-                  f"peak |correlation| = {r_chirp_ece_peak:+.4f} at lag = {lag_chirp_ece_ms:+.2f} ms "
-                  f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
-            if abs(lag_chirp_ece_ms) >= 0.9 * args.m6_max_lag_ms:
-                print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search "
-                      "window edge; widen --m6-max-lag-ms before trusting this number.")
-            r_chirp_ece_sig, p_chirp_ece_std, p_chirp_ece_adj, n_chirp_ece_sig, N_eff_chirp_ece_sig = lagged_pearson_significance(
-                chirp_corr, ece_core_active_corr, dt_corr, lag_chirp_ece_ms
-            )
-            if r_chirp_ece_sig is not None:
-                meets_chirp_ece = abs(r_chirp_ece_sig) > 0.7 and p_chirp_ece_adj < 0.05
-                print(f"    -> At that lag: proper Pearson r = {r_chirp_ece_sig:.4f} (N={n_chirp_ece_sig}, "
-                      f"N_eff={N_eff_chirp_ece_sig:.1f}), p_adj = {format_p_value(p_chirp_ece_adj)} -- "
-                      f"{'MEETS' if meets_chirp_ece else 'does NOT meet'} |r|>0.7 & p<0.05.")
-                if N_eff_chirp_ece_sig <= 3.05:
-                    print("       ️ N_eff hit the floor (~3): the heavily-smoothed chirp-rate series is so "
-                          "autocorrelated that this test has essentially NO statistical power -- 'does NOT "
-                          "meet' here means 'inconclusive', not 'no relationship'. Do not report this as a "
-                          "null result; a coarser/less-smoothed chirp-rate estimate would be needed to test "
-                          "this properly.")
-            else:
-                p_chirp_ece_adj = 1.0
-            if density_detected and pressure_proxy is not None:
-                pressure_proxy_active_corr = anti_alias_decimate(pressure_proxy[mask_active_win], decimate_factor)
-                lag_chirp_pressure_ms, r_chirp_pressure_peak, lags_chirp_pressure_curve, corr_chirp_pressure_curve = lagged_cross_correlation(
-                    chirp_corr, pressure_proxy_active_corr, dt_corr, max_lag_ms=args.m6_max_lag_ms
-                )
-                print(f"  - [Frequency-sweep reading] Chirp rate vs. (density x ECE-core-proxy) [pressure proxy]: "
-                      f"peak |correlation| = {r_chirp_pressure_peak:+.4f} at lag = {lag_chirp_pressure_ms:+.2f} ms "
-                      f"(search window: +/-{args.m6_max_lag_ms:.0f} ms)")
-                if abs(lag_chirp_pressure_ms) >= 0.9 * args.m6_max_lag_ms:
-                    print(f"    ️ BOUNDARY WARNING: this lag is within 10% of the +/-{args.m6_max_lag_ms:.0f} ms search "
-                          "window edge; widen --m6-max-lag-ms before trusting this number.")
-                r_chirp_pressure_sig, p_chirp_pressure_std, p_chirp_pressure_adj, n_chirp_pressure_sig, N_eff_chirp_pressure_sig = lagged_pearson_significance(
-                    chirp_corr, pressure_proxy_active_corr, dt_corr, lag_chirp_pressure_ms
-                )
-                if r_chirp_pressure_sig is not None:
-                    meets_chirp_pressure = abs(r_chirp_pressure_sig) > 0.7 and p_chirp_pressure_adj < 0.05
-                    print(f"    -> At that lag: proper Pearson r = {r_chirp_pressure_sig:.4f} (N={n_chirp_pressure_sig}, "
-                          f"N_eff={N_eff_chirp_pressure_sig:.1f}), p_adj = {format_p_value(p_chirp_pressure_adj)} -- "
-                          f"{'MEETS' if meets_chirp_pressure else 'does NOT meet'} |r|>0.7 & p<0.05.")
-                    if N_eff_chirp_pressure_sig <= 3.05:
-                        print("       ️ N_eff hit the floor (~3): same caveat as above -- this test has "
-                              "essentially no statistical power, so treat 'does NOT meet' as inconclusive.")
-                else:
-                    p_chirp_pressure_adj = 1.0
-            else:
-                r_chirp_pressure_sig, p_chirp_pressure_adj, N_eff_chirp_pressure_sig = None, 1.0, None
-        else:
-            print("  - [Frequency-sweep reading] Chirp-rate correlation skipped: too few/degenerate samples in the active window.")
-            r_chirp_ece_sig, p_chirp_ece_adj, N_eff_chirp_ece_sig = None, 1.0, None
-            r_chirp_pressure_sig, p_chirp_pressure_adj, N_eff_chirp_pressure_sig = None, 1.0, None
-    else:
-        print("  - [Frequency-sweep reading] Chirp-rate correlation skipped: chirp_rate_khz_per_ms not supplied.")
-        r_chirp_ece_sig, p_chirp_ece_adj, N_eff_chirp_ece_sig = None, 1.0, None
-        r_chirp_pressure_sig, p_chirp_pressure_adj, N_eff_chirp_pressure_sig = None, 1.0, None
-
-    # --- Optional: theoretical electron-drag (slowing-down) timescale, only if Te calibration given ---
-    tau_s_ms = None
-    if te_core_ev is not None and density_detected:
-        mask_scaling_win = mask_active_win
-        te_active_ev = np.clip(te_core_ev[mask_scaling_win], 1.0, None)  # clip to avoid <=0 eV under noise
-        ne_active_cm3 = np.clip(density_val[mask_scaling_win], 0.01, None) * 1e19 * 1e-6  # e19 m^-3 -> cm^-3
-        A_b = 1.0 if args.beam_species == "H" else 2.0
-        Z_b = 1.0
-        ln_lambda = 24.0 - np.log(np.sqrt(ne_active_cm3) / te_active_ev)
-        ln_lambda = np.clip(ln_lambda, 5.0, 25.0)
-        tau_s_s = 6.27e8 * A_b * te_active_ev**1.5 / (Z_b**2 * ne_active_cm3 * ln_lambda)
-        tau_s_ms = float(np.mean(tau_s_s)) * 1000.0
-        print(f"  - [VERIFIED PREFACTOR] Theoretical electron-drag slowing-down time (active window mean): "
-              f"tau_s ~= {tau_s_ms:.2f} ms")
-        print(f"    Measured envelope-vs-ECE-core delay: {lag_ece_ms:+.2f} ms "
-              f"({'same order of magnitude' if 0.1 < abs(lag_ece_ms) / max(tau_s_ms, 1e-9) < 10 else 'DIFFERENT order of magnitude'} "
-              f"as tau_s).")
-    mask = mask_active_win
-    t_plot = t_ms[mask]
-    env_plot = envelope[mask]
-    ech_plot = ech_power[mask]
-
-    fig, axs = plt.subplots(1, 4 if density_detected else 3, figsize=(24 if density_detected else 18, 5))
-
-    axs[0].plot(t_ms, ece_core, color='teal', alpha=0.8, label=f'ECE ch.{core_ch} (core-proxy, raw V)')
-    ax0_twin = axs[0].twinx()
-    ax0_twin.plot(t_ms, envelope, color='red', alpha=0.7, label='Mode Envelope')
-    axs[0].set_xlabel("Time (ms)")
-    axs[0].set_ylabel("ECE-core-proxy (raw V)", color='teal')
-    ax0_twin.set_ylabel("Envelope (V)", color='red')
-    axs[0].set_title(f"Shot {shot}: ECE-core-proxy (ch.{core_ch}) & Mode Envelope")
-    axs[0].grid(True, alpha=0.3)
-
-    sc = axs[1].scatter(ech_plot, env_plot, c=t_plot, cmap='viridis', s=6)
-    axs[1].plot(ech_plot, env_plot, color='gray', alpha=0.15, linewidth=0.5)
-    plt.colorbar(sc, ax=axs[1], label='Time (ms)')
-    axs[1].set_xlabel("ECH Power (raw)")
-    axs[1].set_ylabel("Mode Envelope (V)")
-    axs[1].set_title("Zhong Fig. 2 analogue: Envelope vs. ECH Power\n(time-colored; a loop = delayed/hysteretic response)")
-    axs[1].grid(True, alpha=0.3)
-
-    ax_lag = axs[3] if density_detected else axs[2]
-    ax_lag.plot(lags_ece_curve, corr_ece_curve, color='teal', label='vs. ECE-core-proxy')
-    ax_lag.axvline(lag_ece_ms, color='teal', linestyle=':', alpha=0.7)
-    if lags_pressure_curve is not None:
-        ax_lag.plot(lags_pressure_curve, corr_pressure_curve, color='darkorange', label='vs. pressure proxy')
-        ax_lag.axvline(lag_pressure_ms, color='darkorange', linestyle=':', alpha=0.7)
-    if lags_chirp_ece_curve is not None:
-        ax_lag.plot(lags_chirp_ece_curve, corr_chirp_ece_curve, color='slateblue', linestyle='--',
-                    label='chirp rate vs. ECE-core-proxy')
-        ax_lag.axvline(lag_chirp_ece_ms, color='slateblue', linestyle=':', alpha=0.7)
-    if lags_chirp_pressure_curve is not None:
-        ax_lag.plot(lags_chirp_pressure_curve, corr_chirp_pressure_curve, color='darkgreen', linestyle='--',
-                    label='chirp rate vs. pressure proxy')
-        ax_lag.axvline(lag_chirp_pressure_ms, color='darkgreen', linestyle=':', alpha=0.7)
-    ax_lag.axvspan(args.m6_max_lag_ms * 0.9, args.m6_max_lag_ms, color='red', alpha=0.08)
-    ax_lag.axvspan(-args.m6_max_lag_ms, -args.m6_max_lag_ms * 0.9, color='red', alpha=0.08,
-                   label='boundary zone (peak here = untrustworthy, widen window)')
-    ax_lag.set_xlabel("Lag (ms)")
-    ax_lag.set_ylabel("Normalized cross-correlation")
-    ax_lag.set_title("[BUGFIX] Lag-correlation curves\n(dotted = chosen peak; shaded = boundary risk zone)")
-    ax_lag.legend(loc='best', fontsize=8)
-    ax_lag.grid(True, alpha=0.3)
-
-    if density_detected:
-        pressure_plot = pressure_proxy[mask]
-        sc2 = axs[2].scatter(pressure_plot, env_plot, c=t_plot, cmap='viridis', s=6)
-        axs[2].plot(pressure_plot, env_plot, color='gray', alpha=0.15, linewidth=0.5)
-        plt.colorbar(sc2, ax=axs[2], label='Time (ms)')
-        axs[2].set_xlabel("Density x ECE-core-proxy (pressure proxy, raw units)")
-        axs[2].set_ylabel("Mode Envelope (V)")
-        axs[2].set_title("Zhong Fig. 3 analogue: Envelope vs. Pressure Proxy\n(time-colored; a loop = delayed response)")
-        axs[2].grid(True, alpha=0.3)
-
-    plt.tight_layout()
-    suffix = get_output_suffix(args)
-    output_png = f"mhd_analysis_objective2_zhong_{shot}{suffix}.png"
-    plt.savefig(output_png, dpi=150)
-    plt.close(fig)
-    print_result(f"  Zhong-et-al.-style delay/hysteresis figure saved to: '{output_png}'")
-
-    return {
-        "core_ece_channel": core_ch,
-        "core_ece_channel_r_vs_ech": core_r,
-        "lag_ece_ms": lag_ece_ms,
-        "r_ece_peak": r_ece_peak,
-        "r_ece_sig": r_ece_sig, "p_ece_adj": p_ece_adj, "N_eff_ece_sig": N_eff_ece_sig,
-        "lag_pressure_ms": lag_pressure_ms,
-        "r_pressure_peak": r_pressure_peak,
-        "r_pressure_sig": r_pressure_sig, "p_pressure_adj": p_pressure_adj, "N_eff_pressure_sig": N_eff_pressure_sig,
-        "tau_s_ms": tau_s_ms,
-        "lag_chirp_ece_ms": lag_chirp_ece_ms,
-        "r_chirp_ece_peak": r_chirp_ece_peak,
-        "r_chirp_ece_sig": r_chirp_ece_sig, "p_chirp_ece_adj": p_chirp_ece_adj, "N_eff_chirp_ece_sig": N_eff_chirp_ece_sig,
-        "lag_chirp_pressure_ms": lag_chirp_pressure_ms,
-        "r_chirp_pressure_peak": r_chirp_pressure_peak,
-        "r_chirp_pressure_sig": r_chirp_pressure_sig, "p_chirp_pressure_adj": p_chirp_pressure_adj,
-        "N_eff_chirp_pressure_sig": N_eff_chirp_pressure_sig,
-        "ece_core": ece_core,
-    }
-
+    core_ch, _, _ = select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor)
+    if core_ch is not None and core_ch in ece_signals:
+        return ece_signals[core_ch]
+    return None
 
 
 def load_obj1_reference_window(shot, args, fl_hz, fu_hz):
@@ -1407,7 +1133,7 @@ def process_shot(shot, args):
     n_mode_active = int(np.sum(mask_mode_active))
     if n_mode_active < 200:
         print(f"  ️ Only {n_mode_active} mode-active samples found; instantaneous-frequency-vs-heating "
-              "correlation ([M7]) and the [M6] chirp-rate analysis will be SKIPPED for this shot.")
+              "correlation ([M7]) will be SKIPPED for this shot.")
         active_idx_mode = np.array([], dtype=int)
     else:
         active_idx_mode = np.where(mask_mode_active)[0]
@@ -2272,16 +1998,6 @@ def process_shot(shot, args):
     _print_pair_coherence(carrier_coh_results, "Carrier oscillation")
     _print_pair_coherence(envelope_coh_results, "Envelope")
 
-    # Chirp rate, using the same sg_win-smoothed derivative already 
-    # validated in the Savitzky-Golay sensitivity sweep.
-    chirp_rate_khz_per_ms = dsp.savgol_filter(ifreq_khz, args.smoothing, 2, deriv=1) / (dt * 1000.0)
-
-    # --- [M6] Energetic-particle distribution-function response validation (Zhong et al. approach) ---
-    zhong_results = zhong_distribution_function_analysis(
-        shot, args, t_ms, envelope, ech_power, density_val, density_detected,
-        mask_active_win, decimate_factor, dt_corr, chirp_rate_khz_per_ms
-    )
-
     # =========================================================================================
     # ENERGETIC PARTICLE MODE FREQUENCY SCALING IDENTIFICATION (Objective 2 Core Physics)
     # Compare measured instantaneous frequency against candidate EP mode models:
@@ -2324,8 +2040,8 @@ def process_shot(shot, args):
         # 1. Alfvénic / TAE / GAE (1/sqrt(ne))
         s_alfven = 1.0 / np.sqrt(density_val_clean)
 
-        # 2 & 3. BAE Acoustic and Coupled (using core ECE proxy from Zhong analysis)
-        ece_for_bae = zhong_results.get("ece_core") if zhong_results is not None else None
+        # 2 & 3. BAE Acoustic and Coupled (using core ECE proxy)
+        ece_for_bae = load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor)
         if ece_for_bae is not None:
             ece_baseline_val = np.median(ece_for_bae[t_ms < args.ech_active_start]) if np.any(t_ms < args.ech_active_start) else 0.0
             ece_clean_bae = np.clip(ece_for_bae - ece_baseline_val, 1e-4, None)
@@ -2449,20 +2165,6 @@ def process_shot(shot, args):
             test_labels.append(label)
             test_pvalues.append(p_adj)
             test_rvalues.append(r)
-
-    if zhong_results is not None:
-        if zhong_results.get("r_ece_sig") is not None:
-            _add_test("[M6] Envelope vs ECE-proxy", zhong_results["r_ece_sig"], zhong_results["p_ece_adj"],
-                       zhong_results.get("N_eff_ece_sig"))
-        if zhong_results.get("r_pressure_sig") is not None:
-            _add_test("[M6] Envelope vs pressure proxy", zhong_results["r_pressure_sig"], zhong_results["p_pressure_adj"],
-                       zhong_results.get("N_eff_pressure_sig"))
-        if zhong_results.get("r_chirp_ece_sig") is not None:
-            _add_test("[M6] Chirp rate vs ECE-proxy", zhong_results["r_chirp_ece_sig"], zhong_results["p_chirp_ece_adj"],
-                       zhong_results.get("N_eff_chirp_ece_sig"))
-        if zhong_results.get("r_chirp_pressure_sig") is not None:
-            _add_test("[M6] Chirp rate vs pressure proxy", zhong_results["r_chirp_pressure_sig"], zhong_results["p_chirp_pressure_adj"],
-                       zhong_results.get("N_eff_chirp_pressure_sig"))
 
     n_tests = len(test_pvalues)
     alpha_bonferroni = 0.05 / n_tests
@@ -2981,25 +2683,6 @@ def process_shot(shot, args):
     print_result(f"  - Envelope vs. ECH (full range): r = {r_ech:.3f}; partial (step-controlled): r_partial = {r_partial:.3f}")
     if density_detected:
         print_result(f"  - Alfven scaling validation: r = {r_val_scaling:.3f} ({'FINAL' if (bfield_available and b_is_constant) else 'PRELIMINARY (simplified scaling)' if not bfield_available else 'FINAL'})")
-    if zhong_results is not None:
-        chan_status = "explicit" if args.ece_core_channel is not None else "heuristic"
-        calib_status = "Te-calibrated" if zhong_results.get("tau_s_ms") is not None else "qualitative, uncalibrated"
-        print_result(f"  - Zhong et al. [M6]: core ECE ch.{zhong_results['core_ece_channel']} ({chan_status}), "
-              f"envelope-vs-ECE lag = {zhong_results['lag_ece_ms']:+.1f} ms ({calib_status})")
-        if zhong_results.get("r_ece_sig") is not None:
-            meets_ece_summary = abs(zhong_results["r_ece_sig"]) > 0.7 and zhong_results["p_ece_adj"] < 0.05
-            print_result(f"    -> proper r = {zhong_results['r_ece_sig']:.3f}, p_adj = {format_p_value(zhong_results['p_ece_adj'])} "
-                  f"({'MEETS' if meets_ece_summary else 'does NOT meet'} |r|>0.7 & p<0.05: primary validation criterion)")
-        if zhong_results.get("r_pressure_sig") is not None:
-            meets_pressure_summary = abs(zhong_results["r_pressure_sig"]) > 0.7 and zhong_results["p_pressure_adj"] < 0.05
-            print_result(f"    Envelope-vs-pressure-proxy -> proper r = {zhong_results['r_pressure_sig']:.3f}, "
-                  f"p_adj = {format_p_value(zhong_results['p_pressure_adj'])} "
-                  f"({'MEETS' if meets_pressure_summary else 'does NOT meet'} |r|>0.7 & p<0.05)")
-        if zhong_results.get("lag_chirp_ece_ms") is not None:
-            print_result(f"    Chirp-rate-vs-ECE lag [M6/frequency-sweep reading]: {zhong_results['lag_chirp_ece_ms']:+.1f} ms "
-                  f"(peak |r| = {zhong_results['r_chirp_ece_peak']:+.3f})")
-    else:
-        print_result("  - Zhong et al. [M6]: SKIPPED (no ECE channels found for this shot)")
     if freq_heating_results is not None:
         print_result(f"  - Freq vs. NBI/ECH [M7]: r_NBI = {freq_heating_results['r_ifreq_nbi']:.3f} "
               f"(lag {freq_heating_results['lag_ifreq_nbi_ms']:+.1f} ms), "
@@ -3057,7 +2740,6 @@ def process_shot(shot, args):
         "total_nbi_corr": total_nbi_corr,
         "ech_power_corr": ech_power_corr,
         "dt_corr": dt_corr,
-        "zhong_results": zhong_results,
         "freq_heating_results": freq_heating_results,
         "ep_scaling_results": ep_scaling_results,
         "n_mode_active": n_mode_active,
@@ -3153,32 +2835,9 @@ def cross_discharge_analysis(results_list, args):
     else:
         print("    - Fewer than 3 shots have both NBI active and a valid mode-active window; "
               "discharge-level FREQUENCY scaling correlation not computed.")
-    print("\n(iii) CROSS-DISCHARGE SYNTHESIS of the [M6] Zhong-et-al. primary validation criterion")
-    print("      and the [M4] Alfven velocity-scaling verdict (tally of the per-shot MEETS/does-NOT-meet")
-    print("      results above -- not a new statistical test):")
-    zhong_list = [r.get("zhong_results") for r in results_list]
+    print("\n(iii) CROSS-DISCHARGE SYNTHESIS of the [M4] Alfven velocity-scaling verdict")
+    print("      (tally of the per-shot MEETS/does-NOT-meet results above -- not a new statistical test):")
     n_shots_total = len(results_list)
-
-    def _tally(key_r, key_p, label):
-        n_meets, n_evaluated = 0, 0
-        for zr in zhong_list:
-            if zr is None or zr.get(key_r) is None:
-                continue
-            n_evaluated += 1
-            if abs(zr[key_r]) > 0.7 and zr[key_p] < 0.05:
-                n_meets += 1
-        if n_evaluated == 0:
-            print(f"    - {label}: not evaluated in any shot.")
-        else:
-            print(f"    - {label}: MEETS |r|>0.7 & p<0.05 in {n_meets} of {n_evaluated} evaluated discharge(s) "
-                  f"(out of {n_shots_total} total).")
-
-    _tally("r_ece_sig", "p_ece_adj", "Envelope vs. ECE-core-proxy (Zhong Fig. 2 analogue)")
-    _tally("r_pressure_sig", "p_pressure_adj", "Envelope vs. pressure proxy (Zhong Fig. 3 analogue)")
-    print("      ️ Chirp-rate (frequency-sweep) readings of [M6] are excluded from this tally -- see the")
-    print("      per-shot [METROLOGY] notes: their N_eff hits the statistical-power floor in every shot,")
-    print("      so a MEETS/does-NOT-meet count for them would not be meaningful.")
-
     n_alfven_meets = sum(
         1 for r in results_list
         if r.get("density_detected") and abs(r.get("r_val_scaling", 0)) > 0.7 and r.get("p_val_scaling", 1.0) < 0.05
@@ -3319,9 +2978,8 @@ def main():
                               "phase instead of the true coherent burst (confirmed in initial testing: a quiescent-window "
                               "std threshold flagged ~240ms of the discharge as 'mode-active', ~59% of which were "
                               "below-threshold gaps -- i.e. not a real contiguous burst). Used to restrict "
-                              "instantaneous-frequency-vs-heating correlation ([M7]) and the chirp-rate-vs-distribution-"
-                              "function-proxy analysis ([M6]) to periods where the Hilbert instantaneous frequency is "
-                              "physically meaningful.")
+                              "instantaneous-frequency-vs-heating correlation ([M7]) to periods where the Hilbert "
+                              "instantaneous frequency is physically meaningful.")
     parser.add_argument("--mode-active-max-gap-ms", type=float, default=3.0,
                          help="[EXT][BUGFIX] Max gap (ms) bridged when finding the mode-active BURST: a raw "
                               "envelope > threshold mask is typically speckled across the whole heated phase "
@@ -3331,7 +2989,7 @@ def main():
                               "isolated above-threshold noise elsewhere in the discharge is NOT included.")
     parser.add_argument("--mode-active-min-duration-ms", type=float, default=10.0,
                          help="[EXT][BUGFIX] Minimum duration (ms) for the largest contiguous mode-active run "
-                              "to be accepted; shorter 'bursts' are treated as noise and [M7]/[M6]-chirp are skipped.")
+                              "to be accepted; shorter 'bursts' are treated as noise and [M7] is skipped.")
     parser.add_argument("--flat-slope-smooth-ms", type=float, default=2.0,
                          help="[M9] Moving-average smoothing window (ms) applied to |d(f_inst)/dt| before "
                               "flat-frequency-region detection (def: 2.0). Larger = smoother slope estimate, "
@@ -3437,15 +3095,6 @@ def main():
                               "fluctuation. Lower = stricter.")
     parser.add_argument("--ece-file-pattern", type=str, default="ECE{ch}FAST@{shot}.edf",
                          help="ECE channel filename pattern, '{ch}' and '{shot}' substituted (def: ECE{ch}FAST@{shot}.edf)")
-    parser.add_argument("--beam-species", type=str, choices=["H", "D"], default="H",
-                         help="[RESOLVED] NBI beam ion species for [M6] (def: H, confirmed).")
-    parser.add_argument("--beam-energy-kev", type=float, default=30.0,
-                         help="NBI full-energy-component injection energy in keV for [M6] (def: 30.0, "
-                              "Heliotron J max acceleration voltage; not yet used quantitatively -- see [M6] notes)")
-    parser.add_argument("--m6-max-lag-ms", type=float, default=60.0,
-                         help="[M6][BUGFIX] Search window (+/- ms) for envelope-vs-ECE and "
-                              "envelope-vs-pressure-proxy lagged cross-correlation (def: 60.0). Widen this "
-                              "if the printed BOUNDARY WARNING appears.")
     parser.add_argument("--macro-max-lag-ms", type=float, default=50.0,
                          help="Search window (+/- ms) for Wp (stored energy) and nave (density) lagged "
                               "cross-correlation against mode envelope (def: 50.0).")
@@ -3454,13 +3103,6 @@ def main():
                               "second hill and avoiding early-phase noise (def: 270.0).")
     parser.add_argument("--nave-corr-end", type=float, default=None,
                          help="End time (ms) for nave vs. mode envelope correlation (def: None, until end of trace).")
-    parser.add_argument("--te-calib-scale-ev-per-v", type=float, default=None,
-                         help="[M6] Te calibration slope (eV per Volt) for the core ECE channel, if you obtain "
-                              "one (e.g. from a Thomson-scattering cross-calibration or the diagnostics team's "
-                              "radiometer gain). Not derivable from the raw ECE signal alone -- see chat notes. "
-                              "When provided, enables the theoretical electron-drag slowing-down-time estimate.")
-    parser.add_argument("--te-calib-offset-ev", type=float, default=0.0,
-                         help="[M6] Te calibration offset (eV), used with --te-calib-scale-ev-per-v (def: 0.0).")
     parser.add_argument("--bands", type=str, nargs="+", default=None,
                          help="List of frequency bands in lower:upper format (kHz), e.g. --bands 40:80 80:120. "
                               "Runs the full analysis for each frequency window (40-80 kHz secondary mode, 80-120 kHz primary mode).")
