@@ -247,64 +247,48 @@
 
 % SLIDE 11 -- Obj 3 energy-transfer direction (NEW) (~80s)
 \begin{frame}{Objective 3: Energy Flows One Way -- Coalescence, Not Decay}
-    \begin{figure}[h!]
-        \centering
-        % IMAGE TO ADD: time-trace of the corrected biphase / Im[B_sum] sign
-        % along the -0.5 subharmonic ridge for the valid high-SNR windows.
-        % See chat message for exact plotting spec and suggested filename.
-        \includegraphics[height=0.32\textheight]{Images/mhd_biphase_direction_shot_88653.png}
-    \end{figure}
-    \footnotesize
-    \begin{itemize}
-        \item The \textbf{sign} of $\mathrm{Im}[B_{\text{sum}}]$ sets the
-        energy-transfer direction: $>0$ = \textbf{coalescence} (flows up);
-        $<0$ = decay instability (flows down).
-        \item Correcting for window overlap lowers the effective ensemble
-        count to $N_{\text{eff}}=15$, raising the proper 95\% threshold to
-        $b^2_{95}\approx0.20$ -- double the uncorrected value used elsewhere.
-        \item The $-0.5$ subharmonic ridge (strongest in the NBI-only phase,
-        $b^2=0.88$) clears this stricter threshold by $>4\times$.
-        \item After excluding low-SNR samples, \textbf{all 16} valid high-SNR
-        measurements show $\mathrm{Im}[B_{\text{sum}}]>0$ -- the direction never reverses.
-        These form two episodes: 6 windows at 295.3--297.1\,ms (NBI on), and
-        10 windows at 301.8--304.6\,ms (straddling and following the
-        ${\sim}\SI{300.6}{ms}$ beam turn-off, into the slowing-down phase).
-        Due to 97\% window overlap, this is effectively $\sim 2$ independent samples.
-    \end{itemize}
+    \begin{columns}
+        \begin{column}{0.52\textwidth}
+            \includegraphics[width=\textwidth]{Images/bicoherence_sliding_trace_snr.png}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \footnotesize
+            \begin{itemize}
+                \item The \textbf{sign} of $\mathrm{Im}[B_{\text{sum}}]$ sets the
+                energy-transfer direction: $>0$ = \textbf{coalescence} (flows up);
+                $<0$ = decay instability (flows down).
+                \item The $-0.5$ subharmonic ridge clears the stricter 95\% overlap-corrected threshold ($b^2_{95}\approx0.20$) by $>4\times$.
+                \item After excluding low-SNR samples, \textbf{all 16} valid high-SNR
+                measurements show $\mathrm{Im}[B_{\text{sum}}]>0$ -- the direction never reverses.
+                \item These form two episodes: 6 windows at 295.3--297.1\,ms (NBI on), and
+                10 windows at 301.8--304.6\,ms (starting before the ${\sim}\SI{300.6}{ms}$ beam turn-off, extending into the slowing-down phase).
+                \item Due to 97\% window overlap, this is effectively $\sim 2$ independent samples.
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % SLIDE 12 -- Obj 3 mode identity & burst dynamics (NEW) (~85s)
-\begin{frame}{Objective 3: Which Mode Drives Which? Open, Better Constrained}
-    \begin{figure}[h!]
-        \centering
-        % IMAGE TO ADD: log-log scatter of A_100 vs. A_50 across the 16
-        % high-SNR windows with the power-law fit overlaid (exponent 1.54)
-        % and a reference line at exponent 2 (pure harmonic generation).
-        % See chat message for exact plotting spec and suggested filename.
-        \includegraphics[height=0.3\textheight]{Images/amplitude_scaling_valid16.png}
-    \end{figure}
-    \footnotesize
-    \begin{itemize}
-        \item Upward coalescence fits \textbf{two} readings: (A)
-        $\sim$\SI{50}{kHz} drives, $\sim$\SI{100}{kHz} is a passive harmonic;
-        (B) $\sim$\SI{100}{kHz} is independently driven and
-        $\sim$\SI{50}{kHz} merely feeds it.
-        \item Amplitude scaling: OLS pooled slope is $2.10$ (band-integrated)
-        to $2.26$ (peak PSD) on the 16 valid windows. A low all-window slope
-        ($0.81$) was confirmed to be a noise-floor flattening artifact.
-        \item Block-bootstrap 95\% CI (8\,ms blocks): $[0.94,\;2.37]$. The
-        scaling is consistent with passive harmonic generation ($2.0$), but a
-        linear shared-envelope model ($1.0$) is \textbf{not excluded} given
-        the $\sim 2$ effective independent samples.
-        \item \textbf{Not stationary:} integrated bicoherence over the full
-        burst collapses \emph{below} the noise floor ($\sim$38 vs.\ 64), even
-        though short 8 ms sub-windows show the ridge above -- short,
-        phase-locked \textbf{avalanches}, matching Objective 1's
-        frequency-hopping.
-        \item \textbf{Bottom line:} mode identity stays open; the coupling's
-        real, unidirectional, avalanche-like character is the well-supported
-        result.
-    \end{itemize}
+\begin{frame}{Objective 3: Which Mode Drives Which? Inconclusive}
+    \begin{columns}
+        \begin{column}{0.42\textwidth}
+            \begin{figure}[h!]
+                \centering
+                \includegraphics[width=\textwidth]{Images/amplitude_scaling_valid16.png}
+            \end{figure}
+        \end{column}
+        \begin{column}{0.58\textwidth}
+            \scriptsize
+            \begin{itemize}
+                \item Does the lower mode drive a passive harmonic (slope 2), or are they independently driven/shared envelope (slope 1)?
+                \item \textbf{Pooled scaling:} $2.10$ (band) to $2.26$ (peak PSD) on the 16 valid windows. Block-bootstrap CI is $[0.94,\;2.37]$.
+                \item \textbf{Within-episode:} $1.39$ ($N=6$) and $0.95$ ($N=10$). The pooled $2.10$ value mostly reflects the amplitude drop between episodes ($\sim 2$ effective independent samples).
+                \item \textbf{Band peaks:} Lower band peaks at ${\sim}\SI{40}{kHz}$, upper band at $90{-}\SI{105}{kHz}$. The ratio ranges from $2.21{-}2.57$ ($0/16$ windows fall within 5\% of 2.0).
+                \item \textbf{Bottom line:} Scaling is inconclusive; a strict passive second harmonic is disfavored by the frequency ratio.
+                \item \textbf{Not stationary:} integrated bicoherence over the full burst collapses \emph{below} the noise floor, even though short sub-windows show strong coupling.
+            \end{itemize}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 % SLIDE 13 -- Obj 3 validation status (~80s)
@@ -606,10 +590,10 @@
         \toprule
         \textbf{Mechanism} & \textbf{Plausibility} & \textbf{Why} \\
         \midrule
-        Harmonic self-coupling &
-        \textcolor{green!50!black}{\textbf{High}} &
+        \textbf{Harmonic self-coupling} & 
+        \textcolor{orange!70!black}{\textbf{Plausible / unconfirmed}} &
         A single chirping mode trivially produces its own half-harmonic; no
-        second wave required; consistent with the confirmed, continuously
+        second wave required; consistent with the validated, continuously
         chirping \SI{89.0}{kHz} mode. \\
         \addlinespace
         Degenerate parametric decay (PDI) &
@@ -632,14 +616,12 @@
     \vspace{0.2cm}
     \normalsize
     Note: the amplitude-scaling analysis (main deck, Slide~12) yields
-    OLS slopes $2.10$--$2.26$ across valid windows, consistent with harmonic
-    self-coupling ($A_{100}\propto A_{50}^2$). However, rigorous block-bootstrap
-    intervals show a shared-envelope model (slope $1.0$) is not definitively
-    excluded due to the low effective sample size ($\sim 2$). Both remain
-    compatible with the confirmed unidirectional (upward) energy flow.
+    pooled scaling ($2.10{-}2.26$), but within-episode slopes near $1.0$ and peak
+    frequency ratios (${\sim}2.25$, tracking the independently validated 89-95 kHz mode) 
+    make the mode origin inconclusive. Unidirectional flow is supported, but harmonic generation is not.
 \end{frame}
 
-\begin{frame}{Backup: Why the noise floor flattens the slope}
+\begin{frame}{Backup: All-window fit (slope 0.81) vs. high-SNR windows}
     \begin{figure}
         \centering
         \includegraphics[height=0.6\textheight]{Images/amplitude_scaling_all_vs_valid.png}
@@ -647,8 +629,8 @@
     \vspace{-0.2cm}
     \begin{itemize}
         \item Across all 75 sliding windows, the OLS slope drops to $0.81$.
-        \item Subtracting a quiet-time background PSD removes this flattening, recovering steeper scaling.
-        \item The $0.81$ slope is a numerical artifact of low-SNR intervals clustering at the measurement limit, not physical coupling.
+        \item Minimum band powers during the plasma phase (${\sim}10^{-5}$ squared amplitude) are comparable to quiet pre-plasma intervals, suggesting we are hitting a measurement noise limit.
+        \item The $0.81$ slope likely reflects the scaling of a broadband background plasma turbulence or digitizer noise limit rather than the discrete coherent modes.
     \end{itemize}
 \end{frame}
 
