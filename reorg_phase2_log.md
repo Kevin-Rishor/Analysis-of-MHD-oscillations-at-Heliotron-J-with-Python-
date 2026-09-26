@@ -75,3 +75,126 @@
 - HALTED archiving Images_prev: Images_prev referenced in reorg_phase1_inventory.md
 - HALTED archiving Images_prev: Images_prev referenced in reorg_phase2_log.md
 - HALTED archiving Images_prev: Images_prev referenced in scratch\generate_diff.py
+- Moved Images/mhd_lissajous_independent_windows_shot_88653.png to archive\orphans\mhd_lissajous_independent_windows_shot_88653.png (Lissajous unused in .tex)
+- Moved Images/mhd_lissajous_phasebinned_real_shot_88653.png to archive\orphans\mhd_lissajous_phasebinned_real_shot_88653.png (Lissajous unused in .tex)
+- Moved Images/mhd_lissajous_phasebinned_surrogateA_quietHF_shot_88653.png to archive\orphans\mhd_lissajous_phasebinned_surrogateA_quietHF_shot_88653.png (Lissajous unused in .tex)
+- Moved Images/mhd_lissajous_phasebinned_surrogateB_randHF_shot_88653.png to archive\orphans\mhd_lissajous_phasebinned_surrogateB_randHF_shot_88653.png (Lissajous unused in .tex)
+- Moved Images\zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png to Images\heating_phase_comparison\zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png -> Images/heating_phase_comparison/zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png
+- Moved Images\mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png to Images\heating_phase_comparison\mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png -> Images/heating_phase_comparison/mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png
+- Moved Images\mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png to Images\heating_phase_comparison\mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png -> Images/heating_phase_comparison/mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png
+- Moved Images\mhd_bicoherence_objective3_88653_NBI_only.png to Images\heating_phase_comparison\mhd_bicoherence_objective3_88653_NBI_only.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_bicoherence_objective3_88653_NBI_only.png -> Images/heating_phase_comparison/mhd_bicoherence_objective3_88653_NBI_only.png
+- Moved Images\mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png to Images\heating_phase_comparison\mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png -> Images/heating_phase_comparison/mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png
+- Moved Images\mhd_bicoherence_objective3_88653_ECH_NBI.png to Images\heating_phase_comparison\mhd_bicoherence_objective3_88653_ECH_NBI.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_bicoherence_objective3_88653_ECH_NBI.png -> Images/heating_phase_comparison/mhd_bicoherence_objective3_88653_ECH_NBI.png
+- Moved Images\bicoherence_sliding_trace_snr.png to Images\heating_phase_comparison\bicoherence_sliding_trace_snr.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/bicoherence_sliding_trace_snr.png -> Images/heating_phase_comparison/bicoherence_sliding_trace_snr.png
+- Moved Images\mhd_analysis_objective1_88653_ECH_NBI.png to Images\heating_phase_comparison\mhd_analysis_objective1_88653_ECH_NBI.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective1_88653_ECH_NBI.png -> Images/heating_phase_comparison/mhd_analysis_objective1_88653_ECH_NBI.png
+- Moved Images\zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png to Images\heating_phase_comparison\zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png -> Images/heating_phase_comparison/zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png
+- Moved Images\mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png to Images\heating_phase_comparison\mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png -> Images/heating_phase_comparison/mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png
+- Moved Images\mhd_analysis_objective1_88653_NBI_only.png to Images\heating_phase_comparison\mhd_analysis_objective1_88653_NBI_only.png (Heating phase comparison script output)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective1_88653_NBI_only.png -> Images/heating_phase_comparison/mhd_analysis_objective1_88653_NBI_only.png
+- Moved analysis\mhd_mode_mixing_analysis.py to analysis\obj3_nonlinear_coupling\mhd_mode_mixing_analysis.py (Mode mixing relocation)
+- Moved Images\mhd_mode_mixing_shot_88653_HF_90kHz.png to Images\obj3_nonlinear_coupling\mhd_mode_mixing_shot_88653_HF_90kHz.png (Mode mixing relocation)
+- Updated presentation_claude.tex for mhd_mode_mixing_shot_88653_HF_90kHz.png
+- Moved Images\mhd_mode_mixing_shot_88653_LF_43kHz.png to Images\obj3_nonlinear_coupling\mhd_mode_mixing_shot_88653_LF_43kHz.png (Mode mixing relocation)
+- Updated presentation_claude.tex for mhd_mode_mixing_shot_88653_LF_43kHz.png
+- Deleted stale Images\mhd_bicoherence_objective3_88653.png
+- Moved mhd_bicoherence_objective3_88653.png to Images\obj3_nonlinear_coupling\mhd_bicoherence_objective3_88653.png (Refresh stale figure)
+- Updated presentation_claude.tex for mhd_bicoherence_objective3_88653.png
+- Deleted stale Images\mhd_burst_window_detection_88653.png
+- Moved mhd_burst_window_detection_88653.png to Images\obj3_nonlinear_coupling\mhd_burst_window_detection_88653.png (Refresh stale figure)
+- Updated presentation_claude.tex for mhd_burst_window_detection_88653.png
+- Deleted redundant root copy: heating_vs_mirnov (Shot_88653).png
+- Moved Images\heating_vs_mirnov (Shot_88653).png to Images\obj2_dynamics_and_structure\heating_vs_mirnov (Shot_88653).png (Image plan execution)
+- Updated presentation_claude.tex: Images/heating_vs_mirnov (Shot_88653).png -> Images/obj2_dynamics_and_structure//heating_vs_mirnov (Shot_88653).png
+- Deleted redundant root copy: mhd_analysis_objective1_88653.png
+- Moved Images\mhd_analysis_objective1_88653.png to Images\obj1_mode_identification\mhd_analysis_objective1_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective1_88653.png -> Images/obj1_mode_identification//mhd_analysis_objective1_88653.png
+- Deleted redundant root copy: mhd_analysis_objective2_88653_40_80kHz.png
+- Moved Images\mhd_analysis_objective2_88653_40_80kHz.png to Images\obj2_dynamics_and_structure\mhd_analysis_objective2_88653_40_80kHz.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_88653_40_80kHz.png -> Images/obj2_dynamics_and_structure//mhd_analysis_objective2_88653_40_80kHz.png
+- Deleted redundant root copy: mhd_analysis_objective2_88653_80_120kHz.png
+- Moved Images\mhd_analysis_objective2_88653_80_120kHz.png to Images\obj2_dynamics_and_structure\mhd_analysis_objective2_88653_80_120kHz.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_88653_80_120kHz.png -> Images/obj2_dynamics_and_structure//mhd_analysis_objective2_88653_80_120kHz.png
+- Deleted redundant root copy: mhd_analysis_objective2_heating_88653_40_80kHz.png
+- Moved Images\mhd_analysis_objective2_heating_88653_40_80kHz.png to Images\obj2_dynamics_and_structure\mhd_analysis_objective2_heating_88653_40_80kHz.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_heating_88653_40_80kHz.png -> Images/obj2_dynamics_and_structure//mhd_analysis_objective2_heating_88653_40_80kHz.png
+- Deleted redundant root copy: mhd_analysis_objective2_heating_88653_80_120kHz.png
+- Moved Images\mhd_analysis_objective2_heating_88653_80_120kHz.png to Images\obj2_dynamics_and_structure\mhd_analysis_objective2_heating_88653_80_120kHz.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_heating_88653_80_120kHz.png -> Images/obj2_dynamics_and_structure//mhd_analysis_objective2_heating_88653_80_120kHz.png
+- Deleted redundant root copy: mhd_analysis_objective2_structure_88653_40_80kHz.png
+- Moved Images\mhd_analysis_objective2_structure_88653_40_80kHz.png to Images\obj2_dynamics_and_structure\mhd_analysis_objective2_structure_88653_40_80kHz.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_structure_88653_40_80kHz.png -> Images/obj2_dynamics_and_structure//mhd_analysis_objective2_structure_88653_40_80kHz.png
+- Deleted redundant root copy: mhd_analysis_objective2_structure_88653_80_120kHz.png
+- Moved Images\mhd_analysis_objective2_structure_88653_80_120kHz.png to Images\obj2_dynamics_and_structure\mhd_analysis_objective2_structure_88653_80_120kHz.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_analysis_objective2_structure_88653_80_120kHz.png -> Images/obj2_dynamics_and_structure//mhd_analysis_objective2_structure_88653_80_120kHz.png
+- Deleted redundant root copy: mhd_asymptotic_bias_scaling_shot_88653.png
+- Moved Images\mhd_asymptotic_bias_scaling_shot_88653.png to Images\obj3_nonlinear_coupling\mhd_asymptotic_bias_scaling_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_asymptotic_bias_scaling_shot_88653.png -> Images/obj3_nonlinear_coupling//mhd_asymptotic_bias_scaling_shot_88653.png
+- Deleted redundant root copy: mhd_mode_spatial_map_2d_88653.png
+- Moved Images\mhd_mode_spatial_map_2d_88653.png to Images\obj2_dynamics_and_structure\mhd_mode_spatial_map_2d_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_mode_spatial_map_2d_88653.png -> Images/obj2_dynamics_and_structure//mhd_mode_spatial_map_2d_88653.png
+- Deleted redundant root copy: mhd_primary_mode_radial_profile_shot_88653.png
+- Moved Images\mhd_primary_mode_radial_profile_shot_88653.png to Images\obj1_mode_identification\mhd_primary_mode_radial_profile_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_primary_mode_radial_profile_shot_88653.png -> Images/obj1_mode_identification//mhd_primary_mode_radial_profile_shot_88653.png
+- Deleted redundant root copy: mhd_primary_mode_toroidal_n_shot_88653.png
+- Moved Images\mhd_primary_mode_toroidal_n_shot_88653.png to Images\obj1_mode_identification\mhd_primary_mode_toroidal_n_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_primary_mode_toroidal_n_shot_88653.png -> Images/obj1_mode_identification//mhd_primary_mode_toroidal_n_shot_88653.png
+- Moved Images\mhd_b_tilde_vs_envelope_shot_88653.png to Images\obj2_dynamics_and_structure\mhd_b_tilde_vs_envelope_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_b_tilde_vs_envelope_shot_88653.png -> Images/obj2_dynamics_and_structure//mhd_b_tilde_vs_envelope_shot_88653.png
+- Moved Images\mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png to Images\obj2_dynamics_and_structure\mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png -> Images/obj2_dynamics_and_structure//mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png
+- Moved Images\mhd_mode_envelopes_and_ip_evolution_shot_88653.png to Images\obj2_dynamics_and_structure\mhd_mode_envelopes_and_ip_evolution_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_mode_envelopes_and_ip_evolution_shot_88653.png -> Images/obj2_dynamics_and_structure//mhd_mode_envelopes_and_ip_evolution_shot_88653.png
+- Moved Images\mhd_modulator_dual_mode_coherence_shot_88653.png to Images\obj2_dynamics_and_structure\mhd_modulator_dual_mode_coherence_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_modulator_dual_mode_coherence_shot_88653.png -> Images/obj2_dynamics_and_structure//mhd_modulator_dual_mode_coherence_shot_88653.png
+- Moved Images\mhd_self_coupling_coherence_shot_88653.png to Images\obj2_dynamics_and_structure\mhd_self_coupling_coherence_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_self_coupling_coherence_shot_88653.png -> Images/obj2_dynamics_and_structure//mhd_self_coupling_coherence_shot_88653.png
+- Moved Images\mhd_snr_halpha_correlation_shot_88653.png to Images\obj2_dynamics_and_structure\mhd_snr_halpha_correlation_shot_88653.png (Image plan execution)
+- Updated presentation_claude.tex: Images/mhd_snr_halpha_correlation_shot_88653.png -> Images/obj2_dynamics_and_structure//mhd_snr_halpha_correlation_shot_88653.png
+- Moved data/hj88653/NBIS10I@88653.edf to archive\orphans\NBIS10I@88653.edf (Orphan execution)
+- Moved data/hj88653/NBIS3I@88653.edf to archive\orphans\NBIS3I@88653.edf (Orphan execution)
+- Moved data/hj88653/NBIS4I@88653.edf to archive\orphans\NBIS4I@88653.edf (Orphan execution)
+- Moved data/hj88653/NBIS9I@88653.edf to archive\orphans\NBIS9I@88653.edf (Orphan execution)
+- Moved data/hj88653/NIRMON@88653.edf to archive\orphans\NIRMON@88653.edf (Orphan execution)
+- Moved data/hj88654/nave@88654.edf to archive\orphans\nave@88654.edf (Orphan execution)
+- Moved data/hj88654/NBIS10I@88654.edf to archive\orphans\NBIS10I@88654.edf (Orphan execution)
+- Moved data/hj88654/NBIS3I@88654.edf to archive\orphans\NBIS3I@88654.edf (Orphan execution)
+- Moved data/hj88654/NBIS4I@88654.edf to archive\orphans\NBIS4I@88654.edf (Orphan execution)
+- Moved data/hj88654/NBIS9I@88654.edf to archive\orphans\NBIS9I@88654.edf (Orphan execution)
+- Moved data/hj88654/NIRMON@88654.edf to archive\orphans\NIRMON@88654.edf (Orphan execution)
+- Moved docs/Untitled-2.py to archive\orphans\Untitled-2.py (Orphan execution)
+- Moved jpack/affine.py to archive\orphans\affine.py (Orphan execution)
+- Moved NBI vs NBI and ECH/amplitude_scaling_test.png to archive\orphans\amplitude_scaling_test.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_mode_envelopes_and_ip_ECH_NBI_comparison.png to archive\orphans\mhd_mode_envelopes_and_ip_ECH_NBI_comparison.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_primary_mode_radial_profile_shot_88653_ECH_NBI.png to archive\orphans\mhd_primary_mode_radial_profile_shot_88653_ECH_NBI.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_primary_mode_radial_profile_shot_88653_NBI_only.png to archive\orphans\mhd_primary_mode_radial_profile_shot_88653_NBI_only.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_primary_mode_toroidal_n_shot_88653_ECH_NBI.png to archive\orphans\mhd_primary_mode_toroidal_n_shot_88653_ECH_NBI.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_primary_mode_toroidal_n_shot_88653_NBI_only.png to archive\orphans\mhd_primary_mode_toroidal_n_shot_88653_NBI_only.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_self_coupling_coherence_shot_88653_ECH_NBI.png to archive\orphans\mhd_self_coupling_coherence_shot_88653_ECH_NBI.png (Orphan execution)
+- Moved NBI vs NBI and ECH/mhd_self_coupling_coherence_shot_88653_NBI_only.png to archive\orphans\mhd_self_coupling_coherence_shot_88653_NBI_only.png (Orphan execution)
+- Moved NBI vs NBI and ECH/run_comparison.py to archive\orphans\run_comparison.py (Orphan execution)
+- Moved NBI vs NBI and ECH/steady_state_bin_psds.png to archive\orphans\steady_state_bin_psds.png (Orphan execution)
+- Moved NBI vs NBI and ECH/steady_state_psds.png to archive\orphans\steady_state_psds.png (Orphan execution)
+- Moved NBI vs NBI and ECH/transient_control_test.png to archive\orphans\transient_control_test.png (Orphan execution)
+- Moved NBI vs NBI and ECH/transitional_slowing_down.png to archive\orphans\transitional_slowing_down.png (Orphan execution)
+- HALTED scratch: scratch referenced in execute_part_b.py
+- HALTED Images_prev: Images_prev referenced in execute_part_b.py
+- Moved do_part_a.py to docs\audit_history\do_part_a.py (Reorg tooling sweep)
+- Moved do_part_b1.py to docs\audit_history\do_part_b1.py (Reorg tooling sweep)
+- Moved do_part_b3.py to docs\audit_history\do_part_b3.py (Reorg tooling sweep)
+- Moved execute_part_b.py to docs\audit_history\execute_part_b.py (Reorg tooling sweep)
+- Moved scratch_b4.py to docs\audit_history\scratch_b4.py (Reorg tooling sweep)
+- Moved scratch_b4_dynamic.py to docs\audit_history\scratch_b4_dynamic.py (Reorg tooling sweep)
+- Moved scratch_b4_extra.py to docs\audit_history\scratch_b4_extra.py (Reorg tooling sweep)
+- Moved scratch_b5.py to docs\audit_history\scratch_b5.py (Reorg tooling sweep)
+- Moved scratch_diff.py to docs\audit_history\scratch_diff.py (Reorg tooling sweep)
+- Moved scratch\do_part_a.py to docs\audit_history\do_part_a.py (Reorg tooling sweep)
