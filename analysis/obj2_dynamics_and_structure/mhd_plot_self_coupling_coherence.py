@@ -98,14 +98,14 @@ def generate_self_coupling_plot(shot=88653, out_dir=None):
 
     ax1.scatter([1.22], [0.182], color="tab:blue", s=50, zorder=5, edgecolors="white", lw=1.0)
     ax1.annotate(
-        "1.22 kHz (MP1, MP4)", xy=(1.22, 0.182), xytext=(1.22, 0.235),
+        "1.22 kHz (MP1, MP3, MP4)", xy=(1.22, 0.182), xytext=(1.22, 0.235),
         ha="center", fontsize=8.5, fontweight="bold", color="tab:blue",
         arrowprops=dict(arrowstyle="->", color="tab:blue", lw=1.2)
     )
 
     ax1.scatter([2.20], [0.176], color="tab:purple", s=50, zorder=5, edgecolors="white", lw=1.0)
     ax1.annotate(
-        "2.20 kHz (MP3)", xy=(2.20, 0.176), xytext=(2.20, 0.225),
+        "2.20 kHz (MP3, MP4)", xy=(2.20, 0.176), xytext=(2.20, 0.225),
         ha="center", fontsize=8.5, fontweight="bold", color="tab:purple",
         arrowprops=dict(arrowstyle="->", color="tab:purple", lw=1.2)
     )
@@ -141,7 +141,7 @@ def generate_self_coupling_plot(shot=88653, out_dir=None):
 
     plt.tight_layout()
     out_png = out_dir / f"mhd_self_coupling_coherence_shot_{shot}.png"
-    plt.savefig(out_png, dpi=200)
+    plt.savefig(out_png, dpi=300, bbox_inches='tight')
     plt.close(fig)
     print(f"Figure saved to: '{out_png}'")
     return str(out_png)

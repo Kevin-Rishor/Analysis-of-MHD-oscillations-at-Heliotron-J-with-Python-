@@ -112,6 +112,7 @@ def analyze_b_tilde_vs_envelope(shot=88653, out_dir=None):
 
     ax_spec.set_xlim(0.0, 8.0)
     ax_spec.set_yscale("log")
+    ax_spec.set_ylim(bottom=1e-9, top=4e-6)
     ax_spec.set_xlabel("Modulation Frequency (kHz)", fontsize=10)
     ax_spec.set_ylabel(r"PSD $(\mathrm{V}^2/\mathrm{Hz})$", fontsize=10)
     ax_spec.set_title(r"(b) Envelope Modulation Spectrum (Candidate $f_2$)", fontsize=11, fontweight="bold", pad=8)

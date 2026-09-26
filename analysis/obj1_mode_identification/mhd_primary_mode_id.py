@@ -283,8 +283,8 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     fig_rad.suptitle(f"Primary Mode Radial Fluctuation & Localization Profile - Shot {shot}\n(f ~ {mode_freq:.1f} kHz, Window {t_start:.1f}-{t_end:.1f} ms)", fontsize=13, fontweight="bold")
 
     ece_ghz = [d["freq_ghz"] for d in ece_results]
-    ece_rms = [d["fluc_rms"] for d in ece_results]
-    ece_gam = [d["gamma2"] for d in ece_results]
+    ece_rms = [d["fluc_rms"] if d["fluc_rms"] > 0.01 else np.nan for d in ece_results]
+    ece_gam = [d["gamma2"] if d["fluc_rms"] > 0.01 else np.nan for d in ece_results]
     ece_chs = [d["channel"] for d in ece_results]
 
     axs_rad[0].plot(ece_ghz, ece_rms, marker="o", color="crimson", linewidth=2.0, markersize=7, label=r"RMS Fluctuation $\tilde{T}_e$ (V)")
@@ -303,7 +303,7 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     axs_rad[1].set_ylabel(r"Cross-Coherence $\gamma^2$")
     axs_rad[1].set_title("Radial Coherence with Mirnov Probe MP1", fontsize=10)
     axs_rad[1].grid(True, alpha=0.3)
-    axs_rad[1].legend(loc="upper right", fontsize=8.5)
+    axs_rad[1].legend(loc="lower right", fontsize=8.5)
 
     ha_names = [d["name"] for d in ha_results]
     ha_cohs = [d["gamma2"] for d in ha_results]

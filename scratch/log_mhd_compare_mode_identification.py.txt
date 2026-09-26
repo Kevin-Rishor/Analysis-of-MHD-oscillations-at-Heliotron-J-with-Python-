@@ -1,0 +1,7 @@
+--- Mode Identification Overview Comparison (Shot 88653) ---
+  Processing ECH + NBI Phase (259.1 - 291.3 ms)...
+    Saved JSON: discrete_modes_ECH_NBI.json
+    Saved figure: mhd_analysis_objective1_88653_ECH_NBI.png
+  Processing Just NBI Phase (291.3 - 300.0 ms)...
+    Saved JSON: discrete_modes_NBI_only.json
+    Saved figure: mhd_analysis_objective1_88653_NBI_only.png

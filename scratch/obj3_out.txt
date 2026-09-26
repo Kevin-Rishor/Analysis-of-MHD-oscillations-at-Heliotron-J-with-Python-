@@ -1,0 +1,168 @@
+(Full diagnostic detail for this run is being written to: mhd_obj3_88653.log)
+--- Burst/Quiescent/Control windows: AUTO-DETECTING from data\hj88653\Wp@88653.edf (k_on=3.0, k_off=1.5, min_duration=10 ms) ---
+   Baseline W_p (first 50 ms): mean=-0.018, std=0.098
+   Onset threshold (k_on=3.0) = 0.275 | End threshold (k_off=1.5) = 0.128
+Detected burst window: 198.8-311.8 ms (peak W_p in window ≈ 3.250)
+--- [M9] Searching for the mode-active (flat-frequency) sub-window within the 198.8-311.8 ms burst, using MP1@88653.edf ---
+  [M9] Bandpass-filtering MP1@88653.edf (5.0-150.0 kHz, Bessel order 4, sg_win=525) and extracting the Hilbert instantaneous frequency for flat-sub-window detection...
+  [M9][BICOH-FLOOR] Bicoherence needs >= 15872 samples (nfft=1024, nensemble=30, noverlap_frac=0.5) = 15.9 ms at this probe's sample rate; effective [M9] minimum duration = max(5.0, 15.9) = 15.9 ms.
+  [M9] Flat-frequency scan: flattest 8.0 ms patch in the 113.1 ms search domain is at 216.7-224.7 ms (mean |d(f_inst)/dt| = 1.725 kHz/ms).
+  [M9] Flat-frequency sub-window after growth: 198.8-230.5 ms (31790 samples, 31.8 ms, mean |slope| = 2.587 kHz/ms, grown from an 8.0 ms core within 50% tolerance) (grew all the way to the search domain's own edge).
+[M9] Mode-active (flat-frequency) sub-window within the detected 198.8-311.8 ms burst: 198.8-230.5 ms (31.8 ms) -- this is the window used below for the bicoherence calculations and figure (NOT the raw W_p burst window above).
+   Detected quiescent window: 152.8-177.8 ms (nearest flat, sub-threshold segment found before burst onset; mean=-0.045, std=0.030)
+   Detected control window: 316.8-341.8 ms (nearest flat, sub-threshold segment found after burst end; mean=-0.055, std=0.016)
+   These are HEURISTIC threshold-crossing detections on W_p only (no D-alpha/H-alpha cross-check). Visually verify all three windows against the W_p trace (and any edge-turbulence diagnostic you have) before treating them as final -- override any of them individually with --burst-start/--burst-end, --quiescent-start/--quiescent-end, --control-start/--control-end if they look wrong.
+   🖼  Diagnostic plot saved to: 'mhd_burst_window_detection_88653.png' -- open this to VISUALLY confirm the auto-detected window(s) against the actual W_p trace before trusting them.
+--- Searching for diagnostic channels with pattern: data/hj88653/MP[0-9]*@88653.edf ---
+Channels found (3): ['MP1', 'MP3', 'MP4']
+(Verify that all of them actually correspond to Mirnov coils before interpreting the results.)
+Analysis window (burst) [M9 flat sub-window]: 199-231 ms (use --full-discharge to revert to full-shot behavior).
+Rigorous 95% statistical threshold (N_ensemble=30): b²_95 = 0.100 (vs. physical threshold = 0.5)
+NOTE (multiple-comparisons context): under the null hypothesis of total
+     independence, we would expect by pure chance that ~5.0% of the bins exceed b²_95.
+     The '>Stat.95%' percentages reported below should be compared against that
+     baseline of 5.0%, not interpreted in absolute terms.
+
+Processing 3 channels simultaneously for bicoherence (nensemble=30)...
+Channel MP1: fs = 1.000 MHz, nfft = 1024, N_window_samples = 31790 -> Spectral resolution df = 0.977 kHz
+Channel MP1          (Sum ) -> Max b² = 0.4130 at f1=148.4 + f2=115.2 kHz | 272/62750 (0.43%) > physical threshold (0.5) | 32043/62750 (51.06%) > 95% statistical threshold (0.100)
+Channel MP1          (Diff) -> Max b² = 0.4294 at f1=99.6 - f2=49.8 kHz | 318/125250 (0.25%) > physical threshold (0.5) | 43817/125250 (34.98%) > 95% statistical threshold (0.100)  <- dominant/reported type
+      [Domain-size caveat] Sum domain = 62750 bins vs. Diff domain = 125250 bins (ratio 2.00x). Percentages above are each self-normalized; do NOT directly compare a Diff-domain percentage against a Sum-domain percentage from another channel without confirming both domains use an equivalent non-redundant (deduplicated) convention.
+Channel MP3: fs = 1.000 MHz, nfft = 1024, N_window_samples = 31790 -> Spectral resolution df = 0.977 kHz
+Channel MP3          (Sum ) -> Max b² = 0.2722 at f1=91.8 + f2=22.5 kHz | 0/62750 (0.00%) > physical threshold (0.5) | 3165/62750 (5.04%) > 95% statistical threshold (0.100)
+Channel MP3          (Diff) -> Max b² = 0.3071 at f1=52.7 - f2=27.3 kHz | 0/125250 (0.00%) > physical threshold (0.5) | 6230/125250 (4.97%) > 95% statistical threshold (0.100)  <- dominant/reported type
+      [Domain-size caveat] Sum domain = 62750 bins vs. Diff domain = 125250 bins (ratio 2.00x). Percentages above are each self-normalized; do NOT directly compare a Diff-domain percentage against a Sum-domain percentage from another channel without confirming both domains use an equivalent non-redundant (deduplicated) convention.
+Channel MP4: fs = 1.000 MHz, nfft = 1024, N_window_samples = 31790 -> Spectral resolution df = 0.977 kHz
+Channel MP4          (Sum ) -> Max b² = 0.2895 at f1=80.1 + f2=8.8 kHz | 0/62750 (0.00%) > physical threshold (0.5) | 3427/62750 (5.46%) > 95% statistical threshold (0.100)
+Channel MP4          (Diff) -> Max b² = 0.3592 at f1=32.2 - f2=16.6 kHz | 0/125250 (0.00%) > physical threshold (0.5) | 6961/125250 (5.56%) > 95% statistical threshold (0.100)  <- dominant/reported type
+      [Domain-size caveat] Sum domain = 62750 bins vs. Diff domain = 125250 bins (ratio 2.00x). Percentages above are each self-normalized; do NOT directly compare a Diff-domain percentage against a Sum-domain percentage from another channel without confirming both domains use an equivalent non-redundant (deduplicated) convention.
+   * MP1: RMS = 0.0436 V
+   * MP3: RMS = 0.05843 V
+   * MP4: RMS = 0.06648 V
+
+==============================================================================================================
+MULTICHANNEL NONLINEAR COUPLING RANKING (f1 ± f2 = f3)
+   Window analyzed: BURST (199-231 ms)
+   (Leading peak search restricted to f1 < 150.0 kHz and f2 < 150.0 kHz)
+==============================================================================================================
+Rank    Channel     Mode    Max b²      f1(kHz)   f2(kHz)   f3(kHz)     >Phys.(%)   >Stat.95%(%)  
+--------------------------------------------------------------------------------------------------------------
+1       MP1         Diff    0.4294      99.6      49.8      49.8        0.25        34.98         
+        └─ Other local peaks: #2: b²=0.304 @ 144.5-41.0=103.5kHz, #3: b²=0.294 @ 138.7-125.0=13.7kHz, #4: b²=0.293 @ 144.5-103.5=41.0kHz, #5: b²=0.253 @ 68.4-27.3=41.0kHz, #6: b²=0.244 @ 54.7-23.4=31.3kHz, #7: b²=0.243 @ 58.6-7.8=50.8kHz, #8: b²=0.242 @ 43.9-11.7=32.2kHz, #9: b²=0.242 @ 147.5-75.2=72.3kHz, #10: b²=0.241 @ 129.9-32.2=97.7kHz
+
+===================================================================================================================
+TOP 10 LOCAL NONLINEAR COUPLINGS ON LEADING CHANNEL (MP1)
+===================================================================================================================
+Rank  b²      f1 (kHz)   f2 (kHz)   f3 (kHz)   Slope m     Triad Equation            Physical Classification  
+-------------------------------------------------------------------------------------------------------------------
+#1    0.4294  99.6       -49.8      49.8       -0.5000     99.6 - 49.8 = 49.8 kHz    Subharmonic (m ≈ -0.5)   
+#2    0.3040  144.5      -41.0      103.5      -0.2838     144.5 - 41.0 = 103.5 kHz  Secondary Mode Coupling  
+#3    0.2940  138.7      -125.0     13.7       -0.9014     138.7 - 125.0 = 13.7 kHz  Broadband Non-Linear Mode
+#4    0.2929  144.5      -103.5     41.0       -0.7162     144.5 - 103.5 = 41.0 kHz  Broadband Non-Linear Mode
+#5    0.2533  68.4       -27.3      41.0       -0.4000     68.4 - 27.3 = 41.0 kHz    Broadband Non-Linear Mode
+#6    0.2440  54.7       -23.4      31.3       -0.4286     54.7 - 23.4 = 31.3 kHz    Broadband Non-Linear Mode
+#7    0.2425  58.6       -7.8       50.8       -0.1333     58.6 - 7.8 = 50.8 kHz     Broadband Non-Linear Mode
+#8    0.2425  43.9       -11.7      32.2       -0.2667     43.9 - 11.7 = 32.2 kHz    Secondary Mode Coupling  
+#9    0.2419  147.5      -75.2      72.3       -0.5099     147.5 - 75.2 = 72.3 kHz   Subharmonic (m ≈ -0.5)   
+#10   0.2414  129.9      -32.2      97.7       -0.2481     129.9 - 32.2 = 97.7 kHz   Broadband Non-Linear Mode
+-------------------------------------------------------------------------------------------------------------------
+
+   [MP1] Stability note: leading peak sensitive to search boundary (core: f1=68.4 - f2=27.3 kHz, b²=0.253).
+2       MP4         Diff    0.3592      32.2      16.6      15.6        0.00        5.56          
+        └─ Other local peaks: #2: b²=0.327 @ 148.4-74.2=74.2kHz, #3: b²=0.296 @ 48.8-5.9=43.0kHz, #4: b²=0.266 @ 140.6-35.2=105.5kHz, #5: b²=0.246 @ 82.0-41.0=41.0kHz, #6: b²=0.236 @ 106.4-71.3=35.2kHz, #7: b²=0.233 @ 93.8-57.6=36.1kHz, #8: b²=0.226 @ 146.5-11.7=134.8kHz, #9: b²=0.226 @ 146.5-85.9=60.5kHz, #10: b²=0.224 @ 136.7-99.6=37.1kHz
+3       MP3         Diff    0.3071      52.7      27.3      25.4        0.00        4.97          
+        └─ Other local peaks: #2: b²=0.250 @ 140.6-100.6=40.0kHz, #3: b²=0.237 @ 137.7-120.1=17.6kHz, #4: b²=0.236 @ 117.2-98.6=18.6kHz, #5: b²=0.223 @ 140.6-40.0=100.6kHz, #6: b²=0.218 @ 116.2-70.3=45.9kHz, #7: b²=0.218 @ 125.0-95.7=29.3kHz, #8: b²=0.213 @ 149.4-129.9=19.5kHz, #9: b²=0.212 @ 137.7-17.6=120.1kHz, #10: b²=0.212 @ 136.7-54.7=82.0kHz
+
+--- Generating Bicoherence Plot for the Best Channel: MP1 (Burst 199-231 ms [M9 flat sub-window]) ---
+
+--- Checking f1, f2, and f3 correspondence with real local PSD peaks ---
+Peak #1: Triad (99.6 - 49.8 = 49.8 kHz) | b² = 0.429
+  -> f1=99.6 kHz | Closest PSD peak: 100.6 kHz (Distance: 0.98 kHz / 1.00 bins)
+     [CONFIRMED] f1 matches a real local PSD peak (≤ 1.5 bins)
+  -> f2=49.8 kHz | Closest PSD peak: 50.8 kHz (Distance: 0.98 kHz / 1.00 bins)
+     [CONFIRMED] f2 matches a real local PSD peak (≤ 1.5 bins)
+  -> f3=49.8 kHz | Closest PSD peak: 50.8 kHz (Distance: 0.98 kHz / 1.00 bins)
+     [CONFIRMED] f3 matches a real local PSD peak (≤ 1.5 bins)
+Peak #2: Triad (144.5 - 41.0 = 103.5 kHz) | b² = 0.304
+  -> f1=144.5 kHz | Closest PSD peak: 140.6 kHz (Distance: 3.91 kHz / 4.00 bins)
+     [WARNING] f1 does NOT match a prominent local PSD peak (> 1.5 bins)
+  -> f2=41.0 kHz | Closest PSD peak: 42.0 kHz (Distance: 0.98 kHz / 1.00 bins)
+     [CONFIRMED] f2 matches a real local PSD peak (≤ 1.5 bins)
+  -> f3=103.5 kHz | Closest PSD peak: 100.6 kHz (Distance: 2.93 kHz / 3.00 bins)
+     [WARNING] f3 does NOT match a prominent local PSD peak (> 1.5 bins)
+Peak #3: Triad (138.7 - 125.0 = 13.7 kHz) | b² = 0.294
+  -> f1=138.7 kHz | Closest PSD peak: 140.6 kHz (Distance: 1.95 kHz / 2.00 bins)
+     [WARNING] f1 does NOT match a prominent local PSD peak (> 1.5 bins)
+  -> f2=125.0 kHz | Closest PSD peak: 124.0 kHz (Distance: 0.98 kHz / 1.00 bins)
+     [CONFIRMED] f2 matches a real local PSD peak (≤ 1.5 bins)
+  -> f3=13.7 kHz | Closest PSD peak: 10.7 kHz (Distance: 2.93 kHz / 3.00 bins)
+     [WARNING] f3 does NOT match a prominent local PSD peak (> 1.5 bins)
+Headline peak PSD check: triad (99.6 - 49.8 = 49.8 kHz) is CONFIRMED by real local PSD peaks (≤ 1.5 bins).
+Bicoherence plot saved to: 'mhd_bicoherence_objective3_88653.png'
+
+==========================================================================================
+📊 BICOHERENCE COMPARISON: BURST vs. QUIESCENT vs. CONTROL (Leading Channel)
+==========================================================================================
+Burst        (199-231 ms): Max b² = 0.4294 at f1=99.6, f2=49.8 kHz | 34.98% of bins > 95% statistical threshold
+Quiescent    (153-178 ms): Max b² = 0.3656 at f1=102.5, f2=49.8 kHz | 48.02% of bins > 95% statistical threshold
+Control      (317-342 ms): Max b² = 0.4585 at f1=113.3, f2=96.7 kHz | 31.19% of bins > 95% statistical threshold
+
+  - Formal Statistical Inference Assessment:
+    * Kruskal-Wallis H-test (compares all three full populations): H-stat = 14361.882, p-value = 0.0000e+00
+    * Mann-Whitney U post-hoc (Burst > Quiescent?): U = 6101148624.0, p-value = 1.0000e+00
+    * Mann-Whitney U post-hoc (Burst > Control?):    U = 8170603554.0, p-value = 3.2859e-73
+    * Chi-squared test of proportions (bins > b²_95): chi2-stat = 8283.917, p-value = 0.0000e+00
+ Note: Burst bicoherence is not statistically superior to quiescent/control windows.
+
+📈 ENERGY TRANSPORT WINDOW COMPARISON (W_p) -- FINAL CONFIRMATION CRITERION:
+  - Verified metadata for W_p (Wp@88653.edf): DimUnit (time) = 'ms', ValUnit (energy) = 'kJ'
+  - Average values in the burst / quiescent / control windows:
+  Window Burst      (199-231 ms): <W_p> = 0.47 kJ | <dW_p/dt> = +25.83 kJ/s | <ECH> = 0.50 V | Max b² = 0.429 | Bins > Stat.95% = 34.98%
+  Window Quiescent  (153-178 ms): <W_p> = -0.05 kJ | <dW_p/dt> = +6.70 kJ/s | <ECH> = 0.12 V | Max b² = 0.366 | Bins > Stat.95% = 48.02%
+  Window Control    (317-342 ms): <W_p> = -0.05 kJ | <dW_p/dt> = +1.59 kJ/s | <ECH> = -0.01 V | Max b² = 0.459 | Bins > Stat.95% = 31.19%
+Read this table alongside the Burst vs. Quiescent vs. Control comparison above: agreement between elevated bicoherence and a degraded/negative <dW_p/dt> specifically during the burst window is what the proposal defines as the final confirmation criterion.
+==========================================================================================
+
+================================================================================
+🔄 SHOT-TO-SHOT REPRODUCIBILITY VALIDATION (DISCHARGE REPRODUCIBILITY)
+================================================================================
+ Note: Validation shot 88654 Wp not found; using fallback window (188-236 ms).
+
+--- Testing reproducibility for channel: 'MP1' ---
+ Channel 'MP1' not found for shot 88654 in data/hj88654; skipping.
+
+--- Testing reproducibility for channel: 'MP4' ---
+ Channel 'MP4' not found for shot 88654 in data/hj88654; skipping.
+
+--- Testing reproducibility for channel: 'MP3' ---
+ Channel 'MP3' not found for shot 88654 in data/hj88654; skipping.
+
+================================================================================
+🔀 CROSS-DIAGNOSTIC VALIDATION (MAGNETIC vs. ELECTROSTATIC)
+================================================================================
+
+[DivProArr] Probe array file: testing 36 individual probe tip(s) (excluded: ['18-1', '27-1']) against all genuine magnetic channels.
+[DivProArr] Scanned 36 probe tip(s): 0 exceeded the physical threshold (b²>0.5), 0 of those had a RAW (uncorrected) leading-peak match to a magnetic channel's leading triad. Best tip overall: 17-1 (b²=0.477 at f1=29.3 - f2=14.6 kHz, Diff).
+--- Reconciliation: is the 'headline' result the same as the cross-validated one? ---
+No cross-match was found (neither for the headline leading peak nor for secondary peaks).
+
+   The headline peak (#1) of MP1 has all three frequencies PSD-confirmed, which is separate, supporting evidence alongside whatever the Langmuir cross-validation above found.
+
+==========================================================================================
+METHODOLOGICAL DETAIL: THRESHOLD JUSTIFICATION
+==========================================================================================
+Under the null hypothesis of independent signals, b² is approximately exponential with mean 1/N_ensemble (Kim & Powers, 1979).
+Rigorous 95% threshold: b²_95 = -ln(0.05)/N_ensemble = 0.100 (N_ensemble=30); NOT simply the mean 1/N_ensemble = 0.033.
+Physical threshold 0.5 is above b²_95 = 0.100 -> conservative even under the stricter statistical criterion.
+Under H0, ~5.0% of bins are expected to exceed b²_95 by pure chance.
+Spectral resolution: nfft=1024 -> df = 0.977 kHz.
+
+==========================================================================================
+DOUBLE-VALIDATION SUMMARY (Objective 3: reproducibility AND cross-diagnostic consistency)
+==========================================================================================
+  MP1    reproducibility(88654)=FAIL  cross-consistency(Langmuir)=FAIL
+  MP4    reproducibility(88654)=FAIL  cross-consistency(Langmuir)=FAIL
+  MP3    reproducibility(88654)=FAIL  cross-consistency(Langmuir)=FAIL
+
+ RESULT: Objective 3 is NOT validated under the strict double criterion -- no channel simultaneously passed reproducibility AND cross-diagnostic consistency. See the log file for the per-channel breakdown of which criterion each channel failed.
+==========================================================================================

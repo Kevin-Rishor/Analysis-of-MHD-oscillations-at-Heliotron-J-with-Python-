@@ -1,0 +1,56 @@
+1. ECE Channels RMS & Ratios
+
+Computed over 80-100 kHz band (4th-order Bessel).
+Active Window: 259.1 - 275.0 ms
+Quiet Window: 400.0 - 410.0 ms
+
+RMS values (Active vs. Quiet) and Ratios:
+ECE01: Active=0.0019 V, Quiet=0.0015 V, Ratio=1.30
+ECE02: Active=0.0027 V, Quiet=0.0026 V, Ratio=1.02
+ECE03: Active=0.0013 V, Quiet=0.0012 V, Ratio=1.11
+ECE04: Active=0.0007 V, Quiet=0.0006 V, Ratio=1.11
+ECE05: Active=0.0020 V, Quiet=0.0021 V, Ratio=0.98
+ECE06: Active=0.0025 V, Quiet=0.0021 V, Ratio=1.18
+ECE07: Active=0.0046 V, Quiet=0.0023 V, Ratio=2.00
+ECE08: Active=0.0042 V, Quiet=0.0014 V, Ratio=3.06
+ECE09: Active=0.0467 V, Quiet=0.0015 V, Ratio=31.80
+ECE10: Active=0.1100 V, Quiet=0.0016 V, Ratio=70.10
+ECE11: Active=0.0061 V, Quiet=0.0058 V, Ratio=1.04
+ECE12: Active=0.3323 V, Quiet=0.0016 V, Ratio=206.55
+ECE13: Active=0.4781 V, Quiet=0.0020 V, Ratio=244.92
+ECE14: Active=0.0059 V, Quiet=0.0054 V, Ratio=1.10
+ECE15: Active=0.0080 V, Quiet=0.0015 V, Ratio=5.48
+ECE16: Active=0.0001 V, Quiet=0.0000 V, Ratio=4.71
+
+Channels with ratio > 10 (real signals):
+ECE09, ECE10, ECE12, ECE13
+
+Channels with ratio < 3 (dead or outside the plasma):
+ECE01, ECE02, ECE03, ECE04, ECE05, ECE06, ECE07, ECE11, ECE14
+
+---
+
+2. Coherence (80-100 kHz band)
+
+Parameters: nperseg=2048, noverlap=1024, DOF (nd) ~ 14.5
+95% Significance Floor: ~ 0.1986
+
+Band-integrated Coherence with MP1:
+ECE09: 0.0637
+ECE10: 0.0592
+ECE12: 0.0557
+ECE13: 0.0643
+(Note: All are below the 95% significance floor for this estimator).
+
+ECE12-ECE13 coherence at 89 kHz: 0.7708
+
+---
+
+3. ECE13 RMS Reconciliation
+
+Reconciliation: The previous table's value (0.627 V) was calculated using a broader frequency band (likely 80-120 kHz). The figure titled "259.1-275.0 ms" filters down to a tighter 80-100 kHz band around the mode, resulting in a lower RMS of ~0.478 V (0.48 V).
+
+Parameters used to draw the figure:
+- Exact Function: scipy.signal.bessel (4th-order, btype='bandpass') followed by scipy.signal.filtfilt, with the final value given by numpy.std()
+- Band: 80 - 100 kHz
+- Window: 259.1 - 275.0 ms

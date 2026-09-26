@@ -1,0 +1,6 @@
+--- Sliding Window Bicoherence & Biphase Trace (Shot 88653) ---
+    Saved figure: bicoherence_sliding_trace_snr.png
+c:\TFG\analysis\heating_phase_comparison\mhd_plot_bicoherence_sliding_trace.py:121: SyntaxWarning: invalid escape sequence '\,'
+  ax1.set_title(f'Heliotron J #{shot} — Sliding Bicoherence Trace ($8\,\mathrm{{ms}}$ window, step $0.25\,\mathrm{{ms}}$)', fontsize=12, fontweight='bold')
+c:\TFG\analysis\heating_phase_comparison\mhd_plot_bicoherence_sliding_trace.py:121: SyntaxWarning: invalid escape sequence '\,'
+  ax1.set_title(f'Heliotron J #{shot} — Sliding Bicoherence Trace ($8\,\mathrm{{ms}}$ window, step $0.25\,\mathrm{{ms}}$)', fontsize=12, fontweight='bold')

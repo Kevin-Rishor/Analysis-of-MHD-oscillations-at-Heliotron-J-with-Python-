@@ -1,0 +1,139 @@
+IMAGE DIFFERENCE REPORT
+=======================
+
+File: mhd_bicoherence_objective3_88653.png
+  Dimensions: 6076x2368 -> 5968x2433
+  Size: 2720319 bytes -> 2722617 bytes
+  Mean Diff: 9.60%
+  Reason for change: (a) intentional fix (wrapped title to prevent clipping)
+
+File: mhd_analysis_objective2_heating_88653_80_120kHz.png
+  Dimensions: 1875x2400 -> 1875x2400
+  Size: 783070 bytes -> 745262 bytes
+  Mean Diff: 6.79%
+  Reason for change: (a) intentional fix (removed [BEST] text and updated p-value label tag)
+
+File: mhd_analysis_objective2_heating_88653_40_80kHz.png
+  Dimensions: 1875x2400 -> 1875x2400
+  Size: 726629 bytes -> 663533 bytes
+  Mean Diff: 6.31%
+  Reason for change: (a) intentional fix (removed [BEST] text and updated p-value label tag)
+
+File: sign_vs_threshold_88653.png
+  Dimensions: 3000x1800 -> 2400x1800
+  Size: 173660 bytes -> 164156 bytes
+  Mean Diff: 1.68%
+  Reason for change: (b) dpi/size change
+
+File: mhd_b_tilde_vs_envelope_shot_88653.png
+  Dimensions: 2700x1800 -> 2700x1800
+  Size: 1060213 bytes -> 1064363 bytes
+  Mean Diff: 0.25%
+
+File: mhd_primary_mode_radial_profile_shot_88653.png
+  Dimensions: 1500x1650 -> 1500x1650
+  Size: 172694 bytes -> 172694 bytes
+  Mean Diff: 0.00%
+
+File: bicoherence_sliding_trace_snr.png
+  Dimensions: 3000x2400 -> 3000x2400
+  Size: 259378 bytes -> 259378 bytes
+  Mean Diff: 0.00%
+
+File: amplitude_scaling_valid16.png
+  Dimensions: 2100x1500 -> 2100x1500
+  Size: 175132 bytes -> 175132 bytes
+  Mean Diff: 0.00%
+
+File: amplitude_scaling_all_vs_valid.png
+  Dimensions: 2100x1500 -> 2100x1500
+  Size: 242263 bytes -> 242263 bytes
+  Mean Diff: 0.00%
+
+File: mhd_primary_mode_toroidal_n_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_mode_spatial_map_2d_88653.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective1_88653.png
+  Missing in Images_prev
+
+File: heating_vs_mirnov (Shot_88653).png
+  Missing in Images_prev
+
+File: zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png
+  Missing in Images_prev
+
+File: zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective1_88653_ECH_NBI.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective1_88653_NBI_only.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_structure_88653_80_120kHz.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_88653_40_80kHz.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_88653_80_120kHz.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png
+  Missing in Images_prev
+
+File: mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png
+  Missing in Images_prev
+
+File: mhd_self_coupling_coherence_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_mode_envelopes_and_ip_evolution_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_modulator_dual_mode_coherence_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_snr_halpha_correlation_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_burst_window_detection_88653.png
+  Missing in Images_prev
+
+File: mhd_asymptotic_bias_scaling_shot_88653.png
+  Missing in Images_prev
+
+File: mhd_bicoherence_objective3_88653_ECH_NBI.png
+  Missing in Images_prev
+
+File: mhd_bicoherence_objective3_88653_NBI_only.png
+  Missing in Images_prev
+
+MOVED FILES LIST:
+=================
+ - C:\TFG\heating_vs_mirnov (Shot_88653).png
+ - C:\TFG\mhd_asymptotic_bias_scaling_shot_88653.png
+ - C:\TFG\mhd_b_tilde_vs_envelope_shot_88653.png
+ - c:\TFG\mhd_bicoherence_objective3_88653.png
+ - c:\TFG\mhd_burst_window_detection_88653.png
+ - c:\TFG\mhd_hysteresis_ip_vs_envelope_dual_modes_shot_88653.png
+ - c:\TFG\mhd_mode_envelopes_and_ip_evolution_shot_88653.png
+ - C:\TFG\mhd_mode_spatial_map_2d_88653.png
+ - c:\TFG\mhd_modulator_dual_mode_coherence_shot_88653.png
+ - C:\TFG\mhd_primary_mode_radial_profile_shot_88653.png
+ - C:\TFG\mhd_primary_mode_toroidal_n_shot_88653.png
+ - C:\TFG\mhd_self_coupling_coherence_shot_88653.png
+ - c:\TFG\mhd_snr_halpha_correlation_shot_88653.png

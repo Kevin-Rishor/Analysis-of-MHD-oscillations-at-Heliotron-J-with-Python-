@@ -1557,7 +1557,7 @@ def run_single_shot(shot_id, args):
         c = ax1.contourf(ff1_plot, ff2_plot, best_channel_data['bicoh2'], cmap='inferno',
                           levels=color_levels, extend='max')
         ax1.set_title(f"Squared Auto-Bicoherence $b^2$ - Leading Channel: {best_channel_data['channel']} "
-                      f"(nensemble={args.ensemble}, {window_label})")
+                      f"(nensemble={args.ensemble}, {window_label})", wrap=True)
         ax1.set_xlabel("$f_1$ (kHz)")
         ax1.set_ylabel("$f_2$ (kHz)")
         ax1.contour(ff1_plot, ff2_plot, best_channel_data['bicoh2'], levels=[args.threshold], colors='white', linestyles='dashed')
@@ -1585,7 +1585,7 @@ def run_single_shot(shot_id, args):
             2: (-22, -10),
             3: (8, 6),
             4: (-20, 10),
-            5: (6, 8),
+            5: (10, -12),
             6: (8, 6),
             7: (-20, 8),
             8: (8, -12),
@@ -1699,7 +1699,7 @@ def run_single_shot(shot_id, args):
 
         plt.tight_layout()
         output_png = f"mhd_bicoherence_objective3_{shot_id}.png"
-        plt.savefig(output_png, dpi=150)
+        plt.savefig(output_png, dpi=300, bbox_inches='tight')
         log.info(f"Bicoherence plot saved to: '{output_png}'")
 
     # ------------------------------------------------------------------------------------------

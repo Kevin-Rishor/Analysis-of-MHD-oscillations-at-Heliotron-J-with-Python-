@@ -1,0 +1,129 @@
+{
+  "shot": 88653,
+  "window_ms": [
+    259.1,
+    291.3
+  ],
+  "discrete_modes": [
+    {
+      "frequency_hz": 88999.99999957504,
+      "amplitude": 5.361441734301889e-06,
+      "snr_threshold": 2.346718716990022e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.9617242878052805,
+        "MP1_MP4": 0.9754169525865538,
+        "MP3_MP4": 0.9825316032649376
+      },
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "dual_criterion_pass": true
+    },
+    {
+      "frequency_hz": 48999.999999766034,
+      "amplitude": 3.0547833842645972e-06,
+      "snr_threshold": 9.756990240147143e-10,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.9498578264474495,
+        "MP1_MP4": 0.9716781161324962,
+        "MP3_MP4": 0.963802553842612
+      },
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "dual_criterion_pass": true
+    },
+    {
+      "frequency_hz": 39999.999999809006,
+      "amplitude": 2.892580082533023e-06,
+      "snr_threshold": 3.284162270785375e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.9616169819735283,
+        "MP1_MP4": 0.9520957791563701,
+        "MP3_MP4": 0.9534640895481625
+      },
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "dual_criterion_pass": true
+    },
+    {
+      "frequency_hz": 94999.99999954639,
+      "amplitude": 1.7756819526919905e-06,
+      "snr_threshold": 2.978706691136578e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.8543970302889173,
+        "MP1_MP4": 0.9039260634957188,
+        "MP3_MP4": 0.9390872944651318
+      },
+      "confirming_pairs": [
+        "MP1_MP3",
+        "MP1_MP4",
+        "MP3_MP4"
+      ],
+      "dual_criterion_pass": true
+    },
+    {
+      "frequency_hz": 80499.99999961563,
+      "amplitude": 5.074717879598939e-07,
+      "snr_threshold": 1.4651455155575557e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.4400091574601679,
+        "MP1_MP4": 0.6888742464829074,
+        "MP3_MP4": 0.6309714695913619
+      },
+      "confirming_pairs": [],
+      "dual_criterion_pass": false
+    },
+    {
+      "frequency_hz": 25999.999999875854,
+      "amplitude": 1.854607353937906e-07,
+      "snr_threshold": 3.626152361520668e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.20332340480771305,
+        "MP1_MP4": 0.15357165374070333,
+        "MP3_MP4": 0.13381793796678093
+      },
+      "confirming_pairs": [],
+      "dual_criterion_pass": false
+    },
+    {
+      "frequency_hz": 75999.9999996371,
+      "amplitude": 1.360309143084474e-07,
+      "snr_threshold": 1.063466211103201e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.3609818839884297,
+        "MP1_MP4": 0.4458863752026474,
+        "MP3_MP4": 0.6388262795273163
+      },
+      "confirming_pairs": [],
+      "dual_criterion_pass": false
+    },
+    {
+      "frequency_hz": 30999.999999851978,
+      "amplitude": 1.2752977532914087e-07,
+      "snr_threshold": 2.6105229540506455e-09,
+      "is_above_noise_floor": true,
+      "coherence": {
+        "MP1_MP3": 0.16064274346439372,
+        "MP1_MP4": 0.0826954543518836,
+        "MP3_MP4": 0.1308504841339487
+      },
+      "confirming_pairs": [],
+      "dual_criterion_pass": false
+    }
+  ]
+}

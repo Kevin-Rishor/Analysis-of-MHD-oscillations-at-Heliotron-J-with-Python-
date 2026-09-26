@@ -1,0 +1,1 @@
+Asymptotic scaling plot saved to: 'C:\TFG\mhd_asymptotic_bias_scaling_shot_88653.png'

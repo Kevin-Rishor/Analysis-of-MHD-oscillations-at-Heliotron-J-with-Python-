@@ -1,0 +1,57 @@
+79:def bicoherence_min_samples(nfft, ensemble, noverlap_frac):
+81:    length `nfft` with fractional overlap `noverlap_frac`. Shared by analyze_channel_bicoherence()
+83:    [M9] flat-frequency sub-window is never shrunk below what the bicoherence call itself will
+89:    """Rigorous statistical significance threshold for the squared bicoherence.
+313:    trusted as the physical windows for the bicoherence analysis.
+474:    (flat-frequency) sub-window -- the actual window used for the bicoherence calculations and
+477:    meet the bicoherence sample floor); pass '' for no extra note. Drawn as a distinct
+479:    at once -- this is the SAME window already annotated on the squared-bicoherence figure's
+545:    panels. Here it gates the bicoherence analysis window instead (see compute_flat_frequency_
+550:    near the burst's own edges (onset transient, offset/transition). Bicoherence, like cross-
+574:         and still be too short for the bicoherence call downstream (e.g. it needs ~15.9 ms for
+583:         while still guaranteeing it is USABLE by the bicoherence call, rather than either (a)
+695:                     "as-is. The downstream bicoherence call will still fail for this shot -- lower --nfft "
+701:                 f"mean |slope| = {grown_mean:.3f} kHz/ms) to meet the bicoherence sample floor.")
+740:    # [M9][BICOH-FLOOR] The flat-frequency window must be long enough for the bicoherence call
+744:    bicoh_min_samples = bicoherence_min_samples(args.nfft, args.ensemble, BICOH_NOVERLAP_FRAC)
+747:    log.debug(f"  [M9][BICOH-FLOOR] Bicoherence needs >= {bicoh_min_samples} samples "
+765:    the window to actually use for the bicoherence calculations and the squared-bicoherence
+799:def analyze_channel_bicoherence(fpath, nfft, noverlap_frac, ensemble, threshold, f1max, f2max, topn,
+803:    squared auto-bicoherence, returning the ranking of local 2D peaks (already deduplicated
+822:    min_samples_needed = bicoherence_min_samples(nfft, ensemble, noverlap_frac)
+982:    is already applied to the bicoherence bins themselves. It should be applied to the
+1134:                         "bicoherence calculations and figure.")
+1194:                         "bicoherence calculations and figure (NOT the raw W_p burst window above).")
+1253:            fw_note = "extended past flatness tolerance to meet bicoherence sample floor" \
+1303:    log.debug(f"\nProcessing {len(files)} channels simultaneously for bicoherence (nensemble={args.ensemble})...")
+1311:            result = analyze_channel_bicoherence(fpath, args.nfft, noverlap_frac, args.ensemble,
+1372:                # We compute the linear PSD IN THE SAME TIME WINDOW used for the bicoherence,
+1373:                # so that the PSD panel is physically consistent with the bicoherence panel.
+1496:    # 2b. Detailed bicoherence + PSD plot for the leading channel
+1506:        log.debug(f"\n--- Generating Bicoherence Plot for the Best Channel: {best_channel_data['channel']} ({window_label}) ---")
+1510:        # --- PANEL 1: Squared Auto-Bicoherence b^2 ---
+1519:        # analyze_channel_bicoherence() uses to find/rank the peaks shown here (search_mask_sum /
+1559:        ax1.set_title(f"Squared Auto-Bicoherence $b^2$ - Leading Channel: {best_channel_data['channel']} "
+1564:        cbar = fig.colorbar(c, ax=ax1, label="Squared Bicoherence $b^2$")
+1701:        output_png = f"mhd_bicoherence_objective3_{shot_id}.png"
+1703:        log.info(f"Bicoherence plot saved to: '{output_png}'")
+1714:    log.debug("\U0001f4ca BICOHERENCE COMPARISON: BURST vs. QUIESCENT vs. CONTROL (Leading Channel)")
+1739:                res_w = analyze_channel_bicoherence(fpath_best, args.nfft, noverlap_frac, args.ensemble,
+1821:                             "bicoherence is significantly higher than quiescent/control, and the absolute "
+1834:                    log.info(" Note: Burst bicoherence is not statistically superior to quiescent/control windows.")
+1840:        # windows where strong bicoherence is detected will serve as the final confirmation."
+1842:        # windows already used for the bicoherence comparison above -- no additional transport
+1896:                          "agreement between elevated bicoherence and a degraded/negative <dW_p/dt> specifically "
+1985:                result_rep = analyze_channel_bicoherence(file_rep, args.nfft, noverlap_frac, args.ensemble,
+2055:    # Langmuir probe's bicoherence signatures against the peaks of ALL genuine Mirnov channels.
+2123:                    result_lp = analyze_channel_bicoherence(
+2154:                # bicoherence comparison) so we can later estimate how CORRELATED the significant
+2173:                # bicoherence cross-validation literature ("does the dominant coupling
+2386:    parser = argparse.ArgumentParser(description="Multichannel Comparative Bicoherence Analysis (Objective 3)")
+2391:    parser.add_argument("-n", "--nfft", type=int, default=1024, help="FFT size for bicoherence (def: 1024)")
+2392:    parser.add_argument("-t", "--threshold", type=float, default=0.5, help="PHYSICAL threshold for significant bicoherence (def: 0.5)")
+2393:    parser.add_argument("-e", "--ensemble", type=int, default=30, help="Number of ensembles to average bicoherence (def: 30)")
+2411:                        help="Start (ms) of the burst window used for bicoherence. If omitted, the "
+2415:                        help="End (ms) of the burst window used for bicoherence. If omitted, "
+2480:    # tightens the burst window used for the main bicoherence ranking + figure, see
+2485:                             "bicoherence calculations and figure, as before this was added.")

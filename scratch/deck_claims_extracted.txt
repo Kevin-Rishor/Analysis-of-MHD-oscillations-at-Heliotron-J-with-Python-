@@ -1,0 +1,83 @@
+Slide 2:
+- shot 88653
+- dual criterion: 3\sigma amplitude and \gamma^2>0.7
+
+Slide 3:
+- \gamma^2>0.7
+- ECH switches off at t=291.3 ms
+- ECH+NBI (259.1-291.3 ms)
+- NBI-only (291.3-300.0 ms; NBI beams turn off at ~300.6 ms)
+
+Slide 4:
+- 89.0 kHz
+- \gamma^2=0.86-0.88 across all Mirnov pairs
+- toroidal number n=-5, RMSE=6.6 deg
+- n \equiv -1 (mod 4)
+- 95.5 kHz peak
+
+Slide 5:
+- m=+3
+- ECE fluctuation (80-100 kHz) largest at ECE12/13FAST (64.5 GHz/66.5 GHz; 0.33 V/0.478 V, ~200x quiet level), near \rho\approx0.62
+- ECE12-13 mutually coherent (\gamma^2=0.77) but not with MP1 (\gamma^2\approx0.06 vs. floor 0.20)
+- Weak edge coupling at HAFAST7.5 (\gamma^2=0.23)
+
+Slide 6:
+- ECH+NBI: f=89.0 kHz, n=-5 (\equiv -1), RMSE=5.2 deg, \gamma^2 range 0.96-0.98
+- NBI-only: f=86.0 kHz, n=-5 (\equiv -1), RMSE=6.7 deg, \gamma^2 range 0.997-0.998
+- frequency downshifts ~2-3 kHz primary: PSD peak 89.0->87.0, n-fit line 89.0->86.0
+- ~11.5 kHz secondary
+- 3\sigma occupancy is 100%
+- hops discretely among 2-3 frequency branches (~0.4-1.3 jumps/ms)
+
+Slide 7:
+- HF (80-120 kHz): m=+3, r_{circ} up to 0.90, f=89.84 kHz; BAE/GAM (\sqrt{T_e}): r=-0.48 (p=0.20)
+- LF (40-80 kHz): m tentative (+6->+2 between windows; r_{circ}<0.7), f=42.97 kHz; current-induced (I_p): r=-0.85 (p=0.16)
+- adjusted p>0.16; N_{eff}\approx4 for LF, \approx9 for HF
+
+Slide 8:
+- LF band: I_p: 0.801, W_p: 0.810, n_e (t>=270 ms): 0.874, H\alpha: 0.609
+- HF band: I_p: 0.758, W_p: 0.784, n_e: 0.867, H\alpha: 0.568
+- NBI power: ~0.61-0.64
+- ECH power: ~0.44-0.45
+- ECH power (partial): 0.06-0.12
+
+Slide 9:
+- peaks near 1.2 kHz (MP1: 0.18) and 2.2 kHz (MP3: 0.18), above nominal 95% floor of 0.105 (259.1-275.0 ms)
+- 2.2 kHz MP3 peak persists at 2x and 4x resolution
+
+Slide 10:
+- 259.1-275.0 ms
+- peaks at b^2=0.515 for f_1=98.6 kHz, f_2=-48.8 kHz
+- f_3=f_1-0.5f_1=0.5f_1
+- ratio 0.495
+- quiet-time maxima (0.35-0.69)
+- strongest ridge (b^2=0.88)
+
+Slide 11:
+- Episode 1 (6 windows, centers 295.3-297.1 ms; 5 end before ~300.6 ms turn-off, 1 straddles)
+- near f/2 in 4 of 6 (47+98->145 kHz in two)
+- Episode 2 (10 windows, 301.8-304.6 ms, all straddling): 0 of 10 near f/2; triads change (44.9+66.4->111.3 kHz in 5 windows)
+- All 16 windows with den>2.5x10^-23 have Im[B_sum]>0 (16/16 for 2.5-4.0x10^-23; 17/18 at 2.0; 18/22 at 1.5x10^-23)
+- Windows below cut at 296.8-301.5 ms (b^2\approx0.4-0.8) have Im<0, rising smoothly through zero near 301.5 ms
+- 97% window overlap => ~2 independent episodes
+- per-bin 95% level: 0.20 for N_{eff}=15
+- 18 quiet-time windows (~2 independent) max b^2 was 0.35-0.69; 15 of 16 valid windows exceed 0.69
+
+Slide 12:
+- Pooled scaling: 2.10 (band) to 2.26 (peak PSD) on 16 valid windows. CI [0.94, 2.37]
+- Within-episode: 1.39 (N=6) and 0.95 (N=10)
+- Lower band peaks at ~40 kHz, upper band at 90-105 kHz. Ratio ranges 2.21-2.57 (0/16 within 5% of 2.0)
+- Only windows 1, 2, 5 are clean ~50+50->~100 kHz
+- Episode 2 strongest triads hop (44.9+66.4->111.3 and 58.6+70.3->128.9 kHz)
+- same (\pm2 bins) in only 41% of 8 ms windows; most common triad has mean b^2=0.066 (noise level) in 8 ms windows and 0.0004 over full burst
+
+Slide 13:
+- asymptotic b^2_\infty\approx0.28-0.33 for leading triads vs \approx0 for noise
+- 36 Langmuir probe tips found zero matches above b^2>0.5
+- max b^2=0.37 (quiescent) or max b^2=0.46 (control)
+- NBI-only triads reach up to ~3x higher b^2 than ECH+NBI (8 ms sub-windows)
+
+Slide 14 & 14b:
+- m=+3 at ~89 kHz, n\equiv -1 mod 4, n=-5
+- \rho\approx0.62, \gamma^2=0.23 (edge/H\alpha coupling)
+- r=0.57-0.87 vs I_p, W_p, n_e, H\alpha

@@ -1,0 +1,11 @@
+(Appending primary mode ID output to: mhd_obj1_88653.log)
+Primary Mode Identification (Shot 88653, target: 89.0 kHz, window: 259.1-275.0 ms)
+  Pair MP1-MP3: delta_phi=+180.0 deg | gamma^2=0.866 | phase=-178.6 deg
+  Pair MP1-MP4: delta_phi=+270.0 deg | gamma^2=0.923 | phase= +99.9 deg
+  Pair MP3-MP4: delta_phi= +90.0 deg | gamma^2=0.942 | phase= -84.3 deg
+Toroidal fit: best n = -5 (min RMSE = 6.6 deg; aliased: n = -1, +3)
+Radial Localization: peak fluctuation at ECE13FAST (66.5 GHz, RMS = 0.478 V), peak coherence at ECE03FAST (61.5 GHz, gamma^2 = 0.187)
+Edge Fluctuation (HAFAST): dominant at HAFAST7.5 (gamma^2 = 0.2335, phase = -165.0 deg, RMS = 1.25e-04 V)
+Toroidal fit figure saved to: 'C:\TFG\mhd_primary_mode_toroidal_n_shot_88653.png'
+Radial profile figure saved to: 'C:\TFG\mhd_primary_mode_radial_profile_shot_88653.png'
+Summary JSON exported to: 'C:\TFG\primary_mode_identification_shot_88653.json'

@@ -1,0 +1,132 @@
+Step 2: Number of valid windows: 16
+Valid points (Time, Im[B_sum]):
+  295.30 ms: 0.6601
+  295.55 ms: 0.7275
+  296.05 ms: 0.0971
+  296.30 ms: 0.7503
+  296.55 ms: 0.3669
+  297.05 ms: 0.6548
+  301.80 ms: 0.1755
+  302.05 ms: 0.4291
+  302.30 ms: 0.4965
+  302.55 ms: 0.5592
+  302.80 ms: 0.6174
+  303.05 ms: 0.6736
+  303.30 ms: 0.7264
+  303.55 ms: 0.7766
+  304.30 ms: 0.9097
+  304.55 ms: 0.9381
+
+Step 3: p-values used: LF=0.164, HF=0.204. These p-values come from the correlation analysis between the measured mode frequency evolution and the theoretical scaling models during the strongly-present window. They were not significant since N_eff is ~4 (due to the very short burst window containing few independent autocorrelation times).
+
+Step 4:
+
+Window: ECH + NBI Phase (259.1-291.3 ms)
+  Multiplier: 1x (nperseg=2048, df=0.2441 kHz, 95% floor=0.0503)
+    MP1:
+      Coh @ ~1.22 kHz (actual 1.221): 0.0378
+      Coh @ ~2.20 kHz (actual 2.197): 0.0225
+    MP3:
+      Coh @ ~1.22 kHz (actual 1.221): 0.0146
+      Coh @ ~2.20 kHz (actual 2.197): 0.0789
+    MP4:
+      Coh @ ~1.22 kHz (actual 1.221): 0.0197
+      Coh @ ~2.20 kHz (actual 2.197): 0.0703
+  Multiplier: 4x (nperseg=8192, df=0.0610 kHz, 95% floor=0.2384)
+    MP1:
+      Coh @ ~1.22 kHz (actual 1.221): 0.3411
+      Coh @ ~2.20 kHz (actual 2.197): 0.1082
+    MP3:
+      Coh @ ~1.22 kHz (actual 1.221): 0.0770
+      Coh @ ~2.20 kHz (actual 2.197): 0.1787
+    MP4:
+      Coh @ ~1.22 kHz (actual 1.221): 0.1186
+      Coh @ ~2.20 kHz (actual 2.197): 0.1526
+
+Window: Just NBI Phase (291.3-300.0 ms)
+  Multiplier: 1x (nperseg=2048, df=0.2441 kHz, 95% floor=0.2209)
+    MP1:
+      Coh @ ~1.22 kHz (actual 1.221): 0.0234
+      Coh @ ~2.20 kHz (actual 2.197): 0.3425
+    MP3:
+      Coh @ ~1.22 kHz (actual 1.221): 0.1712
+      Coh @ ~2.20 kHz (actual 2.197): 0.4330
+    MP4:
+      Coh @ ~1.22 kHz (actual 1.221): 0.2145
+      Coh @ ~2.20 kHz (actual 2.197): 0.4983
+  Multiplier: 4x (nperseg=8192, df=0.0610 kHz, 95% floor=0.9500)
+    MP1:
+      Coh @ ~1.22 kHz (actual 1.221): 1.0000
+      Coh @ ~2.20 kHz (actual 2.197): 1.0000
+    MP3:
+      Coh @ ~1.22 kHz (actual 1.221): 1.0000
+      Coh @ ~2.20 kHz (actual 2.197): 1.0000
+    MP4:
+      Coh @ ~1.22 kHz (actual 1.221): 1.0000
+      Coh @ ~2.20 kHz (actual 2.197): 1.0000
+
+Step 5: ECE Radial Profile
+Channel | Frequency | RMS | Coherence @ 89 kHz | Notes
+---------------------------------------------------------------------------
+ECE1FAST   | 57.5 GHz   | 0.124069   | 0.0075             | 
+ECE9FAST   | 58.5 GHz   | 0.313176   | 0.0361             | 
+ECE2FAST   | 59.5 GHz   | 0.165250   | 0.0115             | 
+ECE10FAST  | 60.5 GHz   | 0.835801   | 0.0394             | 
+ECE3FAST   | 61.5 GHz   | 0.154731   | 0.0316             | 
+ECE11FAST  | 62.5 GHz   | 0.119808   | 0.0055             | 
+ECE4FAST   | 63.5 GHz   | 0.018954   | 0.0104             | 
+ECE12FAST  | 64.5 GHz   | 1.100589   | 0.0226             | 
+ECE5FAST   | 65.5 GHz   | 0.177182   | 0.0065             | 
+ECE13FAST  | 66.5 GHz   | 1.995517   | 0.0015             | 
+ECE6FAST   | 67.5 GHz   | 0.192188   | 0.0119             | 
+ECE14FAST  | 68.5 GHz   | 0.091580   | 0.0078             | 
+ECE7FAST   | 69.5 GHz   | 0.172033   | 0.0339             | 
+ECE15FAST  | 70.5 GHz   | 0.190673   | 0.0336             | 
+ECE8FAST   | 71.5 GHz   | 0.203330   | 0.0123             | 
+ECE16FAST  | 72.5 GHz   | 0.001239   | 0.0000             | 
+
+Step 6: Avalanche Test
+(a) 291.3-300.0 ms, first 30 segs (actual f1=101.6, f2=-50.8): b2 = 0.8811, N = 30, N_eff = 15.0, 1/N_eff = 0.0667
+(b) 291.3-330.0 ms, first 60 segs (actual f1=101.6, f2=-50.8): b2 = 0.6837, N = 60, N_eff = 30.0, 1/N_eff = 0.0333
+(b) 291.3-330.0 ms, first 124 segs (actual f1=101.6, f2=-50.8): b2 = 0.6817, N = 124, N_eff = 62.0, 1/N_eff = 0.0161
+(c) 400.0-410.0 ms (quiet), 124 segs (actual f1=101.6, f2=-50.8): b2 = 0.0381, N = 38, N_eff = 19.0, 1/N_eff = 0.0526
+
+Summary Notes:
+Step 4: In the 4x nperseg calculation, the 1.22 kHz peak in the ECH+NBI phase persists and rises above the 95% floor (coh=0.3411, floor=0.2384) with df=0.061 kHz. In the NBI-only phase, the window is too short for a 4x nperseg (only 1 segment), yielding trivial coh=1.0.
+Step 5: None of the channels strictly have RMS < 1e-3, but ECE16FAST has an anomalously low RMS (0.001239) and zero coherence.
+Step 2: Number of valid windows: 16
+Valid points (Time, Im[B_sum]):
+  295.30 ms: 0.6601
+  295.55 ms: 0.7275
+  296.05 ms: 0.0971
+  296.30 ms: 0.7503
+  296.55 ms: 0.3669
+  297.05 ms: 0.6548
+  301.80 ms: 0.1755
+  302.05 ms: 0.4291
+  302.30 ms: 0.4965
+  302.55 ms: 0.5592
+  302.80 ms: 0.6174
+  303.05 ms: 0.6736
+  303.30 ms: 0.7264
+  303.55 ms: 0.7766
+  304.30 ms: 0.9097
+  304.55 ms: 0.9381
+Step 2: Number of valid windows: 16
+Valid points (Time, Im[B_sum]):
+  295.30 ms: 0.6601
+  295.55 ms: 0.7275
+  296.05 ms: 0.0971
+  296.30 ms: 0.7503
+  296.55 ms: 0.3669
+  297.05 ms: 0.6548
+  301.80 ms: 0.1755
+  302.05 ms: 0.4291
+  302.30 ms: 0.4965
+  302.55 ms: 0.5592
+  302.80 ms: 0.6174
+  303.05 ms: 0.6736
+  303.30 ms: 0.7264
+  303.55 ms: 0.7766
+  304.30 ms: 0.9097
+  304.55 ms: 0.9381

@@ -1,3 +1,5 @@
+> SUPERSEDED: pooled slope (2.32/2.73) was later found to be an artifact of amplitude dropping between episodes; within-episode slopes (1.39, 0.95) are near 1, not 2. See c:/TFG/objective3_within_episode_scaling_v2.log instead. Verdict: INCONCLUSIVE, not "confirmed passive second harmonic."
+
 # Bispectral Signatures in Heliotron J: Degenerate Parametric Decay vs. Harmonic Self-Coupling
 
 ## 1. The Mathematical Identity of the $-0.5$ Slope

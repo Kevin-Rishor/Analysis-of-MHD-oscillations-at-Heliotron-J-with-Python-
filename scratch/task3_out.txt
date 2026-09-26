@@ -1,0 +1,27 @@
+=== Task 3: Phase-mixing ===
+Most common triad: (82.03, -41.02, 41.02) kHz
+Window 259.10-267.10ms: b2 = 0.2937, phase =  -35.51 deg
+Window 259.35-267.35ms: b2 = 0.3152, phase =  -36.81 deg
+Window 259.60-267.60ms: b2 = 0.2624, phase =  -23.75 deg
+Window 259.85-267.85ms: b2 = 0.2689, phase =  -23.37 deg
+Window 260.60-268.60ms: b2 = 0.2380, phase =   -4.00 deg
+Window 262.35-270.35ms: b2 = 0.0981, phase =  -31.98 deg
+Window 262.60-270.60ms: b2 = 0.1002, phase =  -25.34 deg
+Window 262.85-270.85ms: b2 = 0.0895, phase =  -23.02 deg
+Window 263.10-271.10ms: b2 = 0.0870, phase =  -21.24 deg
+Window 263.35-271.35ms: b2 = 0.0711, phase =  -25.51 deg
+Window 271.10-279.10ms: b2 = 0.0640, phase =  -12.74 deg
+Window 272.85-280.85ms: b2 = 0.2454, phase = +125.52 deg
+Window 273.10-281.10ms: b2 = 0.2079, phase = +137.00 deg
+Window 273.35-281.35ms: b2 = 0.2569, phase = +139.49 deg
+Window 274.85-282.85ms: b2 = 0.2144, phase = -117.61 deg
+Window 275.10-283.10ms: b2 = 0.1824, phase = -116.77 deg
+Window 275.35-283.35ms: b2 = 0.2134, phase = -113.12 deg
+Window 276.35-284.35ms: b2 = 0.2635, phase = -112.40 deg
+Window 276.60-284.60ms: b2 = 0.2664, phase = -107.78 deg
+Window 278.35-286.35ms: b2 = 0.2272, phase = -114.71 deg
+Window 278.60-286.60ms: b2 = 0.2349, phase = -101.61 deg
+Window 286.60-294.60ms: b2 = 0.1694, phase =  +49.61 deg
+
+Circular std of biphase when strongest triad: 86.69 deg
+Biphase drifts (phase slips).

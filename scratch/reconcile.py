@@ -196,7 +196,7 @@ log_A100_sub = np.log10([d['A100_sub'] for d in all_data])
 slope_sub_all = get_slope(log_A50_sub, log_A100_sub)
 print(f"All-window slope without subtraction: {get_slope(log_A50, log_A100):.2f}")
 print(f"All-window slope WITH noise floor subtraction: {slope_sub_all:.2f}")
-print("Conclusion: Yes, the 0.81 flattening is entirely a noise-floor artifact. Subtracting noise shifts the all-window slope significantly upwards.")
+print("Conclusion: The noise floor subtraction actually shifts the all-window slope DOWNWARDS from 0.81 to 0.66, meaning the low-SNR windows anchor the regression and make it even flatter when heavily subtracted.")
 
 print("\n5. EXACT FREQUENCY TRACKING IN THE 16 VALID WINDOWS")
 print("Win | t_center | f_50 peak (kHz) | f_100 peak (kHz)")

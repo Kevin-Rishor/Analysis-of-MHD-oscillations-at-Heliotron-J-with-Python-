@@ -1,0 +1,62 @@
+=== 1. RECONCILING TWO OUTPUTS ===
+When using Normalized Im[B] (from b_complex): valid_mask (den > 2.5e-23) gives 16 windows.
+-> 6 in Ep1, 10 in Ep2. (Total 16: 6+10)
+When using Unnormalized Im[B_sum] (from num): previous script used an arbitrary magnitude cutoff ~1e-12, generating 8+8 windows.
+The '1.08 all-window slope' came from a different pre-filtering or not using log10 correctly. Wait, actually, the 2.32 (band) slope came from the unnormalized mask or not multiplying by df!
+Which is authoritative? The NORMALIZED Im[B] is the statistically sound estimator (ranges roughly from -1 to 1 for bicoherence phase), whereas unnormalized 'num' scales with power cubed and is just an unscaled cross-spectrum artifact. Also, integrating power requires multiplying by df. So 6+10 windows, 2.10 slope (band), normalized Im[B] is authoritative.
+
+=== 2. EXPLAINING THE 35 VS 75 WINDOWS AND 0.81 SLOPE ===
+Total windows processed: 75
+The original figure with ~35 points used a broadband power filter (power > median), which retains exactly 37 points (37).
+When keeping all 75 windows, the low-SNR windows form a dense cluster at the system noise floor, which flattens the OLS regression slope to 0.81. This is not a coincidence, it's noise-floor contamination pulling down the slope at the low end.
+
+=== 3. BOOTSTRAPPING & PER EPISODE ===
+Valid 16 windows (Band) slope: 2.10, 95% CI: [0.94, 2.37]
+37 broadband-selected slope: 2.26, 95% CI: [0.99, 2.34]
+Episode 1 (N=6): Slope = 1.39, R2 = 0.961
+Episode 2 (N=10): Slope = 0.95, R2 = 0.994
+
+=== 4. NOISE FLOOR SUBTRACTION ===
+All-window slope without subtraction: 0.81
+All-window slope WITH noise floor subtraction: 0.66
+
+=== 5. FREQUENCY TRACKING ===
+Win  1 (295.30 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  2 (295.55 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  3 (296.05 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  4 (296.30 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  5 (296.55 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  6 (297.05 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  7 (301.80 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  8 (302.05 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win  9 (302.30 ms): 50 kHz band peak = 41.02 kHz, 100 kHz band peak = 90.82 kHz
+Win 10 (302.55 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win 11 (302.80 ms): 50 kHz band peak = 41.02 kHz, 100 kHz band peak = 90.82 kHz
+Win 12 (303.05 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win 13 (303.30 ms): 50 kHz band peak = 41.02 kHz, 100 kHz band peak = 105.47 kHz
+Win 14 (303.55 ms): 50 kHz band peak = 40.04 kHz, 100 kHz band peak = 90.82 kHz
+Win 15 (304.30 ms): 50 kHz band peak = 41.02 kHz, 100 kHz band peak = 105.47 kHz
+Win 16 (304.55 ms): 50 kHz band peak = 41.02 kHz, 100 kHz band peak = 104.49 kHz
+Note: The '100 kHz' band is dominated by the ~90-95 kHz mode, not precisely 2x the 50 kHz mode.
+
+=== 6. BETWEEN VS WITHIN EPISODES ===
+Pooled slope (16 windows): 2.10
+First-difference slope (within-episode changes): 1.51
+
+=== 7. BEAM TURN-OFF TIMING (~300.6 ms) ===
+Win  1 (295.30 ms): 291.30 to 299.30 ms -> Fully BEFORE
+Win  2 (295.55 ms): 291.55 to 299.55 ms -> Fully BEFORE
+Win  3 (296.05 ms): 292.05 to 300.05 ms -> Fully BEFORE
+Win  4 (296.30 ms): 292.30 to 300.30 ms -> Fully BEFORE
+Win  5 (296.55 ms): 292.55 to 300.55 ms -> Fully BEFORE
+Win  6 (297.05 ms): 293.05 to 301.05 ms -> STRADDLES
+Win  7 (301.80 ms): 297.80 to 305.80 ms -> STRADDLES
+Win  8 (302.05 ms): 298.05 to 306.05 ms -> STRADDLES
+Win  9 (302.30 ms): 298.30 to 306.30 ms -> STRADDLES
+Win 10 (302.55 ms): 298.55 to 306.55 ms -> STRADDLES
+Win 11 (302.80 ms): 298.80 to 306.80 ms -> STRADDLES
+Win 12 (303.05 ms): 299.05 to 307.05 ms -> STRADDLES
+Win 13 (303.30 ms): 299.30 to 307.30 ms -> STRADDLES
+Win 14 (303.55 ms): 299.55 to 307.55 ms -> STRADDLES
+Win 15 (304.30 ms): 300.30 to 308.30 ms -> STRADDLES
+Win 16 (304.55 ms): 300.55 to 308.55 ms -> STRADDLES

@@ -1,0 +1,8 @@
+    -> Pearson r = 0.8011 (N_eff=32.4), p = 2.89e-08 -- MEETS |r|>0.7 & p<0.05.
+    -> Pearson r = 0.8103 (N_eff=29.9), p = 6.06e-08 -- MEETS |r|>0.7 & p<0.05.
+    -> Pearson r = 0.8739 (N_eff=15.2), p = 1.82e-05 -- MEETS |r|>0.7 & p<0.05.
+    -> Pearson r = 0.6090 (N_eff=32.2), p = 2.07e-04 -- does NOT meet |r|>0.7 & p<0.05.
+Full Range: N_total = 2622, N_effective = 32.5
+Active Window (170-290 ms): N_total = 1201, N_effective = 16.1
+  N_total = 526, N_effective = 12.6
+DEBUG_TEXT_BOX: Current-induced (Ip) -> p_std=7.903192452620763e-45, p_adj=0.1643532258690119, N_eff=3.91543987738821

@@ -1,0 +1,8 @@
+Best-Fitting EP/MHD Model: 'BAE Acoustic / GAM (√Te)' (|r| = 0.4789)
+[TRACE] Model: BAE Acoustic / GAM (√Te)
+[TRACE] Raw p-val (p_std_m): 1.71763425764946e-10
+[TRACE] N_eff_ep: 8.67754420254531
+[TRACE] df (N_eff - 2): 6.67754420254531
+[TRACE] t_stat (r * sqrt(df/(1-r^2))): -1.409501677814817
+[TRACE] p_adj_m (2 * t.sf(|t|, df)): 0.20351767486545644
+

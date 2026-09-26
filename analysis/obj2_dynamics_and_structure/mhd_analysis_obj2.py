@@ -2102,6 +2102,16 @@ def process_shot(shot, args):
                 max_abs_r = abs(r_m)
                 best_model_name = model_name
 
+            # TRACE HACK ADDED HERE
+            df_trace = N_eff_ep - 2
+            t_stat_trace = r_m * np.sqrt(df_trace / (1.0 - r_m**2)) if (df_trace > 0 and abs(r_m) < 1.0) else 0.0
+            print(f"\n      [TRACE] Model: {model_name}")
+            print(f"      [TRACE] Raw p-val (p_std_m): {p_std_m}")
+            print(f"      [TRACE] N_eff_ep: {N_eff_ep}")
+            print(f"      [TRACE] df (N_eff - 2): {df_trace}")
+            print(f"      [TRACE] t_stat (r * sqrt(df/(1-r^2))): {t_stat_trace}")
+            print(f"      [TRACE] p_adj_m (2 * t.sf(|t|, df)): {p_adj_m}\n")
+
             ep_scaling_results[model_name] = {
                 "f_theo_curve": f_theo_curve,
                 "norm_constant": nc,
@@ -2448,7 +2458,8 @@ def process_shot(shot, args):
             is_best = (m_name == ep_scaling_results.get("best_model"))
             lw = 2.4 if is_best else 1.2
             alpha_val = 0.95 if is_best else 0.70
-            lbl = f"{m_name}: r={r_val:+.3f} ({format_p_value(p_val)})" + (" [BEST]" if is_best else "")
+            p_str = format_p_value(p_val).replace("p = ", "adj. p=")
+            lbl = f"{m_name}: r={r_val:+.3f} ({p_str})" + (" [highest |r|, n.s.]" if is_best else "")
             axs2[3].plot(t_ms[mask_plot_ep], m_dict["f_theo_curve"][mask_plot_ep], color=m_dict["color"],
                          linestyle=m_dict["linestyle"], linewidth=lw, alpha=alpha_val, label=lbl,
                          zorder=4 if is_best else 2)
@@ -2461,13 +2472,23 @@ def process_shot(shot, args):
 
         best_name = ep_scaling_results.get("best_model", "N/A")
         best_r = ep_scaling_results.get(best_name, {}).get("r", 0.0) if best_name in ep_scaling_results else 0.0
-        badge_text = f"Best-Fitting EP/MHD Model: {best_name} (r = {best_r:+.3f} in {win_start:.1f}-{win_end:.1f} ms window)"
-        axs2[3].text(0.02, 0.06, badge_text, transform=axs2[3].transAxes, fontsize=9, fontweight='bold',
-                     color='darkgreen' if abs(best_r) > 0.4 else 'navy',
-                     bbox=dict(boxstyle='round,pad=0.3', facecolor='lightyellow', edgecolor='darkorange', alpha=0.9))
+        
+        if best_name != "None":
+            best_dict = ep_scaling_results.get(best_name, {})
+            best_p_adj = best_dict.get("p_adj", 1.0)
+            best_neff = best_dict.get("N_eff", 0.0)
+            sig_str = "significant" if best_p_adj < 0.05 else "not significant"
+            sign_str = "expected sign" if best_r > 0 else "sign opposite to model"
+            badge_text = f"Highest |r|: {sig_str} (adj. p={best_p_adj:.3f}, N_eff~{best_neff:.0f}); {sign_str}"
+        else:
+            badge_text = ""
 
-        axs2[3].set_title(f"Energetic Particle Mode Identification: Measured Frequency vs. Theoretical Scalings\n"
-                          f"(Band: {args.lower:.0f}-{args.upper:.0f} kHz | Strongly-Present Window: {win_start:.1f}-{win_end:.1f} ms | Calibrated on {args.alfven_cal_start:.0f}-{args.alfven_cal_end:.0f} ms)", fontsize=10)
+        title_str = (f"Energetic Particle Mode Identification: Measured Frequency vs. Theoretical Scalings\n"
+                     f"(Band: {args.lower:.0f}-{args.upper:.0f} kHz | Strongly-Present Window: {win_start:.1f}-{win_end:.1f} ms | Calibrated on {args.alfven_cal_start:.0f}-{args.alfven_cal_end:.0f} ms)")
+        if badge_text:
+            title_str += f"\n[{badge_text}]"
+
+        axs2[3].set_title(title_str, fontsize=10)
         axs2[3].legend(loc='upper right', fontsize=7.5, ncol=2)
     else:
         axs2[3].text(0.5, 0.5, "Density data unavailable for theoretical EP mode scaling",
@@ -2704,7 +2725,7 @@ def process_shot(shot, args):
         mask_band_e = (f_envelope >= fl_hz) & (f_envelope <= fu_hz)
         peak_carrier = float(np.max(mean_coh2_carrier[mask_band_c])) if np.any(mask_band_c) else float('nan')
         peak_envelope = float(np.max(mean_coh2_envelope[mask_band_e])) if np.any(mask_band_e) else float('nan')
-        print_result(f"  - [M8] {pa}-{pb} inter-probe coherence: carrier peak (in-band) = {peak_carrier:.3f}, "
+        print_result(f"  - [M8] {pa}-{pb} inter-probe coherence (broadband cross-spectral, NOT single-bin Obj1 mode-ID): carrier peak (in-band) = {peak_carrier:.3f}, "
               f"envelope peak (in-band) = {peak_envelope:.3f}")
     nbi_max = np.max(total_nbi_power)
     if nbi_max > 0:

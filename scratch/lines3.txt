@@ -1,0 +1,18 @@
+541: # Core ECE Proxy Loading for BAE Mode Identification
+650:     Loads and selects the core-proxy ECE signal for BAE acoustic scaling identification.
+2005:     # 2. BAE Acoustic: f ~ sqrt(T_e) (Beta-induced acoustic-wave coupling, sound speed c_s)
+2006:     # 3. BAE Coupled: f ~ sqrt(v_A^2 + c_s^2) (Compressibility-modified Alfven continuum)
+2043:         # 2 & 3. BAE Acoustic and Coupled (using core ECE proxy)
+2061:         # 6. Current-induced / iota-shear shift
+2069:             "BAE Acoustic / GAM (√Te)": (s_bae_sound, "Beta-induced acoustic mode", "tab:blue", "-."),
+2070:             "BAE Coupled (√(vA²+cs²))": (s_bae_coupled, "Compressibility-coupled Alfvén", "tab:cyan", ":"),
+2073:             "Current-induced (Ip)": (s_current, "Rotational transform / shear shift", "forestgreen", "--"),
+2208:     # Panel 0: Correlation of Plasma Current (Ip15) vs. Mode Envelope
+2211:         axs1[0].set_ylabel("Plasma Current Ip (kA)", color='tab:blue')
+2222:         axs1[0].set_title(f"Correlation: Plasma Current (Ip15) vs. Mode Envelope - Shot {shot}\n{ip_title_stat}")
+2229:         axs1[0].set_title(f"Correlation: Plasma Current (Ip15) vs. Mode Envelope - Shot {shot}")
+2328:     # 3. EP Mode Frequency Scaling Identification (Alfvén vs BAE vs EPM models)
+2474:                          bbox=dict(boxstyle='round,pad=0.3', facecolor='lightyellow', edgecolor='darkorange', alpha=0.9))
+2588:                         bbox=dict(facecolor='black', alpha=0.4, pad=2))
+2647:                         bbox=dict(boxstyle='round,pad=0.3', facecolor='honeydew', edgecolor='darkgreen', alpha=0.9))
+2652:                         bbox=dict(boxstyle='round,pad=0.3', facecolor='linen', edgecolor='darkred', alpha=0.9))

@@ -105,12 +105,20 @@ def run_sliding_bicoherence_trace(shot=DEFAULT_SHOT, out_dir=None, verbose=False
 
     # Panel 1: Bicoherence
     ax1 = plt.subplot(2, 1, 1)
-    ax1.plot(t_centers[valid], b2_vals[valid], 'ko-', lw=1.5, markersize=4, label='Valid (High SNR)')
+    t_v = t_centers[valid].copy()
+    b2_v = b2_vals[valid].copy()
+    im_v = im_vals[valid].copy()
+    insert_idx = np.where(np.diff(t_v) > 0.5)[0] + 1
+    t_v_nan = np.insert(t_v, insert_idx, np.nan)
+    b2_v_nan = np.insert(b2_v, insert_idx, np.nan)
+    im_v_nan = np.insert(im_v, insert_idx, np.nan)
+
+    ax1.plot(t_v_nan, b2_v_nan, 'ko-', lw=1.5, markersize=4, label='Valid (High SNR)')
     if np.sum(invalid) > 0:
         ax1.plot(t_centers[invalid], b2_vals[invalid], 's', color='silver', markersize=3, label='Excluded (Low SNR Floor)')
     ax1.axhline(0.20, color='r', linestyle='--', label=r'95% Threshold ($N_{\mathrm{eff}}=15$)')
     ax1.set_ylabel(r'Bicoherence $b^2$', fontsize=11)
-    ax1.set_title(f'Heliotron J #{shot} — Sliding Bicoherence Trace ($8\\,\\mathrm{{ms}}$ window, step $0.25\\,\\mathrm{{ms}}$)', fontsize=12, fontweight='bold')
+    ax1.set_title(f'Heliotron J #{shot} — Sliding Bicoherence Trace ($8\,\mathrm{{ms}}$ window, step $0.25\,\mathrm{{ms}}$)', fontsize=12, fontweight='bold')
     ax1.set_xlim(295, 310)
     ax1.grid(True, alpha=0.3)
     ax1.legend(loc='upper right', fontsize=9)
@@ -122,7 +130,7 @@ def run_sliding_bicoherence_trace(shot=DEFAULT_SHOT, out_dir=None, verbose=False
     if np.sum(invalid) > 0:
         ax2.plot(t_centers[invalid], im_vals[invalid], 's', color='silver', markersize=3, alpha=0.7)
 
-    ax2.plot(t_centers[valid], im_vals[valid], 'bo-', lw=1.5, markersize=4, label=r'$\mathrm{Im}[B_{\mathrm{sum}}]$ (Valid)')
+    ax2.plot(t_v_nan, im_v_nan, 'bo-', lw=1.5, markersize=4, label=r'$\mathrm{Im}[B_{\mathrm{sum}}]$ (Valid)')
 
     for i in range(len(t_centers) - 1):
         if valid[i] and valid[i + 1]:
@@ -136,6 +144,10 @@ def run_sliding_bicoherence_trace(shot=DEFAULT_SHOT, out_dir=None, verbose=False
     ax2.set_ylabel(r'$\mathrm{Im}[B_{\mathrm{sum}}]$', fontsize=11)
     ax2.grid(True, alpha=0.3)
     ax2.legend(loc='lower right', fontsize=9)
+
+    ax2.axvline(301.5, color='gray', linestyle=':', lw=1.0)
+    ax2.annotate('Zero crossing near 301.5 ms', xy=(301.5, 0), xytext=(302.0, -0.05),
+                 arrowprops=dict(arrowstyle='->', lw=0.5, color='gray'), fontsize=8, color='gray')
 
     plt.tight_layout()
     out_path = out_dir / 'bicoherence_sliding_trace_snr.png'

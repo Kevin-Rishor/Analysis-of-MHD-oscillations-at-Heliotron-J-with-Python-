@@ -1,0 +1,116 @@
+=== 1. Empirical noise level of the bicoherence estimator ===
+
+Interval 150.0-160.0 ms:
+  8ms windows (9 windows):
+    N_bins: 4710
+    mean b2 per bin: 0.104392
+    N_eff: 9.6
+    total b2 sum: 491.687
+  Single 10ms segment:
+    N_bins: 4710
+    mean b2 per bin: 0.113626
+    N_eff: 8.8
+    total b2 sum: 535.176
+
+Interval 400.0-410.0 ms:
+  8ms windows (9 windows):
+    N_bins: 4710
+    mean b2 per bin: 0.065272
+    N_eff: 15.3
+    total b2 sum: 307.429
+  Single 10ms segment:
+    N_bins: 4710
+    mean b2 per bin: 0.062404
+    N_eff: 16.0
+    total b2 sum: 293.922
+
+Compare to 4800/15 = 320 and 4800/30 = 160.
+
+=== 2. Segment count ===
+Window 8.0 ms: theoretical 30 segments, actual used (nensemble=30) 30 segments
+Window 10.0 ms: theoretical 38 segments, actual used (nensemble=30) 30 segments
+Window 32.2 ms: theoretical 124 segments, actual used (nensemble=30) 30 segments
+
+=== 3. Model-scaling fits (259.1-275.0 ms) ===
+For all models: N points = 15872 (1 MHz sampling for 15.9 ms).
+Method for N_eff: Bartlett's formula `N_eff = max(3.0, min(N, N / (1 + 2 * sum(ACF))))` to correct for autocorrelation of the time series.
+N_eff_ep comes out to ~3.93 independent points.
+
+--- 40-80 kHz Band ---
+BAE Acoustic / GAM (√Te):       r = -0.5547, p = 0.457
+BAE Coupled (√(vA²+cs²)):       r = -0.6518, p = 0.361
+EPM Beam-Drive (√(PNBI/ne)):    r = -0.4440, p = 0.566
+EPM Beam-Power (PNBI):          r = -0.2913, p = 0.716
+Current-induced (Ip):           r = -0.8465, p = 0.164
+Stored Energy (Wp):             r = +0.8369, p = 0.174
+
+--- 80-120 kHz Band ---
+BAE Acoustic / GAM (√Te):       r = -0.4789, p = 0.204
+BAE Coupled (√(vA²+cs²)):       r = -0.4147, p = 0.279
+EPM Beam-Drive (√(PNBI/ne)):    r = +0.1464, p = 0.714
+EPM Beam-Power (PNBI):          r = -0.0594, p = 0.882
+Current-induced (Ip):           r = -0.3925, p = 0.308
+Stored Energy (Wp):             r = +0.3409, p = 0.381
+
+Significance of BEST models and Bonferroni Correction:
+LF BEST (Ip): p=0.164 > 0.05 (Not significant). Sign DOES NOT MATCH predicted (model predicts positive correlation, but r=-0.846).
+HF BEST (BAE √Te): p=0.204 > 0.05 (Not significant). Sign DOES NOT MATCH predicted (model predicts positive correlation, but r=-0.479).
+With a Bonferroni correction for 12 tests (alpha = 0.05/12 = 0.004), the threshold for significance becomes much stricter. Since the uncorrected p-values (0.164 and 0.204) are already far above 0.05, they remain firmly non-significant.
+
+=== 4. Sign sensitivity ===
+Den > 1.5e-23: 22 windows, 18 Im[B_sum] > 0 (Fraction: 0.818)
+Den > 2.0e-23: 18 windows, 17 Im[B_sum] > 0 (Fraction: 0.944)
+Den > 2.5e-23: 16 windows, 16 Im[B_sum] > 0 (Fraction: 1.000)
+Den > 3.0e-23: 16 windows, 16 Im[B_sum] > 0 (Fraction: 1.000)
+Den > 4.0e-23: 16 windows, 16 Im[B_sum] > 0 (Fraction: 1.000)
+
+Excluded windows with b2 > 0.4 (den <= 2.5e-23):
+Center time: 295.80 ms | b2: 0.463 | Im[B_sum]: 4.602e-01 | den: 1.86e-23
+Center time: 296.80 ms | b2: 0.437 | Im[B_sum]: -6.441e-01 | den: 1.36e-23
+Center time: 297.30 ms | b2: 0.499 | Im[B_sum]: -5.307e-01 | den: 5.99e-24
+Center time: 297.55 ms | b2: 0.499 | Im[B_sum]: -5.171e-01 | den: 5.65e-24
+Center time: 297.80 ms | b2: 0.494 | Im[B_sum]: -5.024e-01 | den: 5.39e-24
+Center time: 298.05 ms | b2: 0.512 | Im[B_sum]: -5.049e-01 | den: 5.03e-24
+Center time: 298.30 ms | b2: 0.516 | Im[B_sum]: -4.996e-01 | den: 4.83e-24
+Center time: 298.55 ms | b2: 0.523 | Im[B_sum]: -4.919e-01 | den: 4.67e-24
+Center time: 298.80 ms | b2: 0.526 | Im[B_sum]: -4.808e-01 | den: 4.62e-24
+Center time: 299.05 ms | b2: 0.527 | Im[B_sum]: -4.712e-01 | den: 4.65e-24
+Center time: 299.30 ms | b2: 0.530 | Im[B_sum]: -4.622e-01 | den: 4.84e-24
+Center time: 299.55 ms | b2: 0.535 | Im[B_sum]: -4.554e-01 | den: 5.04e-24
+Center time: 299.80 ms | b2: 0.542 | Im[B_sum]: -4.547e-01 | den: 5.46e-24
+Center time: 300.05 ms | b2: 0.583 | Im[B_sum]: -3.902e-01 | den: 1.07e-23
+Center time: 300.30 ms | b2: 0.631 | Im[B_sum]: -3.347e-01 | den: 1.22e-23
+Center time: 300.55 ms | b2: 0.676 | Im[B_sum]: -2.764e-01 | den: 1.37e-23
+Center time: 300.80 ms | b2: 0.715 | Im[B_sum]: -2.120e-01 | den: 1.53e-23
+Center time: 301.05 ms | b2: 0.740 | Im[B_sum]: -1.438e-01 | den: 1.70e-23
+Center time: 301.30 ms | b2: 0.766 | Im[B_sum]: -7.336e-02 | den: 1.87e-23
+Center time: 301.55 ms | b2: 0.792 | Im[B_sum]: -7.649e-05 | den: 2.04e-23
+Center time: 303.80 ms | b2: 0.970 | Im[B_sum]: -3.998e-01 | den: 1.44e-23
+Center time: 304.05 ms | b2: 0.982 | Im[B_sum]: 7.150e-01 | den: 2.19e-23
+Center time: 305.80 ms | b2: 0.457 | Im[B_sum]: 6.747e-01 | den: 3.15e-28
+Center time: 306.05 ms | b2: 0.458 | Im[B_sum]: 4.587e-01 | den: 9.07e-28
+Center time: 306.30 ms | b2: 0.510 | Im[B_sum]: 4.646e-01 | den: 8.88e-28
+Center time: 306.55 ms | b2: 0.507 | Im[B_sum]: 4.325e-01 | den: 8.87e-28
+Center time: 306.80 ms | b2: 0.506 | Im[B_sum]: 3.809e-01 | den: 8.92e-28
+Center time: 307.05 ms | b2: 0.505 | Im[B_sum]: 3.292e-01 | den: 8.67e-28
+Center time: 307.30 ms | b2: 0.548 | Im[B_sum]: 2.975e-01 | den: 8.52e-28
+Center time: 307.55 ms | b2: 0.568 | Im[B_sum]: 2.904e-01 | den: 1.68e-27
+Center time: 307.80 ms | b2: 0.593 | Im[B_sum]: 2.396e-01 | den: 1.57e-27
+Center time: 308.05 ms | b2: 0.586 | Im[B_sum]: 1.841e-01 | den: 1.58e-27
+Center time: 308.30 ms | b2: 0.590 | Im[B_sum]: 1.274e-01 | den: 1.55e-27
+Center time: 308.55 ms | b2: 0.614 | Im[B_sum]: 2.907e-02 | den: 1.56e-27
+Center time: 308.80 ms | b2: 0.615 | Im[B_sum]: -2.207e-02 | den: 1.49e-27
+Center time: 309.05 ms | b2: 0.614 | Im[B_sum]: -7.374e-02 | den: 1.40e-27
+Center time: 309.30 ms | b2: 0.643 | Im[B_sum]: -1.268e-01 | den: 1.25e-27
+Center time: 309.55 ms | b2: 0.631 | Im[B_sum]: -1.781e-01 | den: 1.17e-27
+Center time: 309.80 ms | b2: 0.613 | Im[B_sum]: -2.232e-01 | den: 1.09e-27
+Center time: 310.05 ms | b2: 0.648 | Im[B_sum]: -3.233e-01 | den: 9.37e-28
+Center time: 310.30 ms | b2: 0.638 | Im[B_sum]: -3.854e-01 | den: 8.56e-28
+Center time: 310.55 ms | b2: 0.623 | Im[B_sum]: -4.429e-01 | den: 7.74e-28
+Center time: 310.80 ms | b2: 0.594 | Im[B_sum]: -4.884e-01 | den: 7.08e-28
+Center time: 311.05 ms | b2: 0.578 | Im[B_sum]: -4.317e-01 | den: 3.43e-28
+Center time: 311.30 ms | b2: 0.592 | Im[B_sum]: -5.020e-01 | den: 2.80e-28
+Center time: 311.55 ms | b2: 0.508 | Im[B_sum]: -5.444e-01 | den: 3.59e-28
+Center time: 311.80 ms | b2: 0.464 | Im[B_sum]: -5.643e-01 | den: 3.16e-28
+Center time: 312.05 ms | b2: 0.405 | Im[B_sum]: -5.051e-01 | den: 1.83e-28
+Center time: 313.30 ms | b2: 0.468 | Im[B_sum]: 1.740e-01 | den: 6.76e-29

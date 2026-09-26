@@ -1,0 +1,55 @@
+# Final Reconciliation Report
+
+## Objective 1: Mode Identification
+| Claim | Deck Value | Fresh-run Value | General Summary | Status |
+|---|---|---|---|---|
+| Dominant Frequency | 89.0 kHz | 89.0 kHz | 89.0 kHz | Confirmed |
+| Toroidal Mode (n) | -5 (== -1) | -5 | -5 | Confirmed |
+| Inter-probe Coherence | 0.86-0.88 (all pairs) | 0.866, 0.923, 0.942 | 0.866, 0.923, 0.942 | Needs deck update |
+| ECE-MP1 Coherence | ~0.06 band-int (ECE12/13) | 0.187 bin (ECE03) | 0.187 bin (ECE03) | Needs deck update |
+| HAFAST Coupling | gamma^2 = 0.23 | gamma^2 = 0.2335 | gamma^2 = 0.2335 | Confirmed |
+
+Specific Resolution (Inter-probe Coherence): The deck currently states "0.86-0.88 across all Mirnov pairs". However, in the fresh run using the exact 259.1-275.0 ms window, only MP1-MP3 yields 0.866. MP1-MP4 (0.923) and MP3-MP4 (0.942) are significantly higher. The deck relies on the lowest pair and should report the full range (0.86-0.94).
+
+Specific Resolution (ECE-MP1 Coherence): The deck cites ECE12-13 with band-integrated (80-100 kHz) coherence (~0.06). The fresh run confirms this band-integrated value (0.056 for ECE12, 0.064 for ECE13). However, evaluating single-bin coherence exactly at 89 kHz reveals that ECE03FAST is the peak channel (gamma^2 = 0.187). Because the mode is narrowband, band-integration artificially dilutes the coherence with noise. The deck should be updated to cite the single-bin metric for ECE03FAST.
+
+## Objective 2: Macroscopic Correlations (80-120 kHz HF Band)
+| Claim | Deck Value | Fresh-run Value | General Summary | Status |
+|---|---|---|---|---|
+| Envelope vs Ip | 0.758 | 0.758 | 0.758 | Confirmed |
+| Envelope vs Wp | 0.784 | 0.784 | 0.784 | Confirmed |
+| Envelope vs ne | 0.867 | 0.867 | 0.867 | Confirmed |
+| Envelope vs Halpha | 0.568 | 0.568 | 0.568 | Confirmed |
+| Validation Status | "correlates strongly" | MEETS | MEETS | Confirmed |
+
+Specific Resolution (Validation Status): The fresh pipeline explicitly marks Ip, Wp, and ne as "MEETS" because their N_eff-adjusted Pearson p-values fall below 0.05. However, these are highly autocorrelated macroscopic variables. The deck is appropriately conservative in labeling them as "correlates strongly" rather than formally validated, and should not be changed.
+
+## Objective 2: Frequency Scaling Models
+| Claim | Deck Value | Fresh-run Value | General Summary | Status |
+|---|---|---|---|---|
+| LF Best Model | Current-induced (Ip) | Current-induced (Ip) | Current-induced (Ip) | Confirmed |
+| LF Model \|r\| | 0.846 | 0.8465 | 0.8465 | Confirmed |
+| LF Model adj.p | 0.164 | 0.164 | 0.164 | Confirmed |
+| HF Best Model | BAE Acoustic/GAM | BAE Acoustic/GAM | BAE Acoustic/GAM | Confirmed |
+| HF Model \|r\| | 0.479 | 0.4789 | 0.4789 | Confirmed |
+| HF Model adj.p | 0.204 | 0.204 | 0.204 | Confirmed |
+
+## Objective 3: Non-linear Coupling (Bicoherence)
+| Claim | Deck Value | Fresh-run Value | General Summary | Status |
+|---|---|---|---|---|
+| Headline (98.6/48.8) PSD | Not mentioned | NOT confirmed | NOT confirmed | Needs deck update |
+| Triad #3 (89.8/41.0) PSD | Not mentioned | CONFIRMED | CONFIRMED | Needs deck update |
+
+Specific Resolution (Triad PSD Match): The fresh run confirms that the headline triad (98.6/48.8 kHz, b^2=0.515) does not match real local PSD peaks (off by >1.5 bins). Meanwhile, Triad #3 (89.8/41.0 kHz, b^2=0.328) is perfectly grounded in confirmed spectral peaks. The headline choice (98.6/48.8) remains the mathematical maximum b^2, but Triad #3 deserves to be co-reported because of its physical grounding in validated PSD peaks.
+
+## Objective 3: Validation
+| Claim | Deck Value | Fresh-run Value | General Summary | Status |
+|---|---|---|---|---|
+| Double-validation | Not passed | FAIL | FAIL | Confirmed |
+| Max b^2 Quiescent | 0.37 | 0.366 | 0.366 | Confirmed |
+| Max b^2 Control | 0.46 | 0.459 | 0.459 | Confirmed |
+
+## Proposed Deck Changes (Priority Order)
+1. Slide 10: Co-report Triad #3 (89.8/41.0 kHz, b^2=0.328) alongside the headline triad, noting it matches confirmed PSD peaks.
+2. Slide 5: Update ECE-MP1 coherence to cite ECE03FAST (0.19) at the exact 89 kHz bin, rather than the band-integrated ECE12/13.
+3. Slide 4: Correct inter-probe coherence to "0.86-0.94" to accurately reflect MP1-MP4 (0.92) and MP3-MP4 (0.94).
