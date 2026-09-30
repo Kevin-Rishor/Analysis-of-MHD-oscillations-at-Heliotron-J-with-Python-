@@ -64,6 +64,15 @@ def plot_heating_vs_mirnov(shot=SHOT, out_dir=None):
     t_nir = dat_nir[:, 0]
     y_nir = dat_nir[:, 1]
 
+    nave_file = base_dir / f"nave@{shot}.edf"
+    if nave_file.exists():
+        edf_nave = TE.edf()
+        dat_nave = edf_nave.load(str(nave_file))
+        t_nave = dat_nave[:, 0]
+        y_nave = dat_nave[:, 1]
+    else:
+        t_nave, y_nave = None, None
+
     y_pellet = np.where(y_nir >= 0.15, y_nir, 0.0)
     max_pellet = y_pellet.max()
     if max_pellet > 0:
@@ -82,7 +91,14 @@ def plot_heating_vs_mirnov(shot=SHOT, out_dir=None):
     ax1.set_ylabel("Heating & Plasma", fontsize=10)
     ax1.set_ylim(-0.1, 5.0)
     ax1.grid(True, linestyle=':', alpha=0.6)
-    ax1.legend(loc='upper right', frameon=True, facecolor='white', framealpha=0.9, edgecolor='gray')
+    ax1.legend(loc='upper left', frameon=True, facecolor='white', framealpha=0.9, edgecolor='gray')
+
+    if t_nave is not None:
+        ax3 = ax1.twinx()
+        ax3.plot(t_nave, y_nave, color='purple', linewidth=1.5, label='n_e (10^19 m^-3)')
+        ax3.set_ylabel("n_e (10^19 m^-3)", fontsize=10, color='purple')
+        ax3.tick_params(axis='y', labelcolor='purple')
+        ax3.legend(loc='upper right', frameon=True, facecolor='white', framealpha=0.9, edgecolor='gray')
 
     ax2.plot(t_mp1, y_mp1, color='blue', linewidth=0.5, alpha=0.8, label='MP1')
     ax2.set_ylabel("Mirnov (V)", fontsize=10)
@@ -100,5 +116,7 @@ def plot_heating_vs_mirnov(shot=SHOT, out_dir=None):
 
 
 if __name__ == "__main__":
-    plot_heating_vs_mirnov()
+    out_path = root_dir / "Images" / "obj2_dynamics_and_structure"
+    out_path.mkdir(parents=True, exist_ok=True)
+    plot_heating_vs_mirnov(out_dir=out_path)
 
