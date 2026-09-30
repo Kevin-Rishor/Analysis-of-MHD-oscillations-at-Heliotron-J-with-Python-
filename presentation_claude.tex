@@ -57,7 +57,7 @@
         \item \textbf{EPM--heating correlation:} evaluate the synchronization between
         magnetic fluctuation frequencies and NBI/ECH heating power through statistical
         correlation metrics (envelope vs.\ $I_p$, $W_p$, $n_e$, H$\alpha$; lagged
-        cross-correlation), separating LF and HF bands and testing them against
+        cross-correlation), separating Secondary and Primary bands and testing them against
         physical scaling models.
         \item \textbf{Low-frequency H-mode fluctuations \& edge coupling:} map
         non-linear three-wave (bicoherence) and self-coupling of the dominant mode,
@@ -197,14 +197,14 @@
         \begin{column}{0.62\textwidth}
             \small
             \begin{itemize}
-                \item \textbf{HF (\SIrange{80}{120}{kHz}):} $m=+3$ \textbf{confirmed} in both windows
+                \item \textbf{Primary (\SIrange{80}{120}{kHz}):} $m=+3$ \textbf{confirmed} in both windows
                 ($r_{\text{circ}}$ up to 0.90), $f=\SI{89.84}{kHz}$; highest-$|r|$ scaling model
                 BAE/GAM ($\sqrt{T_e}$): $r=-0.48$ ($p=0.20$).
-                \item \textbf{LF (\SIrange{40}{80}{kHz}):} $m$ tentative ($+6\to+2$ between
+                \item \textbf{Secondary (\SIrange{40}{80}{kHz}):} $m$ tentative ($+6\to+2$ between
                 windows; $r_{\text{circ}}<0.7$), $f=\SI{42.97}{kHz}$; highest-$|r|$ model
                 current-induced ($I_p$): $r=-0.85$ ($p=0.16$).
                 \item \textbf{Scaling tests:} none of six models is significant
-                (adjusted $p>0.16$; $N_{\text{eff}}\approx4$ for LF, $\approx9$ for HF), and both
+                (adjusted $p>0.16$; $N_{\text{eff}}\approx4$ for Secondary, $\approx9$ for Primary), and both
                 top-$|r|$ models have the sign opposite to their prediction -- no model is identified.
             \end{itemize}
         \end{column}
@@ -217,7 +217,7 @@
     \begin{center}
     \begin{tabular}{lcc}
         \toprule
-        Correlation with mode envelope & LF band ($r$) & HF band ($r$) \\
+        Correlation with mode envelope & Secondary band ($r$) & Primary band ($r$) \\
         \midrule
         Plasma current $I_p$        & 0.801 & 0.758 \\
         Stored energy $W_p$         & 0.810 & 0.784 \\
@@ -385,8 +385,8 @@
         \item \textbf{Objective 2:} The mode envelope correlates strongly with heating and
         confinement metrics ($r=0.57$--$0.87$ for $I_p$, $W_p$, $n_e$, H$\alpha$ in both
         bands; consistent with \textbf{NBI drive} rather than ECH), establishing the
-        EPM--heating link. The HF poloidal structure is \textbf{confirmed} ($m=+3$; LF
-        tentative); band-separated scaling-model tests are inconclusive -- no model is
+        EPM--heating link. The Primary poloidal structure is \textbf{confirmed} ($m=+3$; Secondary
+        unconfirmed); band-separated scaling-model tests are inconclusive -- no model is
         statistically significant.
         \item \textbf{Objective 3:} Three-wave phase coupling is \textbf{statistically real}; early at $f/2$, later shifting to asymmetric triads that hop between windows. Energy flows \textbf{upward} in the 16 highest-SNR windows (${\sim}2$ independent episodes; the sign is threshold-dependent). Not validated under the strict double criterion; mode identity and mechanism remain \textbf{open questions}.
         \item \textbf{Confinement relevance:} the primary mode's edge/core
@@ -415,7 +415,7 @@
         EPM--heating correlation; statistical metrics &
         $r=0.57$--$0.87$ vs.\ $I_p$, $W_p$, $n_e$, H$\alpha$; NBI drive $>$ ECH &
         \textbf{Met} \\
-        LF H-mode fluctuations; edge turbulence \& heat-transport coupling &
+        Secondary-band H-mode fluctuations; edge turbulence \& heat-transport coupling &
         Bicoherence real \& unidirectional; edge/H$\alpha$ coupling weak
         ($\gamma^2=0.23$); double-validation not passed &
         \textbf{Partial} \\
@@ -535,46 +535,46 @@
 
 \subsection{Backup: Objective 2}
 
-\begin{frame}{Backup: Objective 2 -- LF Band Macroscopic Correlations}
+\begin{frame}{Backup: Objective 2 -- Secondary Band Macroscopic Correlations}
     \begin{figure}[h!]
         \centering
         \includegraphics[height=0.85\textheight]{Images/obj2_dynamics_and_structure/mhd_analysis_objective2_88653_40_80kHz.png}
     \end{figure}
 \end{frame}
 
-\begin{frame}{Backup: Objective 2 -- LF Band Heating Synchronization}
+\begin{frame}{Backup: Objective 2 -- Secondary Band Heating Synchronization}
     \begin{figure}[h!]
         \centering
         \includegraphics[height=0.85\textheight]{Images/obj2_dynamics_and_structure/mhd_analysis_objective2_heating_88653_40_80kHz.png}
     \end{figure}
 \end{frame}
 
-\begin{frame}{Backup: Objective 2 -- HF Band Macroscopic Correlations}
+\begin{frame}{Backup: Objective 2 -- Primary Band Macroscopic Correlations}
     \begin{figure}[h!]
         \centering
         \includegraphics[height=0.85\textheight]{Images/obj2_dynamics_and_structure/mhd_analysis_objective2_88653_80_120kHz.png}
     \end{figure}
 \end{frame}
 
-\begin{frame}{Backup: Objective 2 -- HF Band Heating Synchronization}
+\begin{frame}{Backup: Objective 2 -- Primary Band Heating Synchronization}
     \begin{figure}[h!]
         \centering
         \includegraphics[height=0.85\textheight]{Images/obj2_dynamics_and_structure/mhd_analysis_objective2_heating_88653_80_120kHz.png}
     \end{figure}
 \end{frame}
 
-\begin{frame}{Backup: Objective 2 -- LF Band Poloidal Structure (Full Window)}
+\begin{frame}{Backup: Objective 2 -- Secondary Band Poloidal Structure (Full Window)}
     \begin{figure}[h!]
         \centering
         \includegraphics[width=0.85\textwidth,height=0.62\textheight,keepaspectratio]{Images/obj2_dynamics_and_structure/mhd_analysis_objective2_structure_88653_40_80kHz.png}
     \end{figure}
     \footnotesize
-    Full ECH+NBI window (\SIrange{259.1}{291.3}{ms}), companion to the HF full-window
+    Full ECH+NBI window (\SIrange{259.1}{291.3}{ms}), companion to the Primary full-window
     structure on the main Objective 2 slide. Consistent with the tentative status
     reported there: $m$ is not stable across the ECH+NBI/NBI-only split (see next slide).
 \end{frame}
 
-\begin{frame}{Backup: Objective 2 Comparative -- LF Band Spatial Structure}
+\begin{frame}{Backup: Objective 2 Comparative -- Secondary Band Spatial Structure}
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
             \centering ECH+NBI\\
@@ -587,7 +587,7 @@
     \end{columns}
 \end{frame}
 
-\begin{frame}{Backup: Objective 2 Comparative -- HF Band Spatial Structure}
+\begin{frame}{Backup: Objective 2 Comparative -- Primary Band Spatial Structure}
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
             \centering ECH+NBI\\
@@ -607,10 +607,10 @@
         \toprule
         Band & Window & $m$ & $f$ (kHz) & $r_{\text{circ}}$ & Mean Err. ($^\circ$) & Status \\
         \midrule
-        LF (40--80 kHz) & ECH+NBI  & $+6$ & 48.8 & 0.216 & 92.3 & Unconfirmed \\
-        LF (40--80 kHz) & NBI-only & $+2$ & 41.0 & 0.632 & 81.1 & Unconfirmed \\
-        HF (80--120 kHz) & ECH+NBI  & $+3$ & 89.8 & 0.882 & 26.7 & \textbf{Confirmed} \\
-        HF (80--120 kHz) & NBI-only & $+3$ & 85.9 & 0.902 & 22.2 & \textbf{Confirmed} \\
+        Secondary (40--80 kHz) & ECH+NBI  & $+6$ & 48.8 & 0.216 & 92.3 & Unconfirmed \\
+        Secondary (40--80 kHz) & NBI-only & $+2$ & 41.0 & 0.632 & 81.1 & Unconfirmed \\
+        Primary (80--120 kHz) & ECH+NBI  & $+3$ & 89.8 & 0.882 & 26.7 & \textbf{Confirmed} \\
+        Primary (80--120 kHz) & NBI-only & $+3$ & 85.9 & 0.902 & 22.2 & \textbf{Confirmed} \\
         \bottomrule
     \end{tabular}
 \end{frame}
@@ -648,19 +648,19 @@
     \end{figure}
 \end{frame}
 
-\begin{frame}{Backup: LF--HF Mode-Mixing Correlation}
+\begin{frame}{Backup: Secondary--Primary Mode-Mixing Correlation}
     \begin{columns}[T]
         \begin{column}{0.5\textwidth}
-            \centering LF branch ($\sim$\SI{43}{kHz})\\
-            \includegraphics[width=0.62\textwidth]{Images/obj3_nonlinear_coupling/mhd_mode_mixing_shot_88653_LF_43kHz.png}
+            \centering Secondary branch ($\sim$\SI{43}{kHz})\\
+            \includegraphics[width=0.62\textwidth]{Images/obj3_nonlinear_coupling/mhd_mode_mixing_shot_88653_secondary_mode_43kHz.png}
         \end{column}
         \begin{column}{0.5\textwidth}
-            \centering HF branch ($\sim$\SI{90}{kHz})\\
-            \includegraphics[width=0.62\textwidth]{Images/obj3_nonlinear_coupling/mhd_mode_mixing_shot_88653_HF_90kHz.png}
+            \centering Primary branch ($\sim$\SI{90}{kHz})\\
+            \includegraphics[width=0.62\textwidth]{Images/obj3_nonlinear_coupling/mhd_mode_mixing_shot_88653_primary_mode_90kHz.png}
         \end{column}
     \end{columns}
     \vspace{0.2cm}
-    \tiny Additional correlation-metric view of inter-band mixing between the LF and HF
+    \tiny Additional correlation-metric view of inter-band mixing between the Secondary and Primary
     envelopes, complementing the dual-mode coherence above. Numbers on this slide have not
     been independently re-verified against the pipeline outputs in this round -- check
     against the underlying script before quoting specific values live.

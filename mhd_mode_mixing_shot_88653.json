@@ -39,8 +39,8 @@
     "PMP14"
   ],
   "modes": {
-    "LF_43kHz": {
-      "label": "LF_43kHz",
+    "secondary_mode_43kHz": {
+      "label": "secondary_mode_43kHz",
       "f_target_khz": 42.97,
       "actual_f_khz": 42.96874999979483,
       "m_dominant": 2,
@@ -213,8 +213,8 @@
         }
       }
     },
-    "HF_90kHz": {
-      "label": "HF_90kHz",
+    "primary_mode_90kHz": {
+      "label": "primary_mode_90kHz",
       "f_target_khz": 89.84,
       "actual_f_khz": 89.843749999571,
       "m_dominant": 3,

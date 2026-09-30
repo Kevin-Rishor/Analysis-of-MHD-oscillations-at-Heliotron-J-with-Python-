@@ -219,7 +219,8 @@ def analyze_mode_mixing(shot, data_dir, t_start_ms, t_end_ms, mode_configs, out_
                          nfft=256, max_m=6, dead_channels=DEFAULT_DEAD_CHANNELS):
     """Performs comprehensive poloidal mode mixing analysis across all available PMP channels."""
     if out_dir is None:
-        out_dir = ROOT_DIR
+        target_img_dir = ROOT_DIR / "Images" / "obj3_nonlinear_coupling"
+        out_dir = target_img_dir if target_img_dir.exists() else ROOT_DIR
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -597,9 +598,9 @@ def analyze_mode_mixing(shot, data_dir, t_start_ms, t_end_ms, mode_configs, out_
         plt.close(fig)
         log(f"  Saved figure: {out_png_name}")
 
-    # Export summary JSON
+    # Export summary JSON to project root
     out_json_name = f"mhd_mode_mixing_shot_{shot}.json"
-    out_json_path = out_dir / out_json_name
+    out_json_path = ROOT_DIR / out_json_name
     with open(out_json_path, "w", encoding="utf-8") as f:
         json.dump(overall_results, f, indent=2)
     log(f"\nSaved mode mixing metrics JSON: {out_json_name}")
@@ -626,12 +627,12 @@ def main():
 
     mode_configs = [
         {
-            "label": "LF_43kHz",
+            "label": "secondary_mode_43kHz",
             "f_target_khz": 42.97,
             "expected_m": 2,
         },
         {
-            "label": "HF_90kHz",
+            "label": "primary_mode_90kHz",
             "f_target_khz": 89.84,
             "expected_m": 3,
         }
