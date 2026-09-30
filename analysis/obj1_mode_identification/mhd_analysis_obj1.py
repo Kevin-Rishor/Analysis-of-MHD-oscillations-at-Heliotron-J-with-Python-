@@ -20,13 +20,21 @@ for p in [current] + list(current.parents):
 if root_dir is None:
     root_dir = Path("c:/TFG")
 
-for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", root_dir / "analysis" / "heating_phase_comparison"]:
     if str(p_add) not in sys.path:
         sys.path.append(str(p_add))
 
+import hashlib
+import io
+import matplotlib.transforms as transforms
 import turnelib as TE
 import libana_signal as LAS
 from mhd_common import morlet_cwt
+from comparison_common import (
+    T_NOISE_START, T_NOISE_END,
+    T_W1_START, T_W1_END,
+    T_W2_START, T_W2_END,
+)
 
 import logging
 
@@ -101,12 +109,62 @@ def safe_savefig(fig, out_path, dpi=150):
             pass
 
 
+def compute_phase_mode_frequencies(ys_mp1, fs, time_s):
+    """
+    Computes per-phase ridge frequencies for Primary and Secondary modes
+    using the exact tracking logic from analysis/heating_phase_comparison/mhd_compare_spectrograms.py
+    """
+    nperseg = 1024
+    noverlap = 960  # fine temporal resolution: step = 64 us
+    f_stft, t_s, Zxx = dsp.stft(ys_mp1, fs=fs, nperseg=nperseg, noverlap=noverlap, window='hann')
+    t_stft_ms = float(time_s[0]) * 1000.0 + t_s * 1000.0
+    psd = np.abs(Zxx) ** 2
+    f_khz = f_stft / 1000.0
+
+    mask_noise = (t_stft_ms >= T_NOISE_START) & (t_stft_ms <= T_NOISE_END)
+    mean_noise = np.mean(psd[:, mask_noise], axis=1)
+    std_noise = np.std(psd[:, mask_noise], axis=1)
+    thresh_3sigma = mean_noise + 3.0 * std_noise
+
+    windows = [
+        ("ECH + NBI Phase", T_W1_START, T_W1_END),
+        ("NBI-only Phase", T_W2_START, T_W2_END)
+    ]
+
+    m_pri = (f_khz >= 70.0) & (f_khz <= 110.0)
+    m_sec = (f_khz >= 30.0) & (f_khz <= 65.0)
+
+    tracked = {}
+    for phase_name, tw_start, tw_end in windows:
+        mask_win = (t_stft_ms >= tw_start) & (t_stft_ms <= tw_end)
+        psd_sub = psd[:, mask_win]
+
+        f_pri_track = []
+        f_sec_track = []
+        for col in psd_sub.T:
+            idx_p = np.argmax(col[m_pri])
+            f_pri_track.append(f_khz[m_pri][idx_p])
+
+            idx_s = np.argmax(col[m_sec])
+            f_sec_track.append(f_khz[m_sec][idx_s])
+
+        tracked[phase_name] = {
+            "tw_start": tw_start,
+            "tw_end": tw_end,
+            "f_pri_mean": float(np.mean(f_pri_track)),
+            "f_sec_mean": float(np.mean(f_sec_track)),
+        }
+    return tracked
+
+
 def parse_args():
     p = argparse.ArgumentParser(description="MHD Analysis - Objective 1 (Mode Identification)")
     p.add_argument("-s", "--shots", type=int, nargs="+", default=SHOTS_DEFAULT,
                    help=f"List of shot numbers to analyze (default: {SHOTS_DEFAULT})")
     p.add_argument("-d", "--data-dir-pattern", type=str, default="data/hj{shot}",
                    help="Data directory pattern (default: data/hj{shot})")
+    p.add_argument("-o", "--out-dir", type=str, default=str(root_dir / "Images" / "obj1_mode_identification"),
+                   help="Output directory for generated figures")
     p.add_argument("--fres", type=float, default=500.0,
                    help="FFT frequency resolution in Hz (default: 500.0)")
     p.add_argument("--wav-nfreqs", type=int, default=150,
@@ -327,18 +385,67 @@ def process_shot(shot, args):
         axs[0].contour(tt[mask_fplot, :], ff[mask_fplot, :], dmap_plot,
                         levels=[0.5], colors='black', linewidths=1.2, linestyles=':')
 
-        t_max_ms = tave[-1] * 1000.0
-        for m in discrete_modes:
-            if not m["dual_criterion_pass"]:
-                continue
-            f_khz = m["frequency_hz"] / 1000.0
-            axs[0].axhline(y=f_khz, color='black', linestyle='--', alpha=0.9, linewidth=2.2)
-            axs[0].text(
-                t_max_ms * 0.98, f_khz, f"{f_khz:.1f} kHz",
-                color='white', fontsize=9, fontweight='bold',
-                va='bottom', ha='right',
-                bbox=dict(boxstyle='round,pad=0.2', facecolor='black', alpha=0.6, edgecolor='white', lw=0.8)
-            )
+        # Time window matching heating_vs_mirnov.py
+        axs[0].set_xlim(150.0, 350.0)
+
+        # Primary and secondary mode segmented markers
+        phase_tracking = compute_phase_mode_frequencies(signals["MP1"], fs, time_sec)
+        w1_data = phase_tracking["ECH + NBI Phase"]
+        w2_data = phase_tracking["NBI-only Phase"]
+
+        f_pri_w1, f_sec_w1 = w1_data["f_pri_mean"], w1_data["f_sec_mean"]
+        f_pri_w2, f_sec_w2 = w2_data["f_pri_mean"], w2_data["f_sec_mean"]
+
+        log_print(f"Segmented mode ridge tracking for Shot {shot}:")
+        log_print(f"  Primary Mode Segment 1 (ECH+NBI):  [{w1_data['tw_start']:.1f}, {w1_data['tw_end']:.1f}] ms -> {f_pri_w1:.2f} kHz")
+        log_print(f"  Primary Mode Segment 2 (NBI-only): [{w2_data['tw_start']:.1f}, {w2_data['tw_end']:.1f}] ms -> {f_pri_w2:.2f} kHz")
+        log_print(f"  Secondary Mode Segment 1 (ECH+NBI):  [{w1_data['tw_start']:.1f}, {w1_data['tw_end']:.1f}] ms -> {f_sec_w1:.2f} kHz")
+        log_print(f"  Secondary Mode Segment 2 (NBI-only): [{w2_data['tw_start']:.1f}, {w2_data['tw_end']:.1f}] ms -> {f_sec_w2:.2f} kHz")
+
+        # Sanity check against reference values
+        ref_pri_w1, ref_sec_w1 = 87.60, 45.47
+        ref_pri_w2, ref_sec_w2 = 86.69, 40.26
+        if abs(f_pri_w1 - ref_pri_w1) > 4.0 or abs(f_sec_w1 - ref_sec_w1) > 4.0 or \
+           abs(f_pri_w2 - ref_pri_w2) > 4.0 or abs(f_sec_w2 - ref_sec_w2) > 4.0:
+            raise ValueError("Computed ridge tracking values disagree with reference values by more than 4 kHz! Aborting.")
+
+        # Primary mode segments (white dashed)
+        axs[0].plot([w1_data["tw_start"], w1_data["tw_end"]], [f_pri_w1, f_pri_w1],
+                    color='white', linestyle='--', linewidth=2.4, zorder=5)
+        axs[0].plot([w2_data["tw_start"], w2_data["tw_end"]], [f_pri_w2, f_pri_w2],
+                    color='white', linestyle='--', linewidth=2.4, zorder=5)
+
+        # Secondary mode segments (yellow dashed)
+        axs[0].plot([w1_data["tw_start"], w1_data["tw_end"]], [f_sec_w1, f_sec_w1],
+                    color='yellow', linestyle='--', linewidth=2.4, zorder=5)
+        axs[0].plot([w2_data["tw_start"], w2_data["tw_end"]], [f_sec_w2, f_sec_w2],
+                    color='yellow', linestyle='--', linewidth=2.4, zorder=5)
+
+        # Small frequency badges
+        bbox_f_pri = dict(boxstyle='round,pad=0.2', facecolor='black', alpha=0.75, edgecolor='white', lw=0.8)
+        bbox_f_sec = dict(boxstyle='round,pad=0.2', facecolor='black', alpha=0.75, edgecolor='yellow', lw=0.8)
+
+        axs[0].text((w1_data["tw_start"] + w1_data["tw_end"]) / 2.0, f_pri_w1 + 3.0, f"{f_pri_w1:.1f} kHz",
+                    color='white', fontsize=8.0, fontweight='bold', ha='center', va='bottom', bbox=bbox_f_pri)
+        axs[0].text((w2_data["tw_start"] + w2_data["tw_end"]) / 2.0, f_pri_w2 + 3.0, f"{f_pri_w2:.1f} kHz",
+                    color='white', fontsize=8.0, fontweight='bold', ha='center', va='bottom', bbox=bbox_f_pri)
+
+        axs[0].text((w1_data["tw_start"] + w1_data["tw_end"]) / 2.0, f_sec_w1 + 3.0, f"{f_sec_w1:.1f} kHz",
+                    color='yellow', fontsize=8.0, fontweight='bold', ha='center', va='bottom', bbox=bbox_f_sec)
+        axs[0].text((w2_data["tw_start"] + w2_data["tw_end"]) / 2.0, f_sec_w2 - 3.0, f"{f_sec_w2:.1f} kHz",
+                    color='yellow', fontsize=8.0, fontweight='bold', ha='center', va='top', bbox=bbox_f_sec)
+
+        # Mode labels near right end of mode's line (styled like mhd_plot_modulator_dual_mode.py)
+        bbox_lbl_pri = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='white', lw=1.2)
+        bbox_lbl_sec = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='yellow', lw=1.2)
+
+        axs[0].annotate('Primary Mode', xy=(w2_data["tw_end"], f_pri_w2), xytext=(305.0, f_pri_w2),
+                        ha='left', va='center', fontsize=9.0, fontweight='bold', color='white',
+                        bbox=bbox_lbl_pri, arrowprops=dict(arrowstyle='->', color='white', lw=1.2))
+
+        axs[0].annotate('Secondary Mode', xy=(w2_data["tw_end"], f_sec_w2), xytext=(305.0, f_sec_w2),
+                        ha='left', va='center', fontsize=9.0, fontweight='bold', color='yellow',
+                        bbox=bbox_lbl_sec, arrowprops=dict(arrowstyle='->', color='yellow', lw=1.2))
 
         axs[0].set_title("MP1 Spectrogram with 3-sigma Dominance Region")
         axs[0].set_xlabel("Time (ms)")
@@ -372,10 +479,49 @@ def process_shot(shot, args):
         axs[2].legend(loc='upper right', fontsize=9)
 
         plt.tight_layout()
-        output_png = f"mhd_analysis_objective1_{shot}.png"
+        out_dir = Path(getattr(args, "out_dir", root_dir / "Images" / "obj1_mode_identification"))
+        out_dir.mkdir(parents=True, exist_ok=True)
+        output_png = out_dir / f"mhd_analysis_objective1_{shot}.png"
         safe_savefig(fig, output_png, dpi=150)
-        plt.close(fig)
         print(f"Objective 1 overview saved to '{output_png}'.")
+
+        # Re-extract panel 1 and check panels 2 and 3
+        panels_dir = out_dir / "panels"
+        panels_dir.mkdir(parents=True, exist_ok=True)
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        primary_axes = [ax for ax in fig.get_axes() if not (hasattr(ax, '_colorbar_info') or getattr(ax, '_colorbar', False))]
+
+        pad = 0.08
+        # Panel 1
+        ax1 = primary_axes[0]
+        bb1 = ax1.get_tightbbox(renderer)
+        if bb1 is None: bb1 = ax1.get_window_extent(renderer)
+        bb1_in = bb1.transformed(fig.dpi_scale_trans.inverted())
+        bb1_padded = transforms.Bbox.from_extents(bb1_in.x0 - pad, bb1_in.y0 - pad, bb1_in.x1 + pad, bb1_in.y1 + pad)
+        p1_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png"
+        fig.savefig(str(p1_path), dpi=150, bbox_inches=bb1_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+        print(f"Panel 1 extracted and saved to '{p1_path}'.")
+
+        # Compare panels 2 and 3 hashes
+        p2_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel2_morlet_wavelet_transform_mp1.png"
+        p3_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel3_inter_probe_spatial_coherence_gamma2f.png"
+        for i, (ax, p_path) in enumerate([(primary_axes[1], p2_path), (primary_axes[2], p3_path)], 2):
+            if p_path.exists():
+                orig_hash = hashlib.sha256(p_path.read_bytes()).hexdigest()
+                bb = ax.get_tightbbox(renderer)
+                if bb is None: bb = ax.get_window_extent(renderer)
+                bbi = bb.transformed(fig.dpi_scale_trans.inverted())
+                bbp = transforms.Bbox.from_extents(bbi.x0 - pad, bbi.y0 - pad, bbi.x1 + pad, bbi.y1 + pad)
+                buf = io.BytesIO()
+                fig.savefig(buf, format='png', dpi=150, bbox_inches=bbp, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+                new_hash = hashlib.sha256(buf.getvalue()).hexdigest()
+                match = (orig_hash == new_hash)
+                print(f"Panel {i} SHA-256 match: {match} (orig: {orig_hash}, new: {new_hash})")
+                if not match:
+                    print(f"WARNING: Panel {i} hash differs! Leaving existing file untouched.")
+
+        plt.close(fig)
 
     except Exception as e:
         print(f"Error processing shot {shot}: {e}")
