@@ -872,7 +872,7 @@ def analyze_channel_bicoherence(fpath, nfft, noverlap_frac, ensemble, threshold,
     total_physical_bins_sum = int(np.sum(non_redundant_mask_sum))
     significant_count_sum = int(np.sum((bicoh2 > threshold) & non_redundant_mask_sum))
     n_eff = compute_n_effective(ensemble, noverlap_frac)
-    b2_stat_threshold = statistical_b2_threshold(n_eff, alpha=0.05)
+    b2_stat_threshold = statistical_b2_threshold(ensemble, alpha=0.05)
     significant_count_stat_sum = int(np.sum((bicoh2 > b2_stat_threshold) & non_redundant_mask_sum))
 
     search_mask_sum = physical_mask_sum & (ff1 < f1max * 1000.0) & (ff2 < f2max * 1000.0) & (ff1 >= ff2) & (ff1 >= fmin_khz * 1000.0) & (ff2 >= fmin_khz * 1000.0)
@@ -1292,7 +1292,7 @@ def run_single_shot(shot_id, args):
             det, args.window_plot_path, flat_window=fw_span)
 
     n_eff_preview = compute_n_effective(args.ensemble, BICOH_NOVERLAP_FRAC)
-    b2_stat_threshold_preview = statistical_b2_threshold(n_eff_preview, alpha=0.05)
+    b2_stat_threshold_preview = statistical_b2_threshold(args.ensemble, alpha=0.05)
 
     log.debug(f"--- Searching for diagnostic channels with pattern: {args.pattern} ---")
     # On Windows, glob.glob() is case-insensitive by default.
@@ -1314,8 +1314,8 @@ def run_single_shot(shot_id, args):
         flat_tag = " [M9 flat sub-window]" if flat_window_applied else ""
         log.info(f"Analysis window (burst){flat_tag}: {main_t_start:.0f}-{main_t_end:.0f} ms "
               f"(use --full-discharge to revert to full-shot behavior).")
-    log.debug(f"Rigorous 95% statistical threshold (N_ensemble={args.ensemble}, N_eff={n_eff_preview:.2f}): "
-          f"b\u00b2_95 = {b2_stat_threshold_preview:.3f} (vs. physical threshold = {args.threshold})")
+    log.debug(f"Rigorous 95% statistical threshold (N_ensemble={args.ensemble}): "
+          f"b\u00b2_95 = {b2_stat_threshold_preview:.3f} (N_eff diagnostic = {n_eff_preview:.2f}; vs. physical threshold = {args.threshold})")
 
     # Multiple-comparisons context: under H0, we would expect by chance that ~alpha% of the
     # bins/points exceed the 95% statistical threshold -by construction, alpha=5%-. All the
@@ -2364,8 +2364,8 @@ def run_single_shot(shot_id, args):
     log.debug("=" * 90)
     log.debug("Under the null hypothesis of independent signals, b\u00b2 is approximately exponential with "
                "mean 1/N_ensemble (Kim & Powers, 1979).")
-    log.debug(f"Rigorous 95% threshold: b\u00b2_95 = -ln(0.05)/N_eff = {b2_stat_threshold_preview:.3f} "
-               f"(N_ensemble={args.ensemble}, N_eff={n_eff_preview:.2f}); NOT simply the mean 1/N_ensemble = {1.0/args.ensemble:.3f}.")
+    log.debug(f"Rigorous 95% threshold: b\u00b2_95 = -ln(0.05)/N_ensemble = {b2_stat_threshold_preview:.3f} "
+               f"(N_ensemble={args.ensemble}, N_eff diagnostic={n_eff_preview:.2f}); NOT simply the mean 1/N_ensemble = {1.0/args.ensemble:.3f}.")
     log.debug(f"Physical threshold {args.threshold} is above b\u00b2_95 = {b2_stat_threshold_preview:.3f} "
                f"-> conservative even under the stricter statistical criterion.")
     log.debug(f"Under H0, ~{chance_level_pct:.1f}% of bins are expected to exceed b\u00b2_95 by pure chance.")
