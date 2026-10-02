@@ -44,74 +44,97 @@ def run_waterfall_analysis(staging_dir=None):
     print(f"  Flatness tolerance (1.5x core): {ref_core['tol_mean']:.4f} kHz/ms")
     print(f"SNR threshold: den > {SNR_THRESHOLD:.1e}")
 
-    # --- WATERFALL 1: Strict Containment [t, t+8.0] in [291.3, 300.0] ms ---
+    # --- TABLE: All 75 Scan Windows Excursions and Gates ---
+    print("\n" + "=" * 115)
+    print("ALL 75 SCAN WINDOWS: EXCURSIONS AND FLATNESS GATES")
+    print("=" * 115)
+    print(f"{'Idx':>3} | {'Window (ms)':>17} | {'Old Slope':>10} | {'Old Gate':>8} | {'Pri Exc (kHz)':>13} | {'Sec Exc (kHz)':>13} | {'Abs Gate':>8} | {'Abs 2x':>8} | {'SNR':>5} | {'Im[Bsum]':>9}")
+    print("-" * 115)
+    for i, w in enumerate(windows, 1):
+        old_gate_str = "PASS" if w['pass_flatness'] else "FAIL"
+        abs_gate_str = "PASS" if w['pass_flatness_abs'] else "FAIL"
+        abs_2x_str = "PASS" if w['pass_flatness_abs_2x'] else "FAIL"
+        snr_str = "PASS" if w['pass_snr'] else "FAIL"
+        im_str = f"{w['im_val']:+.4f}" if not np.isnan(w['im_val']) else "    NaN"
+        win_str = f"[{w['t_start']:.2f}, {w['t_end']:.2f}]"
+        print(f"{i:3d} | {win_str:>17} | {w['slope']:10.3f} | {old_gate_str:>8} | {w['exc_pri']:13.3f} | {w['exc_sec']:13.3f} | {abs_gate_str:>8} | {abs_2x_str:>8} | {snr_str:>5} | {im_str:>9}")
+
+    # --- WATERFALL 1: Absolute Flatness Gate (<= 1.5 bins = 2.930 kHz) ---
     print("\n" + "-" * 80)
-    print("1. WATERFALL: STRICT NBI-BURST CONTAINMENT ([t, t+8.0] in [291.3, 300.0] ms)")
+    print("1. WATERFALL: ABSOLUTE FLATNESS GATE (<= 1.5 bins = 2.930 kHz)")
     print("-" * 80)
     w_contain_strict = [w for w in windows if w['pass_containment_strict']]
+    w_flat_strict_abs = [w for w in w_contain_strict if w['pass_flatness_abs']]
+    w_survive_strict_abs = [w for w in w_flat_strict_abs if w['pass_snr']]
+
+    print(f"Stage 0 (Total candidate windows):              {n_total}")
+    print(f"Stage 1 (Containment <= 300.0 ms):              {len(w_contain_strict)}")
+    print(f"Stage 2 (Absolute Flatness <= 1.5 bins):        {len(w_flat_strict_abs)}")
+    print(f"Stage 3 (SNR den > {SNR_THRESHOLD:.1e}):               {len(w_survive_strict_abs)}")
+
+    if len(w_survive_strict_abs) == 0:
+        print("\nAbsolute Flatness Gate Result: 0 windows pass the absolute frequency excursion gate (no survivors).")
+        print("  n_indep = 0 < 5: no regression or p-value reported. Sign tally marked: not testable.")
+    else:
+        for i, w in enumerate(w_survive_strict_abs, 1):
+            print(f"  Win #{i}: [{w['t_start']:.2f}, {w['t_end']:.2f}] ms | Pri Exc={w['exc_pri']:.3f} kHz | "
+                  f"Sec Exc={w['exc_sec']:.3f} kHz | Im[B_sum]={w['im_val']:+.4f}")
+
+    # Sensitivity Rows
+    w_contain_beam = [w for w in windows if w['pass_containment_beam']]
+    w_flat_beam_abs = [w for w in w_contain_beam if w['pass_flatness_abs']]
+    w_survive_beam_abs = [w for w in w_flat_beam_abs if w['pass_snr']]
+
+    w_flat_strict_2x = [w for w in w_contain_strict if w['pass_flatness_abs_2x']]
+    w_survive_strict_2x = [w for w in w_flat_strict_2x if w['pass_snr']]
+
+    w_flat_beam_2x = [w for w in w_contain_beam if w['pass_flatness_abs_2x']]
+    w_survive_beam_2x = [w for w in w_flat_beam_2x if w['pass_snr']]
+
+    print("\nSensitivity Rows:")
+    print(f"  Containment <= 300.6 ms & Abs Flatness (1.5 bins):     {len(w_survive_beam_abs)} survivors")
+    print(f"  Containment <= 300.0 ms & Doubled Flatness (3.0 bins): {len(w_survive_strict_2x)} survivors")
+    print(f"  Containment <= 300.6 ms & Doubled Flatness (3.0 bins): {len(w_survive_beam_2x)} survivors")
+
+    # --- WATERFALL 2: Reference Relative Flatness Gate (for comparison) ---
+    print("\n" + "-" * 80)
+    print("2. REFERENCE: RELATIVE FLATNESS GATE (<= 1.5x reference core)")
+    print("-" * 80)
     w_flat_strict = [w for w in w_contain_strict if w['pass_flatness']]
     w_survive_strict = [w for w in w_flat_strict if w['pass_snr']]
-
-    print(f"Stage 0 (Total candidate windows):       {n_total}")
-    print(f"Stage 1 (Containment <= 300.0 ms):       {len(w_contain_strict)}")
-    print(f"Stage 2 (Flatness <= {ref_core['tol_mean']:.3f} kHz/ms):     {len(w_flat_strict)}")
-    print(f"Stage 3 (SNR den > {SNR_THRESHOLD:.1e}):        {len(w_survive_strict)}")
-
-    print(f"\nStrict Survivors Sign Tally (Im[B_sum]):")
-    pos_strict = [w for w in w_survive_strict if w['im_val'] > 0]
-    neg_strict = [w for w in w_survive_strict if w['im_val'] < 0]
-    print(f"  Positive (Im > 0, Upward cascade): {len(pos_strict)} / {len(w_survive_strict)}")
-    print(f"  Negative (Im < 0, Downward decay): {len(neg_strict)} / {len(w_survive_strict)}")
-    for i, w in enumerate(w_survive_strict, 1):
-        print(f"  Win #{i}: [{w['t_start']:.2f}, {w['t_end']:.2f}] ms (center {w['t_center']:.2f} ms) | "
-              f"slope={w['slope']:.3f} kHz/ms | den={w['den']:.2e} | Im[B_sum]={w['im_val']:+.4f} | "
-              f"f50={w['f50_peak']/1e3:.2f} kHz, f100={w['f100_peak']/1e3:.2f} kHz")
-
-    # --- WATERFALL 2: Sensitivity at Beam Turn-off ([t, t+8.0] <= 300.6 ms) ---
-    print("\n" + "-" * 80)
-    print("2. WATERFALL: BEAM TURN-OFF SENSITIVITY ([t, t+8.0] <= 300.6 ms)")
-    print("-" * 80)
-    w_contain_beam = [w for w in windows if w['pass_containment_beam']]
     w_flat_beam = [w for w in w_contain_beam if w['pass_flatness']]
     w_survive_beam = [w for w in w_flat_beam if w['pass_snr']]
 
-    print(f"Stage 0 (Total candidate windows):       {n_total}")
-    print(f"Stage 1 (Containment <= 300.6 ms):       {len(w_contain_beam)}")
-    print(f"Stage 2 (Flatness <= {ref_core['tol_mean']:.3f} kHz/ms):     {len(w_flat_beam)}")
-    print(f"Stage 3 (SNR den > {SNR_THRESHOLD:.1e}):        {len(w_survive_beam)}")
-
-    print(f"\nBeam Turn-off Survivors Sign Tally (Im[B_sum]):")
-    pos_beam = [w for w in w_survive_beam if w['im_val'] > 0]
-    neg_beam = [w for w in w_survive_beam if w['im_val'] < 0]
-    print(f"  Positive (Im > 0, Upward cascade): {len(pos_beam)} / {len(w_survive_beam)}")
-    print(f"  Negative (Im < 0, Downward decay): {len(neg_beam)} / {len(w_survive_beam)}")
+    print(f"Strict (<= 300.0 ms): {len(w_survive_strict)} survivors")
+    for i, w in enumerate(w_survive_strict, 1):
+        print(f"  Win #{i}: [{w['t_start']:.2f}, {w['t_end']:.2f}] ms | slope={w['slope']:.3f} kHz/ms | "
+              f"Pri Exc={w['exc_pri']:.3f} kHz | Sec Exc={w['exc_sec']:.3f} kHz | Im[B_sum]={w['im_val']:+.4f}")
+    print(f"Beam turn-off (<= 300.6 ms): {len(w_survive_beam)} survivors")
     for i, w in enumerate(w_survive_beam, 1):
-        print(f"  Win #{i}: [{w['t_start']:.2f}, {w['t_end']:.2f}] ms (center {w['t_center']:.2f} ms) | "
-              f"slope={w['slope']:.3f} kHz/ms | den={w['den']:.2e} | Im[B_sum]={w['im_val']:+.4f} | "
-              f"f50={w['f50_peak']/1e3:.2f} kHz, f100={w['f100_peak']/1e3:.2f} kHz")
+        print(f"  Win #{i}: [{w['t_start']:.2f}, {w['t_end']:.2f}] ms | slope={w['slope']:.3f} kHz/ms | "
+              f"Pri Exc={w['exc_pri']:.3f} kHz | Sec Exc={w['exc_sec']:.3f} kHz | Im[B_sum]={w['im_val']:+.4f}")
 
     # --- FREQUENCY DRIFT IN BINS ---
     print("\n" + "-" * 80)
     print("3. MODE FREQUENCY DRIFT ACROSS SURVIVORS")
     print("-" * 80)
-    # FFT bin resolution
     fs = 1e6
     nfft_psd = 1024
     df_psd_khz = (fs / nfft_psd) / 1000.0  # 0.9766 kHz
     nfft_bicoh = 512
     df_bicoh_khz = (fs / nfft_bicoh) / 1000.0  # 1.9531 kHz
 
-    f50_beam = [w['f50_peak'] / 1e3 for w in w_survive_beam]
-    f100_beam = [w['f100_peak'] / 1e3 for w in w_survive_beam]
-    drift_f50 = max(f50_beam) - min(f50_beam)
-    drift_f100 = max(f100_beam) - min(f100_beam)
-
-    print(f"FFT resolution: PSD df = {df_psd_khz:.4f} kHz (N_fft=1024), Bicoherence df = {df_bicoh_khz:.4f} kHz (N_fft=512)")
-    print(f"Beam survivors (N=5):")
-    print(f"  ~50 kHz mode range: [{min(f50_beam):.2f}, {max(f50_beam):.2f}] kHz -> Drift = {drift_f50:.2f} kHz "
-          f"({drift_f50 / df_psd_khz:.2f} PSD bins, {drift_f50 / df_bicoh_khz:.2f} bicoh bins)")
-    print(f"  ~100 kHz mode range: [{min(f100_beam):.2f}, {max(f100_beam):.2f}] kHz -> Drift = {drift_f100:.2f} kHz "
-          f"({drift_f100 / df_psd_khz:.2f} PSD bins, {drift_f100 / df_bicoh_khz:.2f} bicoh bins)")
+    if len(w_survive_beam) > 0:
+        f50_beam = [w['f50_peak'] / 1e3 for w in w_survive_beam]
+        f100_beam = [w['f100_peak'] / 1e3 for w in w_survive_beam]
+        drift_f50 = max(f50_beam) - min(f50_beam)
+        drift_f100 = max(f100_beam) - min(f100_beam)
+        print(f"FFT resolution: PSD df = {df_psd_khz:.4f} kHz (N_fft=1024), Bicoherence df = {df_bicoh_khz:.4f} kHz (N_fft=512)")
+        print(f"Beam survivors (relative gate N={len(w_survive_beam)}):")
+        print(f"  ~50 kHz mode range: [{min(f50_beam):.2f}, {max(f50_beam):.2f}] kHz -> Drift = {drift_f50:.2f} kHz "
+              f"({drift_f50 / df_psd_khz:.2f} PSD bins, {drift_f50 / df_bicoh_khz:.2f} bicoh bins)")
+        print(f"  ~100 kHz mode range: [{min(f100_beam):.2f}, {max(f100_beam):.2f}] kHz -> Drift = {drift_f100:.2f} kHz "
+              f"({drift_f100 / df_psd_khz:.2f} PSD bins, {drift_f100 / df_bicoh_khz:.2f} bicoh bins)")
 
     # Full 16 valid SNR windows drift for comparison:
     w_valid_16 = [w for w in windows if w['pass_snr']]
@@ -125,24 +148,43 @@ def run_waterfall_analysis(staging_dir=None):
     print(f"  ~100 kHz mode range: [{min(f100_16):.2f}, {max(f100_16):.2f}] kHz -> Drift = {drift_f100_16:.2f} kHz "
           f"({drift_f100_16 / df_psd_khz:.2f} PSD bins, {drift_f100_16 / df_bicoh_khz:.2f} bicoh bins)")
 
-    # --- RECOMPUTED REGRESSIONS ---
+    # --- RECOMPUTED REGRESSIONS AND INDEPENDENT SAMPLES ---
     print("\n" + "-" * 80)
-    print("4. RECOMPUTED AMPLITUDE SCALING REGRESSIONS")
+    print("4. RECOMPUTED AMPLITUDE SCALING REGRESSIONS (n_indep >= 5 required)")
     print("-" * 80)
-    
+
+    def compute_n_independent(subset, min_gap_ms=8.0):
+        if not subset:
+            return 0
+        sorted_sub = sorted(subset, key=lambda x: x['t_start'])
+        count = 1
+        last_t = sorted_sub[0]['t_start']
+        for w in sorted_sub[1:]:
+            if w['t_start'] >= last_t + min_gap_ms:
+                count += 1
+                last_t = w['t_start']
+        return count
+
     def eval_reg(subset, name):
+        n_indep = compute_n_independent(subset)
         if len(subset) < 2:
-            print(f"{name}: N={len(subset)}, insufficient points for regression.")
+            print(f"{name:32s}: N={len(subset):2d}, n_indep={n_indep:2d} | insufficient points for regression.")
+            return
+        if n_indep < 5:
+            pos = [w for w in subset if w['im_val'] > 0]
+            neg = [w for w in subset if w['im_val'] < 0]
+            print(f"{name:32s}: N={len(subset):2d}, n_indep={n_indep:2d} < 5 | no regression or p-value reported. Sign tally (not testable): {len(pos)} pos / {len(neg)} neg")
             return
         x = np.log10([w['A50_band'] for w in subset])
         y = np.log10([w['A100_band'] for w in subset])
         res = stats.linregress(x, y)
         r2 = res.rvalue**2 if not np.isnan(res.rvalue) else np.nan
-        print(f"{name:32s}: N={len(subset):2d} | Slope = {res.slope:6.3f} | Intercept = {res.intercept:6.3f} | "
+        print(f"{name:32s}: N={len(subset):2d}, n_indep={n_indep:2d} | Slope = {res.slope:6.3f} | Intercept = {res.intercept:6.3f} | "
               f"R² = {r2:5.3f} | p-value = {res.pvalue:.4e}")
 
-    eval_reg(w_survive_strict, "Strict Survivors (N=2)")
-    eval_reg(w_survive_beam, "Beam Survivors (N=5)")
+    eval_reg(w_survive_strict_abs, "Absolute Strict Survivors (N=0)")
+    eval_reg(w_survive_strict, "Strict Relative Survivors (N=2)")
+    eval_reg(w_survive_beam, "Beam Relative Survivors (N=5)")
     eval_reg([w for w in windows if w['pass_snr'] and w['t_center'] <= 297.5], "Episode 1 (N=6, t_center<=297.5)")
     eval_reg([w for w in windows if w['pass_snr'] and w['t_center'] > 300.0], "Episode 2 (N=10, t_center>300.0)")
     eval_reg([w for w in windows if w['pass_snr']], "Pooled 16 Valid Windows (Old)")

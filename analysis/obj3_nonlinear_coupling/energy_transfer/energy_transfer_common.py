@@ -16,13 +16,14 @@ for p in [current] + list(current.parents):
 if root_dir is None:
     root_dir = Path("c:/TFG")
 
-for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", root_dir / "analysis" / "obj3_nonlinear_coupling", root_dir / "analysis" / "heating_phase_comparison"]:
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", root_dir / "analysis" / "obj3_nonlinear_coupling", root_dir / "analysis" / "obj1_mode_identification", root_dir / "analysis" / "heating_phase_comparison"]:
     if str(p_add) not in sys.path:
         sys.path.append(str(p_add))
 
 from comparison_common import load_channel
 from mhd_plot_bicoherence_sliding_trace import custom_abicoh2_complex
 from mhd_analysis_obj3 import extract_instantaneous_frequency
+from mhd_analysis_obj1 import track_mode_ridges
 
 # Standard analysis parameters
 WIN_LEN_MS = 8.0
@@ -95,6 +96,14 @@ def evaluate_energy_transfer_windows(shot=88653):
 
     ref_core = compute_reference_flatness_core(t_ms, ifreq_khz, dt)
 
+    # Ridge tracking for absolute mode frequency excursion gate
+    tr_res = track_mode_ridges(ys, fs, time_start_sec=t_ms[0] / 1000.0)
+    t_tr = tr_res['t_stft_ms']
+    med_p = tr_res['med_pri']
+    med_s = tr_res['med_sec']
+    df_bicoh_khz = (fs / 512.0) / 1000.0  # 1.953125 kHz
+    tol_abs_khz = 1.5 * df_bicoh_khz      # 2.9296875 kHz
+
     # Welch parameters for amplitude scaling
     NPERSEG = 1024
     NOVERLAP = 512
@@ -123,6 +132,10 @@ def evaluate_energy_transfer_windows(shot=88653):
 
         win_mean_slope = float(np.mean(full_slope_abs[idx]))
 
+        m_tr = (t_tr >= t_start) & (t_tr <= t_end)
+        exc_pri = float(np.max(med_p[m_tr]) - np.min(med_p[m_tr]))
+        exc_sec = float(np.max(med_s[m_tr]) - np.min(med_s[m_tr]))
+
         f_psd, Pxx = dsp.welch(y_sub, fs=fs, nperseg=NPERSEG, noverlap=NOVERLAP, window='hann', scaling='density')
         df = f_psd[1] - f_psd[0]
         mask_50 = (f_psd >= 40e3) & (f_psd <= 55e3)
@@ -132,10 +145,12 @@ def evaluate_energy_transfer_windows(shot=88653):
         f50_peak = f_psd[mask_50][np.argmax(Pxx[mask_50])]
         f100_peak = f_psd[mask_100][np.argmax(Pxx[mask_100])]
 
-        # The 3 Rules
+        # The 3 Rules (and absolute flatness variant)
         pass_containment_strict = (t_end <= T_NBI_BURST_END_MS + 1e-6)
         pass_containment_beam = (t_end <= T_BEAM_OFF_MS + 1e-6)
         pass_flatness = (win_mean_slope <= ref_core['tol_mean'])
+        pass_flatness_abs = (exc_pri <= tol_abs_khz) and (exc_sec <= tol_abs_khz)
+        pass_flatness_abs_2x = (exc_pri <= tol_abs_khz * 2.0) and (exc_sec <= tol_abs_khz * 2.0)
         pass_snr = (den_val > SNR_THRESHOLD)
 
         windows.append({
@@ -146,6 +161,8 @@ def evaluate_energy_transfer_windows(shot=88653):
             'im_val': im_val,
             'den': den_val,
             'slope': win_mean_slope,
+            'exc_pri': exc_pri,
+            'exc_sec': exc_sec,
             'A50_band': A50_band,
             'A100_band': A100_band,
             'f50_peak': f50_peak,
@@ -153,9 +170,13 @@ def evaluate_energy_transfer_windows(shot=88653):
             'pass_containment_strict': pass_containment_strict,
             'pass_containment_beam': pass_containment_beam,
             'pass_flatness': pass_flatness,
+            'pass_flatness_abs': pass_flatness_abs,
+            'pass_flatness_abs_2x': pass_flatness_abs_2x,
             'pass_snr': pass_snr,
             'pass_all_strict': pass_containment_strict and pass_flatness and pass_snr,
-            'pass_all_beam': pass_containment_beam and pass_flatness and pass_snr
+            'pass_all_beam': pass_containment_beam and pass_flatness and pass_snr,
+            'pass_all_strict_abs': pass_containment_strict and pass_flatness_abs and pass_snr,
+            'pass_all_beam_abs': pass_containment_beam and pass_flatness_abs and pass_snr,
         })
 
     return windows, ref_core
