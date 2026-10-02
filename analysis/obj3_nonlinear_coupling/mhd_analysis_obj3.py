@@ -89,20 +89,16 @@ def bicoherence_min_samples(nfft, ensemble, noverlap_frac):
 def statistical_b2_threshold(n_ensemble, alpha=0.05):
     """Rigorous statistical significance threshold for the squared bicoherence.
 
-    Under the null hypothesis (statistically independent phases/signals), Kim, Y.C. &
-    Powers, E.J. (IEEE Trans. Plasma Sci., 1979) show that N_ensemble * b^2 approximately
-    follows an exponential distribution with mean 1 (equivalently, b^2 is distributed as an
-    exponential with mean 1/N_ensemble). The (1 - alpha) percentile of that exponential
-    distribution is:
-
-        b^2_alpha = -ln(alpha) / N_ensemble
-
-    This is different from (and more rigorous than) comparing only against the MEAN of that
-    distribution (1/N_ensemble), which systematically underestimates the true 95% significance
-    level (with alpha=0.05, the factor -ln(0.05) ~= 3.0, i.e. the 95% threshold is ~3 times the
-    mean, not the mean itself).
+    Under the null hypothesis (statistically independent phases/signals), the finite-sample
+    bicoherence distribution follows a Beta distribution matching the cross-coherence floor:
+        b^2_alpha = 1 - alpha^(1 / (N_ensemble - 1))
+    which asymptotically approaches -ln(alpha) / N_ensemble as N -> inf.
+    For N=30 and alpha=0.05, 1 - 0.05^(1/29) = 0.098 (vs. -ln(0.05)/30 = 0.100).
     """
-    return -np.log(alpha) / n_ensemble
+    if n_ensemble <= 1:
+        return 1.0
+    return 1.0 - alpha ** (1.0 / (n_ensemble - 1))
+
 
 
 def compute_n_effective(n_ensemble, noverlap_frac=0.5, window_name='hann'):
