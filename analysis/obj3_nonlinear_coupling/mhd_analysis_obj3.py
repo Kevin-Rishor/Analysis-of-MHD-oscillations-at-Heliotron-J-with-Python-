@@ -1604,16 +1604,34 @@ def run_single_shot(shot_id, args):
                              arrowprops=dict(arrowstyle="->", color='white', lw=1.1, alpha=0.85, shrinkA=2, shrinkB=3),
                              path_effects=[path_effects.withStroke(linewidth=2.5, foreground="black")])
 
-        # Compact structured info badge in lower right
+        # Dynamic info badge in lower right built from peak table
+        TOL_PUMP_KHZ = 6.0
+        TOL_SUBHARMONIC = 0.035
+        subharm_ranks = []
+        pump_lines = []
+
+        if best_rank_entry:
+            sign_op = '-' if best_channel_data['coupling_type'] == 'Diff' else '+'
+            for idx, p in enumerate(best_rank_entry['top_peaks'], 1):
+                pf1, pf2, pf3 = p[1], p[2], p[3]
+                signed_pf2 = -pf2 if best_channel_data['coupling_type'] == 'Diff' else pf2
+                if abs(pf1 - 89.0) <= TOL_PUMP_KHZ:
+                    pump_lines.append(f"  Peak #{idx} ({pf1:.1f} {sign_op} {pf2:.1f} = {pf3:.1f} kHz)")
+                elif abs(signed_pf2 / pf1 + 0.5) <= TOL_SUBHARMONIC:
+                    subharm_ranks.append(idx)
+
+        clustering_parts = []
+        if subharm_ranks:
+            clustering_parts.append("\u2022 Subharmonic Line (Slope -0.5):\n  Peaks " + ", ".join(f"#{r}" for r in subharm_ranks))
+        if pump_lines:
+            clustering_parts.append("• Pump Column (f1 = 89 kHz):\n" + "\n".join(pump_lines))
+
+        clustering_str = "\n".join(clustering_parts)
+        clustering_section = f"\n\nNon-Linear Triad Clustering:\n{clustering_str}" if clustering_str else ""
+
         badge_text = (
             f"Leading: f1={best_f[0]:.1f}, f2={best_f[1]:.1f}, f3={best_f[2]:.1f} kHz | b\u00b2={best_channel_data['max_b2']:.3f}\n"
-            f"95% Stat. Floor: b\u00b2 = {best_channel_data['b2_stat_threshold']:.3f}\n\n"
-            "Non-Linear Triad Clustering:\n"
-            "\u2022 Subharmonic Line (Slope -0.5):\n"
-            "  Peaks #1, #2, #4, #5, #8, #9, #10\n"
-            "\u2022 Pump Column (f1 = 89 kHz):\n"
-            "  Peak #3 (89.8 - 41.0 = 48.8 kHz)\n"
-            "  Peak #7 (84.0 - 23.4 = 60.5 kHz)"
+            f"95% Stat. Floor: b\u00b2 = {best_channel_data['b2_stat_threshold']:.3f}{clustering_section}"
         )
         ax1.text(0.98, 0.03, badge_text, transform=ax1.transAxes, fontsize=8.2,
                  va="bottom", ha="right", bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="gray", alpha=0.9))
