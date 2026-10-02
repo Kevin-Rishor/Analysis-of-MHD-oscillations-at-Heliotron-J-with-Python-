@@ -3,16 +3,23 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-root_dir = Path("c:/TFG")
-sys.path.append(str(root_dir / "jpack"))
-sys.path.append(str(root_dir / "analysis"))
-sys.path.append(str(root_dir / "analysis" / "common"))
-sys.path.append(str(root_dir / "analysis" / "heating_phase_comparison"))
+current = Path(__file__).resolve().parent
+root_dir = None
+for p in [current] + list(current.parents):
+    if (p / "jpack").exists():
+        root_dir = p
+        break
+if root_dir is None:
+    root_dir = Path("c:/TFG")
+
+for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", root_dir / "analysis" / "heating_phase_comparison"]:
+    if str(p_add) not in sys.path:
+        sys.path.append(str(p_add))
 
 from comparison_common import load_channel
 from mhd_plot_bicoherence_sliding_trace import custom_abicoh2_complex
 
-def run_step2():
+def run_step2(out_path=None):
     shot = 88653
     t_ms, ys, dt, fs = load_channel(shot, "MP1")
     if ys is None or t_ms is None:
@@ -78,7 +85,11 @@ def run_step2():
     ax.set_ylabel('Im[B_sum]')
     ax.set_title('Sign vs Threshold - 88653')
     
-    out_path = root_dir / "Images" / "sign_vs_threshold_88653.png"
+    if out_path is None:
+        out_path = root_dir / "Images" / "sign_vs_threshold_88653.png"
+    else:
+        out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     plt.savefig(out_path, dpi=300)
     plt.close()
     
@@ -86,11 +97,14 @@ def run_step2():
     valid_mask = den_plot > 2.5e-23
     num_valid = np.sum(valid_mask)
     
-    with open(root_dir / "scratch" / "round_final2.txt", "a") as f:
+    logs_dir = root_dir / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    with open(logs_dir / "round_final2.txt", "a") as f:
         f.write(f"Step 2: Number of valid windows: {num_valid}\n")
         f.write(f"Valid points (Time, Im[B_sum]):\n")
         for t, im in zip(t_plot[valid_mask], im_plot[valid_mask]):
             f.write(f"  {t:.2f} ms: {im:.4f}\n")
 
 if __name__ == "__main__":
-    run_step2()
+    out_arg = sys.argv[1] if len(sys.argv) > 1 else None
+    run_step2(out_path=out_arg)

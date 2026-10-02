@@ -7,8 +7,19 @@ import scipy.fft as fft
 import scipy.stats as stats
 from pathlib import Path
 
-ROOT = Path("c:/TFG")
-sys.path.insert(0, str(ROOT / "jpack"))
+current = Path(__file__).resolve().parent
+ROOT = None
+for p in [current] + list(current.parents):
+    if (p / "jpack").exists():
+        ROOT = p
+        break
+if ROOT is None:
+    ROOT = Path("c:/TFG")
+
+for p_add in [ROOT / "jpack", ROOT / "analysis", ROOT / "analysis" / "common"]:
+    if str(p_add) not in sys.path:
+        sys.path.append(str(p_add))
+
 import turnelib as TE
 
 def load_channel(shot, channel_name):
