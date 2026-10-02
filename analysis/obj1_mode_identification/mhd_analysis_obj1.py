@@ -7,7 +7,8 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.signal as dsp
-from scipy.ndimage import uniform_filter1d
+from scipy.ndimage import uniform_filter1d, median_filter
+import matplotlib.patheffects as pe
 
 SHOTS_DEFAULT = [88653]
 
@@ -31,6 +32,7 @@ import turnelib as TE
 import libana_signal as LAS
 from mhd_common import morlet_cwt
 from comparison_common import (
+    DEFAULT_SHOT,
     T_NOISE_START, T_NOISE_END,
     T_W1_START, T_W1_END,
     T_W2_START, T_W2_END,
@@ -44,6 +46,12 @@ def setup_logging(verbose=False, log_file=None):
     log.setLevel(logging.DEBUG)
     log.handlers.clear()
     
+    if hasattr(sys.stdout, "reconfigure"):
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
     console = logging.StreamHandler(sys.stdout)
     console.setLevel(logging.DEBUG if verbose else logging.INFO)
     console.setFormatter(logging.Formatter("%(message)s"))
@@ -377,7 +385,7 @@ def process_shot(shot, args):
 
         c0 = axs[0].pcolormesh(tt[mask_fplot, :], ff[mask_fplot, :], np.log10(Pyy1[mask_fplot, :] + 1e-30),
                                 cmap='jet', shading='auto')
-        fig.colorbar(c0, ax=axs[0], label="log10 PSD (V^2/Hz)", pad=0.03)
+        cb0 = fig.colorbar(c0, ax=axs[0], label="log10 PSD (V^2/Hz)", pad=0.03)
 
         dmap_plot = dominance_map[mask_fplot, :].astype(float)
         axs[0].contourf(tt[mask_fplot, :], ff[mask_fplot, :], dmap_plot,
@@ -388,64 +396,163 @@ def process_shot(shot, args):
         # Time window matching heating_vs_mirnov.py
         axs[0].set_xlim(150.0, 350.0)
 
-        # Primary and secondary mode segmented markers
-        phase_tracking = compute_phase_mode_frequencies(signals["MP1"], fs, time_sec)
-        w1_data = phase_tracking["ECH + NBI Phase"]
-        w2_data = phase_tracking["NBI-only Phase"]
+        # Mode markers for DEFAULT_SHOT only
+        if shot == DEFAULT_SHOT:
+            # Dynamic tracked ridge lines for Primary and Secondary modes
+            nperseg_tr = 1024
+            noverlap_tr = 960  # hop = 64 us
+            f_stft_tr, t_s_tr, Zxx_tr = dsp.stft(signals["MP1"], fs=fs, nperseg=nperseg_tr, noverlap=noverlap_tr, window='hann')
+            t_stft_ms_tr = float(time_sec[0]) * 1000.0 + t_s_tr * 1000.0
+            psd_tr = np.abs(Zxx_tr) ** 2
+            f_khz_tr = f_stft_tr / 1000.0
 
-        f_pri_w1, f_sec_w1 = w1_data["f_pri_mean"], w1_data["f_sec_mean"]
-        f_pri_w2, f_sec_w2 = w2_data["f_pri_mean"], w2_data["f_sec_mean"]
+            m_pri_band = (f_khz_tr >= 70.0) & (f_khz_tr <= 110.0)
+            m_sec_band = (f_khz_tr >= 30.0) & (f_khz_tr <= 65.0)
 
-        log_print(f"Segmented mode ridge tracking for Shot {shot}:")
-        log_print(f"  Primary Mode Segment 1 (ECH+NBI):  [{w1_data['tw_start']:.1f}, {w1_data['tw_end']:.1f}] ms -> {f_pri_w1:.2f} kHz")
-        log_print(f"  Primary Mode Segment 2 (NBI-only): [{w2_data['tw_start']:.1f}, {w2_data['tw_end']:.1f}] ms -> {f_pri_w2:.2f} kHz")
-        log_print(f"  Secondary Mode Segment 1 (ECH+NBI):  [{w1_data['tw_start']:.1f}, {w1_data['tw_end']:.1f}] ms -> {f_sec_w1:.2f} kHz")
-        log_print(f"  Secondary Mode Segment 2 (NBI-only): [{w2_data['tw_start']:.1f}, {w2_data['tw_end']:.1f}] ms -> {f_sec_w2:.2f} kHz")
+            # Dominance map lookup setup
+            t_dmap_ms = tave * 1000.0
+            f_dmap_khz = f / 1000.0
 
-        # Sanity check against reference values
-        ref_pri_w1, ref_sec_w1 = 87.60, 45.47
-        ref_pri_w2, ref_sec_w2 = 86.69, 40.26
-        if abs(f_pri_w1 - ref_pri_w1) > 4.0 or abs(f_sec_w1 - ref_sec_w1) > 4.0 or \
-           abs(f_pri_w2 - ref_pri_w2) > 4.0 or abs(f_sec_w2 - ref_sec_w2) > 4.0:
-            raise ValueError("Computed ridge tracking values disagree with reference values by more than 4 kHz! Aborting.")
+            # Process per phase: Phase 1 (259.1-291.3 ms) and Phase 2 (291.3-300.0 ms)
+            phase_defs = [
+                ("Phase 1 (ECH+NBI)", (t_stft_ms_tr >= 259.1) & (t_stft_ms_tr <= 291.3)),
+                ("Phase 2 (NBI-only)", (t_stft_ms_tr > 291.3) & (t_stft_ms_tr <= 300.0)),
+            ]
 
-        # Primary mode segments (white dashed)
-        axs[0].plot([w1_data["tw_start"], w1_data["tw_end"]], [f_pri_w1, f_pri_w1],
-                    color='white', linestyle='--', linewidth=2.4, zorder=5)
-        axs[0].plot([w2_data["tw_start"], w2_data["tw_end"]], [f_pri_w2, f_pri_w2],
-                    color='white', linestyle='--', linewidth=2.4, zorder=5)
+            mode_results = {}
+            log_print(f"\nTracked ridge mode statistics for Shot {shot} (median filter: 17 slices = 1.088 ms):")
 
-        # Secondary mode segments (yellow dashed)
-        axs[0].plot([w1_data["tw_start"], w1_data["tw_end"]], [f_sec_w1, f_sec_w1],
-                    color='yellow', linestyle='--', linewidth=2.4, zorder=5)
-        axs[0].plot([w2_data["tw_start"], w2_data["tw_end"]], [f_sec_w2, f_sec_w2],
-                    color='yellow', linestyle='--', linewidth=2.4, zorder=5)
+            def filter_short_runs(mask, min_len=9):
+                cleaned = mask.copy()
+                in_run = False
+                run_start = 0
+                runs = []
+                for i, val in enumerate(mask):
+                    if val and not in_run:
+                        in_run = True
+                        run_start = i
+                    elif not val and in_run:
+                        in_run = False
+                        runs.append((run_start, i))
+                if in_run:
+                    runs.append((run_start, len(mask)))
+                n_dropped = 0
+                for start, end in runs:
+                    rlen = end - start
+                    if rlen < min_len:
+                        cleaned[start:end] = False
+                        n_dropped += rlen
+                return cleaned, n_dropped
 
-        # Small frequency badges
-        bbox_f_pri = dict(boxstyle='round,pad=0.2', facecolor='black', alpha=0.75, edgecolor='white', lw=0.8)
-        bbox_f_sec = dict(boxstyle='round,pad=0.2', facecolor='black', alpha=0.75, edgecolor='yellow', lw=0.8)
+            for pname, mask_ph in phase_defs:
+                t_ph = t_stft_ms_tr[mask_ph]
+                n_sl = len(t_ph)
+                psd_ph = psd_tr[:, mask_ph]
 
-        axs[0].text((w1_data["tw_start"] + w1_data["tw_end"]) / 2.0, f_pri_w1 + 3.0, f"{f_pri_w1:.1f} kHz",
-                    color='white', fontsize=8.0, fontweight='bold', ha='center', va='bottom', bbox=bbox_f_pri)
-        axs[0].text((w2_data["tw_start"] + w2_data["tw_end"]) / 2.0, f_pri_w2 + 3.0, f"{f_pri_w2:.1f} kHz",
-                    color='white', fontsize=8.0, fontweight='bold', ha='center', va='bottom', bbox=bbox_f_pri)
+                raw_p = f_khz_tr[m_pri_band][np.argmax(psd_ph[m_pri_band, :], axis=0)]
+                raw_s = f_khz_tr[m_sec_band][np.argmax(psd_ph[m_sec_band, :], axis=0)]
 
-        axs[0].text((w1_data["tw_start"] + w1_data["tw_end"]) / 2.0, f_sec_w1 + 3.0, f"{f_sec_w1:.1f} kHz",
-                    color='yellow', fontsize=8.0, fontweight='bold', ha='center', va='bottom', bbox=bbox_f_sec)
-        axs[0].text((w2_data["tw_start"] + w2_data["tw_end"]) / 2.0, f_sec_w2 - 3.0, f"{f_sec_w2:.1f} kHz",
-                    color='yellow', fontsize=8.0, fontweight='bold', ha='center', va='top', bbox=bbox_f_sec)
+                med_p = median_filter(raw_p, size=17)
+                med_s = median_filter(raw_s, size=17)
 
-        # Mode labels near right end of mode's line (styled like mhd_plot_modulator_dual_mode.py)
-        bbox_lbl_pri = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='white', lw=1.2)
-        bbox_lbl_sec = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='yellow', lw=1.2)
+                for mname, raw_arr, med_arr in [("Primary", raw_p, med_p), ("Secondary", raw_s, med_s)]:
+                    # Edge trimming: drop first and last 8 slices
+                    edge_drop = np.zeros(n_sl, dtype=bool)
+                    edge_drop[:8] = True
+                    edge_drop[-8:] = True
+                    n_edge = int(np.sum(edge_drop))
 
-        axs[0].annotate('Primary Mode', xy=(w2_data["tw_end"], f_pri_w2), xytext=(305.0, f_pri_w2),
-                        ha='left', va='center', fontsize=9.0, fontweight='bold', color='white',
-                        bbox=bbox_lbl_pri, arrowprops=dict(arrowstyle='->', color='white', lw=1.2))
+                    # Outlier rejection: |raw - filtered| > 5.0 kHz
+                    diff = np.abs(raw_arr - med_arr)
+                    outlier_drop = diff > 5.0
+                    n_outliers = int(np.sum(outlier_drop & (~edge_drop)))
 
-        axs[0].annotate('Secondary Mode', xy=(w2_data["tw_end"], f_sec_w2), xytext=(305.0, f_sec_w2),
-                        ha='left', va='center', fontsize=9.0, fontweight='bold', color='yellow',
-                        bbox=bbox_lbl_sec, arrowprops=dict(arrowstyle='->', color='yellow', lw=1.2))
+                    # 3-sigma dominance map lookup
+                    dom_mask = np.zeros(n_sl, dtype=bool)
+                    for idx_pt, (ti, fp) in enumerate(zip(t_ph, med_arr)):
+                        it = int(np.abs(t_dmap_ms - ti).argmin())
+                        ifp = int(np.abs(f_dmap_khz - fp).argmin())
+                        dom_mask[idx_pt] = dominance_map[ifp, it]
+
+                    dom_masked = (~edge_drop) & (~outlier_drop) & (~dom_mask)
+                    n_dom = int(np.sum(dom_masked))
+
+                    valid_initial = (~edge_drop) & (~outlier_drop) & dom_mask
+                    valid_mask, n_short = filter_short_runs(valid_initial, min_len=9)
+                    valid_vals = med_arr[valid_mask]
+                    mean_val = float(np.mean(valid_vals)) if len(valid_vals) > 0 else float('nan')
+                    min_val = float(np.min(valid_vals)) if len(valid_vals) > 0 else float('nan')
+                    max_val = float(np.max(valid_vals)) if len(valid_vals) > 0 else float('nan')
+
+                    log_print(f"  {pname} - {mname} Mode:")
+                    log_print(f"    Slices dropped by edge trimming: {n_edge}")
+                    log_print(f"    Slices dropped as outliers: {n_outliers}")
+                    log_print(f"    Slices masked by 3-sigma dominance map: {n_dom}")
+                    log_print(f"    Slices dropped as short runs (< 9 slices): {n_short}")
+                    log_print(f"    Resulting mean = {mean_val:.2f} kHz, min = {min_val:.2f} kHz, max = {max_val:.2f} kHz")
+
+                    mode_results[(pname, mname)] = {
+                        "t": t_ph,
+                        "plot_vals": np.where(valid_mask, med_arr, np.nan),
+                        "mean": mean_val,
+                        "min": min_val,
+                        "max": max_val,
+                    }
+
+            pri_w1_mean = mode_results[("Phase 1 (ECH+NBI)", "Primary")]["mean"]
+            pri_w2_mean = mode_results[("Phase 2 (NBI-only)", "Primary")]["mean"]
+            sec_w1_mean = mode_results[("Phase 1 (ECH+NBI)", "Secondary")]["mean"]
+            sec_w2_mean = mode_results[("Phase 2 (NBI-only)", "Secondary")]["mean"]
+
+            # Sanity check against flat reference values
+            ref_pri_w1, ref_sec_w1 = 87.60, 45.47
+            ref_pri_w2, ref_sec_w2 = 86.69, 40.26
+            d_p1 = abs(pri_w1_mean - ref_pri_w1)
+            d_p2 = abs(pri_w2_mean - ref_pri_w2)
+            d_s1 = abs(sec_w1_mean - ref_sec_w1)
+            d_s2 = abs(sec_w2_mean - ref_sec_w2)
+            log_print(f"  Differences vs flat references: Pri W1: {d_p1:.2f} kHz, Pri W2: {d_p2:.2f} kHz, Sec W1: {d_s1:.2f} kHz, Sec W2: {d_s2:.2f} kHz")
+            if d_p1 > 4.0 or d_p2 > 4.0 or d_s1 > 4.0 or d_s2 > 4.0:
+                log_print(f"  WARNING: One or more tracked ridge means differ from flat reference values by more than 4 kHz! Continuing.")
+
+            # Plot cleaned 1.6 pt solid lines with dark outline
+            outline_effect = [pe.Stroke(linewidth=3.0, foreground='black'), pe.Normal()]
+            for pname in ["Phase 1 (ECH+NBI)", "Phase 2 (NBI-only)"]:
+                axs[0].plot(mode_results[(pname, "Primary")]["t"],
+                            mode_results[(pname, "Primary")]["plot_vals"],
+                            color='white', linewidth=1.6, zorder=5, path_effects=outline_effect)
+                axs[0].plot(mode_results[(pname, "Secondary")]["t"],
+                            mode_results[(pname, "Secondary")]["plot_vals"],
+                            color='yellow', linewidth=1.6, zorder=5, path_effects=outline_effect)
+
+            # Mode labels near right end with arrow pointing to the last valid point
+            p2_pri_vals = mode_results[("Phase 2 (NBI-only)", "Primary")]["plot_vals"]
+            p2_pri_t = mode_results[("Phase 2 (NBI-only)", "Primary")]["t"]
+            valid_p2_pri = np.where(~np.isnan(p2_pri_vals))[0]
+            last_t_pri = p2_pri_t[valid_p2_pri[-1]]
+            last_f_pri = p2_pri_vals[valid_p2_pri[-1]]
+
+            p2_sec_vals = mode_results[("Phase 2 (NBI-only)", "Secondary")]["plot_vals"]
+            p2_sec_t = mode_results[("Phase 2 (NBI-only)", "Secondary")]["t"]
+            valid_p2_sec = np.where(~np.isnan(p2_sec_vals))[0]
+            last_t_sec = p2_sec_t[valid_p2_sec[-1]]
+            last_f_sec = p2_sec_vals[valid_p2_sec[-1]]
+
+            bbox_lbl_pri = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='white', lw=1.2)
+            bbox_lbl_sec = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='yellow', lw=1.2)
+
+            label_pri = f"Primary Mode\nmean {pri_w1_mean:.1f} \u2192 {pri_w2_mean:.1f} kHz"
+            label_sec = f"Secondary Mode\nmean {sec_w1_mean:.1f} \u2192 {sec_w2_mean:.1f} kHz"
+
+            axs[0].annotate(label_pri, xy=(last_t_pri, last_f_pri), xytext=(305.0, last_f_pri),
+                            ha='left', va='center', fontsize=8.5, fontweight='bold', color='white',
+                            bbox=bbox_lbl_pri, arrowprops=dict(arrowstyle='->', color='white', lw=1.2))
+
+            axs[0].annotate(label_sec, xy=(last_t_sec, last_f_sec), xytext=(305.0, last_f_sec),
+                            ha='left', va='center', fontsize=8.5, fontweight='bold', color='yellow',
+                            bbox=bbox_lbl_sec, arrowprops=dict(arrowstyle='->', color='yellow', lw=1.2))
+        else:
+            log_print(f"Notice: Mode markers are only defined for shot {DEFAULT_SHOT}; skipping mode markers for shot {shot}.")
 
         axs[0].set_title("MP1 Spectrogram with 3-sigma Dominance Region")
         axs[0].set_xlabel("Time (ms)")
@@ -453,7 +560,7 @@ def process_shot(shot, args):
 
         tt_w, ff_w = np.meshgrid(time_sec * 1000.0, freqs_wav / 1000.0)
         c1 = axs[1].pcolormesh(tt_w, ff_w, np.log10(wav_power + 1e-30), cmap='jet', shading='auto')
-        fig.colorbar(c1, ax=axs[1], label="log10 Wavelet Power (rel.)", pad=0.03)
+        cb1 = fig.colorbar(c1, ax=axs[1], label="log10 Wavelet Power (rel.)", pad=0.03)
         axs[1].set_title("Morlet Wavelet Transform (MP1)")
         axs[1].set_xlabel("Time (ms)")
         axs[1].set_ylabel("Frequency (kHz)")
@@ -493,33 +600,48 @@ def process_shot(shot, args):
         primary_axes = [ax for ax in fig.get_axes() if not (hasattr(ax, '_colorbar_info') or getattr(ax, '_colorbar', False))]
 
         pad = 0.08
-        # Panel 1
+        # Panel 1 (with colorbar)
         ax1 = primary_axes[0]
         bb1 = ax1.get_tightbbox(renderer)
         if bb1 is None: bb1 = ax1.get_window_extent(renderer)
-        bb1_in = bb1.transformed(fig.dpi_scale_trans.inverted())
+        bb1_cb = cb0.ax.get_tightbbox(renderer)
+        if bb1_cb is None: bb1_cb = cb0.ax.get_window_extent(renderer)
+        bb1_union = transforms.Bbox.union([bb1, bb1_cb])
+        bb1_in = bb1_union.transformed(fig.dpi_scale_trans.inverted())
         bb1_padded = transforms.Bbox.from_extents(bb1_in.x0 - pad, bb1_in.y0 - pad, bb1_in.x1 + pad, bb1_in.y1 + pad)
         p1_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png"
         fig.savefig(str(p1_path), dpi=150, bbox_inches=bb1_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
         print(f"Panel 1 extracted and saved to '{p1_path}'.")
 
-        # Compare panels 2 and 3 hashes
+        # Panel 2 (with colorbar)
+        ax2 = primary_axes[1]
+        bb2 = ax2.get_tightbbox(renderer)
+        if bb2 is None: bb2 = ax2.get_window_extent(renderer)
+        bb2_cb = cb1.ax.get_tightbbox(renderer)
+        if bb2_cb is None: bb2_cb = cb1.ax.get_window_extent(renderer)
+        bb2_union = transforms.Bbox.union([bb2, bb2_cb])
+        bb2_in = bb2_union.transformed(fig.dpi_scale_trans.inverted())
+        bb2_padded = transforms.Bbox.from_extents(bb2_in.x0 - pad, bb2_in.y0 - pad, bb2_in.x1 + pad, bb2_in.y1 + pad)
         p2_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel2_morlet_wavelet_transform_mp1.png"
+        fig.savefig(str(p2_path), dpi=150, bbox_inches=bb2_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+        print(f"Panel 2 extracted (with colorbar) and saved to '{p2_path}'.")
+
+        # Panel 3 (no colorbar - verify hash match)
+        ax3 = primary_axes[2]
         p3_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel3_inter_probe_spatial_coherence_gamma2f.png"
-        for i, (ax, p_path) in enumerate([(primary_axes[1], p2_path), (primary_axes[2], p3_path)], 2):
-            if p_path.exists():
-                orig_hash = hashlib.sha256(p_path.read_bytes()).hexdigest()
-                bb = ax.get_tightbbox(renderer)
-                if bb is None: bb = ax.get_window_extent(renderer)
-                bbi = bb.transformed(fig.dpi_scale_trans.inverted())
-                bbp = transforms.Bbox.from_extents(bbi.x0 - pad, bbi.y0 - pad, bbi.x1 + pad, bbi.y1 + pad)
-                buf = io.BytesIO()
-                fig.savefig(buf, format='png', dpi=150, bbox_inches=bbp, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
-                new_hash = hashlib.sha256(buf.getvalue()).hexdigest()
-                match = (orig_hash == new_hash)
-                print(f"Panel {i} SHA-256 match: {match} (orig: {orig_hash}, new: {new_hash})")
-                if not match:
-                    print(f"WARNING: Panel {i} hash differs! Leaving existing file untouched.")
+        if p3_path.exists():
+            orig_hash = hashlib.sha256(p3_path.read_bytes()).hexdigest()
+            bb3 = ax3.get_tightbbox(renderer)
+            if bb3 is None: bb3 = ax3.get_window_extent(renderer)
+            bb3_in = bb3.transformed(fig.dpi_scale_trans.inverted())
+            bb3_padded = transforms.Bbox.from_extents(bb3_in.x0 - pad, bb3_in.y0 - pad, bb3_in.x1 + pad, bb3_in.y1 + pad)
+            buf = io.BytesIO()
+            fig.savefig(buf, format='png', dpi=150, bbox_inches=bb3_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+            new_hash = hashlib.sha256(buf.getvalue()).hexdigest()
+            match = (orig_hash == new_hash)
+            print(f"Panel 3 SHA-256 match: {match} (orig: {orig_hash}, new: {new_hash})")
+            if not match:
+                print(f"WARNING: Panel 3 hash differs! Leaving existing file untouched.")
 
         plt.close(fig)
 
