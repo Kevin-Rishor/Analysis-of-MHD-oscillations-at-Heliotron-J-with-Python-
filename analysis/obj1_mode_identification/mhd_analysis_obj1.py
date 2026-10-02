@@ -74,6 +74,62 @@ print = log_print
 CONFIRMATION_RULE = "any single coil pair > threshold"
 
 
+def filter_short_runs(mask, min_len=9):
+    """Cleans a boolean mask by dropping runs shorter than min_len consecutive True samples."""
+    cleaned = mask.copy()
+    in_run = False
+    run_start = 0
+    runs = []
+    for i, val in enumerate(mask):
+        if val and not in_run:
+            in_run = True
+            run_start = i
+        elif not val and in_run:
+            in_run = False
+            runs.append((run_start, i))
+    if in_run:
+        runs.append((run_start, len(mask)))
+    n_dropped = 0
+    for start, end in runs:
+        rlen = end - start
+        if rlen < min_len:
+            cleaned[start:end] = False
+            n_dropped += rlen
+    return cleaned, n_dropped
+
+
+def track_mode_ridges(signal, fs, time_start_sec=0.0,
+                      nperseg=1024, noverlap=960,
+                      pri_band=(70.0, 110.0), sec_band=(30.0, 65.0),
+                      med_filter_size=17):
+    """Tracks primary and secondary mode ridges using STFT peak picking and median filter."""
+    f_stft, t_s, Zxx = dsp.stft(signal, fs=fs, nperseg=nperseg, noverlap=noverlap, window='hann')
+    t_stft_ms = float(time_start_sec) * 1000.0 + t_s * 1000.0
+    psd = np.abs(Zxx) ** 2
+    f_khz = f_stft / 1000.0
+
+    m_pri = (f_khz >= pri_band[0]) & (f_khz <= pri_band[1])
+    m_sec = (f_khz >= sec_band[0]) & (f_khz <= sec_band[1])
+
+    raw_pri = f_khz[m_pri][np.argmax(psd[m_pri, :], axis=0)]
+    raw_sec = f_khz[m_sec][np.argmax(psd[m_sec, :], axis=0)]
+
+    med_pri = median_filter(raw_pri, size=med_filter_size)
+    med_sec = median_filter(raw_sec, size=med_filter_size)
+
+    return {
+        't_stft_ms': t_stft_ms,
+        'f_khz': f_khz,
+        'psd': psd,
+        'raw_pri': raw_pri,
+        'raw_sec': raw_sec,
+        'med_pri': med_pri,
+        'med_sec': med_sec,
+        'm_pri_band': m_pri,
+        'm_sec_band': m_sec,
+    }
+
+
 def find_active_intervals(bool_series, time_s, min_duration_ms=0.0):
     """Returns [start_ms, end_ms] active intervals where bool_series is True."""
     bool_series = np.asarray(bool_series, dtype=bool)
@@ -399,15 +455,12 @@ def process_shot(shot, args):
         # Mode markers for DEFAULT_SHOT only
         if shot == DEFAULT_SHOT:
             # Dynamic tracked ridge lines for Primary and Secondary modes
-            nperseg_tr = 1024
-            noverlap_tr = 960  # hop = 64 us
-            f_stft_tr, t_s_tr, Zxx_tr = dsp.stft(signals["MP1"], fs=fs, nperseg=nperseg_tr, noverlap=noverlap_tr, window='hann')
-            t_stft_ms_tr = float(time_sec[0]) * 1000.0 + t_s_tr * 1000.0
-            psd_tr = np.abs(Zxx_tr) ** 2
-            f_khz_tr = f_stft_tr / 1000.0
-
-            m_pri_band = (f_khz_tr >= 70.0) & (f_khz_tr <= 110.0)
-            m_sec_band = (f_khz_tr >= 30.0) & (f_khz_tr <= 65.0)
+            tr_res = track_mode_ridges(signals["MP1"], fs, time_start_sec=float(time_sec[0]))
+            t_stft_ms_tr = tr_res['t_stft_ms']
+            psd_tr = tr_res['psd']
+            f_khz_tr = tr_res['f_khz']
+            m_pri_band = tr_res['m_pri_band']
+            m_sec_band = tr_res['m_sec_band']
 
             # Dominance map lookup setup
             t_dmap_ms = tave * 1000.0
@@ -421,28 +474,6 @@ def process_shot(shot, args):
 
             mode_results = {}
             log_print(f"\nTracked ridge mode statistics for Shot {shot} (median filter: 17 slices = 1.088 ms):")
-
-            def filter_short_runs(mask, min_len=9):
-                cleaned = mask.copy()
-                in_run = False
-                run_start = 0
-                runs = []
-                for i, val in enumerate(mask):
-                    if val and not in_run:
-                        in_run = True
-                        run_start = i
-                    elif not val and in_run:
-                        in_run = False
-                        runs.append((run_start, i))
-                if in_run:
-                    runs.append((run_start, len(mask)))
-                n_dropped = 0
-                for start, end in runs:
-                    rlen = end - start
-                    if rlen < min_len:
-                        cleaned[start:end] = False
-                        n_dropped += rlen
-                return cleaned, n_dropped
 
             for pname, mask_ph in phase_defs:
                 t_ph = t_stft_ms_tr[mask_ph]
