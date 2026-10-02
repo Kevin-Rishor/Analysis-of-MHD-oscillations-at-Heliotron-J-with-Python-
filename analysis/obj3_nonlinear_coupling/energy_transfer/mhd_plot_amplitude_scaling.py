@@ -122,55 +122,56 @@ def plot_amplitude_scaling(all_data, q1, q2, out_dir=None):
     y_mean = np.mean(y_valid)
 
     # FIGURE 1: amplitude_scaling_valid16.png
-    fig1, ax1 = plt.subplots(figsize=(7, 5), dpi=300)
-    ax1.scatter(x_valid, y_valid, color='blue', alpha=0.8, s=35, label=f'Valid (N={len(x_valid)})')
+    plt.figure(figsize=(7, 5))
+    plt.scatter(x_valid, y_valid, c='blue', alpha=0.8, label=f'Valid (N={len(x_valid)})')
 
-    x_line = np.linspace(-1.72, -0.85, 200)
-    ax1.plot(x_line, slope_valid * x_line + intercept_valid, color='blue', lw=1.8,
-             label=f'Valid slope={slope_valid:.2f}')
-    ax1.plot(x_line, 1.0 * (x_line - x_mean) + y_mean, color='green', ls=':', lw=1.8,
-             label='Ref slope=1.0')
-    ax1.plot(x_line, 2.0 * (x_line - x_mean) + y_mean, color='red', ls=':', lw=1.8,
-             label='Ref slope=2.0')
+    x_vals1 = np.linspace(np.min(x_valid) - 0.1, np.max(x_valid) + 0.1, 10)
+    plt.plot(x_vals1, slope_valid * x_vals1 + (y_mean - slope_valid * x_mean), 'b-', label=f'Valid slope={slope_valid:.2f}')
 
-    ax1.set_title('Amplitude Scaling: Valid High-SNR Windows', fontsize=12)
-    ax1.set_xlabel('log10(A_50)', fontsize=11)
-    ax1.set_ylabel('log10(A_100)', fontsize=11)
-    ax1.grid(True)
-    ax1.legend(loc='upper left', fontsize=10)
-    fig1.tight_layout()
-    fig1.savefig(out_dir / "amplitude_scaling_valid16.png", dpi=300)
-    plt.close(fig1)
+    # References
+    y_ref1 = 1.0 * x_vals1 + (y_mean - 1.0 * x_mean)
+    y_ref2 = 2.0 * x_vals1 + (y_mean - 2.0 * x_mean)
+    plt.plot(x_vals1, y_ref1, 'g:', label='Ref slope=1.0')
+    plt.plot(x_vals1, y_ref2, 'r:', label='Ref slope=2.0')
+
+    plt.xlabel('log10(A_50)')
+    plt.ylabel('log10(A_100)')
+    plt.title('Amplitude Scaling: Valid High-SNR Windows')
+    plt.legend(loc='best')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "amplitude_scaling_valid16.png", dpi=300)
+    plt.close()
 
     # FIGURE 2: amplitude_scaling_all_vs_valid.png
-    fig2, ax2 = plt.subplots(figsize=(7, 5), dpi=300)
+    plt.figure(figsize=(7, 5))
     x_low = log_A50[~valid_mask]
     y_low = log_A100[~valid_mask]
-    ax2.scatter(x_low, y_low, color='grey', alpha=0.4, s=35, label=f'Low-SNR (N={len(x_low)})')
-    ax2.scatter(x_valid, y_valid, color='blue', alpha=0.8, s=35, label=f'Valid (N={len(x_valid)})')
+    plt.scatter(x_low, y_low, c='grey', alpha=0.5, label=f'Low-SNR (N={len(x_low)})')
+    plt.scatter(x_valid, y_valid, c='blue', alpha=0.8, label=f'Valid (N={len(x_valid)})')
 
     # Quiet intervals
-    ax2.scatter(q1[0], q1[1], color='red', marker='*', s=140, label='Quiet 1 (150-160 ms)')
-    ax2.scatter(q2[0], q2[1], color='orange', marker='*', s=140, label='Quiet 2 (400-410 ms)')
+    plt.scatter(q1[0], q1[1], c='red', marker='*', s=150, label='Quiet 1 (150-160 ms)')
+    plt.scatter(q2[0], q2[1], c='orange', marker='*', s=150, label='Quiet 2 (400-410 ms)')
 
-    x_line_all = np.linspace(-2.52, -0.95, 200)
-    ax2.plot(x_line_all, slope_all * x_line_all + intercept_all, color='black', ls='--', lw=1.6,
-             label=f'All slope={slope_all:.2f}')
-    ax2.plot(x_line_all, slope_valid * x_line_all + intercept_valid, color='blue', lw=1.8,
-             label=f'Valid slope={slope_valid:.2f}')
-    ax2.plot(x_line_all, 1.0 * (x_line_all - x_mean) + y_mean, color='green', ls=':', lw=1.8,
-             label='Ref slope=1.0')
-    ax2.plot(x_line_all, 2.0 * (x_line_all - x_mean) + y_mean, color='red', ls=':', lw=1.8,
-             label='Ref slope=2.0')
+    x_vals2 = np.linspace(np.min(log_A50), np.max(log_A50), 10)
+    plt.plot(x_vals2, slope_all * x_vals2 + (np.mean(log_A100) - slope_all * np.mean(log_A50)), 'k--', label=f'All slope={slope_all:.2f}')
+    plt.plot(x_vals2, slope_valid * x_vals2 + (y_mean - slope_valid * x_mean), 'b-', label=f'Valid slope={slope_valid:.2f}')
 
-    ax2.set_title('Amplitude Scaling: All vs Valid Windows', fontsize=12)
-    ax2.set_xlabel('log10(A_50)', fontsize=11)
-    ax2.set_ylabel('log10(A_100)', fontsize=11)
-    ax2.grid(True)
-    ax2.legend(loc='lower right', fontsize=9.5)
-    fig2.tight_layout()
-    fig2.savefig(out_dir / "amplitude_scaling_all_vs_valid.png", dpi=300)
-    plt.close(fig2)
+    # References
+    y_ref1_all = 1.0 * x_vals2 + (y_mean - 1.0 * x_mean)
+    y_ref2_all = 2.0 * x_vals2 + (y_mean - 2.0 * x_mean)
+    plt.plot(x_vals2, y_ref1_all, 'g:', label='Ref slope=1.0')
+    plt.plot(x_vals2, y_ref2_all, 'r:', label='Ref slope=2.0')
+
+    plt.xlabel('log10(A_50)')
+    plt.ylabel('log10(A_100)')
+    plt.title('Amplitude Scaling: All vs Valid Windows')
+    plt.legend(loc='best')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(out_dir / "amplitude_scaling_all_vs_valid.png", dpi=300)
+    plt.close()
 
 def main(out_dir=None):
     data, q1, q2 = compute_scaling_data()
