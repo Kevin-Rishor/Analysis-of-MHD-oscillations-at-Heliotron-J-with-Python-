@@ -4,6 +4,7 @@ import re
 import glob
 import argparse
 import fnmatch
+import json
 import logging
 from pathlib import Path
 import numpy as np
@@ -102,6 +103,37 @@ def statistical_b2_threshold(n_ensemble, alpha=0.05):
     mean, not the mean itself).
     """
     return -np.log(alpha) / n_ensemble
+
+
+def compute_n_effective(n_ensemble, noverlap_frac=0.5, window_name='hann'):
+    """Effective independent ensemble count accounting for window overlap correlation.
+    For Hann window with 50% overlap, adjacent segment correlation rho1 = 1/6.
+    Under Welch's variance formula:
+        N_eff = N / [1 + 2 * ((N - 1) / N) * rho1^2]
+    For N=30, N_eff = 28.48.
+    """
+    if n_ensemble <= 1:
+        return float(n_ensemble)
+    if window_name == 'hann' and np.isclose(noverlap_frac, 0.5):
+        rho1 = 1.0 / 6.0
+        c_sum = 2.0 * ((n_ensemble - 1.0) / float(n_ensemble)) * (rho1**2)
+        return float(n_ensemble / (1.0 + c_sum))
+    return float(n_ensemble)
+
+
+def get_objective1_pump_freq(shot, default_freq=89.0):
+    """Retrieve mode frequency from Objective 1 JSON if available, else default."""
+    json_path = ROOT_DIR / f"primary_mode_identification_shot_{shot}.json"
+    if json_path.exists():
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            freq = data.get("mode_frequency_khz")
+            if freq is not None:
+                return float(freq)
+        except Exception as e:
+            log.warning(f"Failed to read mode_frequency_khz from {json_path.name}: {e}")
+    return default_freq
 
 
 def load_edf_signal(fpath):
@@ -839,8 +871,8 @@ def analyze_channel_bicoherence(fpath, nfft, noverlap_frac, ensemble, threshold,
     non_redundant_mask_sum = physical_mask_sum & (ff1 >= ff2) & (ff1 >= fmin_khz * 1000.0) & (ff2 >= fmin_khz * 1000.0)
     total_physical_bins_sum = int(np.sum(non_redundant_mask_sum))
     significant_count_sum = int(np.sum((bicoh2 > threshold) & non_redundant_mask_sum))
-
-    b2_stat_threshold = statistical_b2_threshold(ensemble, alpha=0.05)
+    n_eff = compute_n_effective(ensemble, noverlap_frac)
+    b2_stat_threshold = statistical_b2_threshold(n_eff, alpha=0.05)
     significant_count_stat_sum = int(np.sum((bicoh2 > b2_stat_threshold) & non_redundant_mask_sum))
 
     search_mask_sum = physical_mask_sum & (ff1 < f1max * 1000.0) & (ff2 < f2max * 1000.0) & (ff1 >= ff2) & (ff1 >= fmin_khz * 1000.0) & (ff2 >= fmin_khz * 1000.0)
@@ -952,6 +984,7 @@ def analyze_channel_bicoherence(fpath, nfft, noverlap_frac, ensemble, threshold,
         'diff_significant_count_stat': significant_count_stat_diff,
 
         'b2_stat_threshold': b2_stat_threshold,
+        'n_eff': n_eff,
         'n_samples': len(ys), 'filter_size_bins': filter_size_bins, 'df_khz': df_khz,
 
         # Peak-stability check results (leader found within a smaller "core" box, and whether it
@@ -1258,7 +1291,8 @@ def run_single_shot(shot_id, args):
             det['baseline_mean'], det['baseline_std'], det['onset_threshold'], det['end_threshold'],
             det, args.window_plot_path, flat_window=fw_span)
 
-    b2_stat_threshold_preview = statistical_b2_threshold(args.ensemble, alpha=0.05)
+    n_eff_preview = compute_n_effective(args.ensemble, BICOH_NOVERLAP_FRAC)
+    b2_stat_threshold_preview = statistical_b2_threshold(n_eff_preview, alpha=0.05)
 
     log.debug(f"--- Searching for diagnostic channels with pattern: {args.pattern} ---")
     # On Windows, glob.glob() is case-insensitive by default.
@@ -1280,7 +1314,7 @@ def run_single_shot(shot_id, args):
         flat_tag = " [M9 flat sub-window]" if flat_window_applied else ""
         log.info(f"Analysis window (burst){flat_tag}: {main_t_start:.0f}-{main_t_end:.0f} ms "
               f"(use --full-discharge to revert to full-shot behavior).")
-    log.debug(f"Rigorous 95% statistical threshold (N_ensemble={args.ensemble}): "
+    log.debug(f"Rigorous 95% statistical threshold (N_ensemble={args.ensemble}, N_eff={n_eff_preview:.2f}): "
           f"b\u00b2_95 = {b2_stat_threshold_preview:.3f} (vs. physical threshold = {args.threshold})")
 
     # Multiple-comparisons context: under H0, we would expect by chance that ~alpha% of the
@@ -1605,8 +1639,9 @@ def run_single_shot(shot_id, args):
                              path_effects=[path_effects.withStroke(linewidth=2.5, foreground="black")])
 
         # Dynamic info badge in lower right built from peak table
-        TOL_PUMP_KHZ = 6.0
-        TOL_SUBHARMONIC = 0.035
+        f_pump = get_objective1_pump_freq(shot_id, default_freq=89.0)
+        bin_width_khz = best_channel_data.get('df_khz', (best_channel_data['fs'] / args.nfft) / 1000.0)
+        tol_khz = 1.5 * bin_width_khz
         subharm_ranks = []
         pump_lines = []
 
@@ -1615,16 +1650,16 @@ def run_single_shot(shot_id, args):
             for idx, p in enumerate(best_rank_entry['top_peaks'], 1):
                 pf1, pf2, pf3 = p[1], p[2], p[3]
                 signed_pf2 = -pf2 if best_channel_data['coupling_type'] == 'Diff' else pf2
-                if abs(pf1 - 89.0) <= TOL_PUMP_KHZ:
+                if abs(pf1 - f_pump) <= tol_khz:
                     pump_lines.append(f"  Peak #{idx} ({pf1:.1f} {sign_op} {pf2:.1f} = {pf3:.1f} kHz)")
-                elif abs(signed_pf2 / pf1 + 0.5) <= TOL_SUBHARMONIC:
+                elif abs(signed_pf2 + 0.5 * pf1) <= tol_khz:
                     subharm_ranks.append(idx)
 
         clustering_parts = []
         if subharm_ranks:
             clustering_parts.append("\u2022 Subharmonic Line (Slope -0.5):\n  Peaks " + ", ".join(f"#{r}" for r in subharm_ranks))
         if pump_lines:
-            clustering_parts.append("• Pump Column (f1 = 89 kHz):\n" + "\n".join(pump_lines))
+            clustering_parts.append(f"• Pump Column (f1 = {f_pump:.0f} kHz):\n" + "\n".join(pump_lines))
 
         clustering_str = "\n".join(clustering_parts)
         clustering_section = f"\n\nNon-Linear Triad Clustering:\n{clustering_str}" if clustering_str else ""
@@ -1633,8 +1668,10 @@ def run_single_shot(shot_id, args):
             f"Leading: f1={best_f[0]:.1f}, f2={best_f[1]:.1f}, f3={best_f[2]:.1f} kHz | b\u00b2={best_channel_data['max_b2']:.3f}\n"
             f"95% Stat. Floor: b\u00b2 = {best_channel_data['b2_stat_threshold']:.3f}{clustering_section}"
         )
-        ax1.text(0.98, 0.03, badge_text, transform=ax1.transAxes, fontsize=8.2,
+        badge_artist = ax1.text(0.98, 0.03, badge_text, transform=ax1.transAxes, fontsize=8.2,
                  va="bottom", ha="right", bbox=dict(boxstyle="round,pad=0.35", fc="white", ec="gray", alpha=0.9))
+        ax1._badge_artist = badge_artist
+        fig._badge_artist = badge_artist
 
         # --- PANEL 2: Linear Power Spectral Density (PSD) (same time window) ---
         f_psd_khz = best_channel_data['f_psd'] / 1000.0
@@ -2327,8 +2364,8 @@ def run_single_shot(shot_id, args):
     log.debug("=" * 90)
     log.debug("Under the null hypothesis of independent signals, b\u00b2 is approximately exponential with "
                "mean 1/N_ensemble (Kim & Powers, 1979).")
-    log.debug(f"Rigorous 95% threshold: b\u00b2_95 = -ln(0.05)/N_ensemble = {b2_stat_threshold_preview:.3f} "
-               f"(N_ensemble={args.ensemble}); NOT simply the mean 1/N_ensemble = {1.0/args.ensemble:.3f}.")
+    log.debug(f"Rigorous 95% threshold: b\u00b2_95 = -ln(0.05)/N_eff = {b2_stat_threshold_preview:.3f} "
+               f"(N_ensemble={args.ensemble}, N_eff={n_eff_preview:.2f}); NOT simply the mean 1/N_ensemble = {1.0/args.ensemble:.3f}.")
     log.debug(f"Physical threshold {args.threshold} is above b\u00b2_95 = {b2_stat_threshold_preview:.3f} "
                f"-> conservative even under the stricter statistical criterion.")
     log.debug(f"Under H0, ~{chance_level_pct:.1f}% of bins are expected to exceed b\u00b2_95 by pure chance.")
@@ -2400,7 +2437,7 @@ def run_shot_worker(task):
     return shot_id, buf.getvalue()
 
 
-def main():
+def build_cli_parser():
     parser = argparse.ArgumentParser(description="Multichannel Comparative Bicoherence Analysis (Objective 3)")
     parser.add_argument("--shots", type=str, default="88653",
                         help="Comma-separated list of shot numbers to run (def: 88653)")
@@ -2592,6 +2629,11 @@ def main():
                         help="Path to write the full diagnostic trail to, regardless of --verbose "
                              "(def: mhd_obj3_<shot>.log for a single shot; omitted for multi-shot runs, "
                              "where each shot's captured report is what would otherwise go there).")
+    return parser
+
+
+def main():
+    parser = build_cli_parser()
     args = parser.parse_args()
 
     if args.flat_freq_low_khz is None:
