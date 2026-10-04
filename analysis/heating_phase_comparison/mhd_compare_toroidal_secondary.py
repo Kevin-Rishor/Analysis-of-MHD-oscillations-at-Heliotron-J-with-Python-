@@ -38,7 +38,8 @@ for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" /
 
 from comparison_common import (
     DEFAULT_SHOT, T_W1_START, T_W1_END, T_W2_START, T_W2_END,
-    PROBE_ANGLES_TOR, load_signals, safe_savefig
+    PROBE_ANGLES_TOR, load_signals, safe_savefig,
+    plot_toroidal_phase_panel, extract_panel_axes
 )
 
 DEFAULT_IMG_DIR = root_dir / "Images" / "heating_phase_comparison"
@@ -98,30 +99,14 @@ def run_secondary_toroidal(shot=DEFAULT_SHOT, img_dir=None):
         # Single panel, same layout as panel 2 of the primary-mode toroidal figure
         plt.rcdefaults()
         fig, ax = plt.subplots(1, 1, figsize=(10, 3.67))
-        d_angles_plot = np.linspace(-180, 270, 300)
-        for n_test, col, ls in [(-1, "crimson", "-"), (+3, "navy", "--"), (+1, "gray", ":"), (+2, "darkorange", "-.")]:
-            theo_line = [(n_test * np.radians(a) + np.pi) % (2 * np.pi) - np.pi for a in d_angles_plot]
-            ax.plot(d_angles_plot, np.degrees(theo_line), color=col, ls=ls, lw=1.5,
-                    label=f"Theory n = {n_test:+d} (RMSE={fits[n_test]:.1f} deg)")
-        names = {("MP1", "MP3"): "MP1-MP3 (+180 deg)", ("MP1", "MP4"): "MP1-MP4 (+270 deg)",
-                 ("MP3", "MP4"): "MP3-MP4 (+90 deg)"}
-        for pr, pdict in measured.items():
-            a, ph = pdict["d_tor_deg"], pdict["phase_deg"]
-            ax.scatter([a], [ph], color="blue", s=90, zorder=5, edgecolors="black", lw=1.5)
-            ax.annotate(f"{names[pr]}\n({ph:+.1f} deg)", (a, ph), textcoords="offset points",
-                        xytext=(0, 10), ha="center", fontsize=8.5, fontweight="bold")
-        ax.set_xlim(-10, 290)
-        ax.set_ylim(-195, 195)
-        ax.set_xlabel(r"Toroidal Probe Separation $\Delta\varphi$ (deg)")
-        ax.set_ylabel(r"Cross-Spectral Phase $\Delta\phi$ (deg)")
-        ax.set_title(rf"Secondary Mode ({mode_freq:.1f} kHz): Measured vs. Theoretical Toroidal Phase "
-                     r"$\Delta\phi = n \Delta\varphi$", fontsize=10)
-        ax.legend(loc="lower right", fontsize=8)
-        ax.grid(True, alpha=0.3)
+        plot_toroidal_phase_panel(
+            ax, measured, fits,
+            title=rf"Secondary Mode ({mode_freq:.1f} kHz): Measured vs. Theoretical Toroidal Phase $\Delta\phi = n \Delta\varphi$"
+        )
         plt.tight_layout()
         out_png = panel_dir / (f"mhd_secondary_mode_toroidal_n_shot_{shot}_{tag}"
                                "_panel2_measured_phase_vs_theoretical_toroidal_p.png")
-        safe_savefig(fig, out_png, dpi=150)
+        extract_panel_axes(fig, ax, out_png, dpi=150)
         plt.close(fig)
         print(f"    Saved figure: {out_png.name}")
 

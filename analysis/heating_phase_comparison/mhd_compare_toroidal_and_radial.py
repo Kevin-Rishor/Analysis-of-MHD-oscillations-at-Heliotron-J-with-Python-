@@ -22,7 +22,8 @@ for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" /
 from comparison_common import (
     DEFAULT_SHOT, DEFAULT_OUT_DIR,
     T_W1_START, T_W1_END, T_W2_START, T_W2_END,
-    PROBE_ANGLES_TOR, load_channel, load_signals, safe_savefig
+    PROBE_ANGLES_TOR, load_channel, load_signals, safe_savefig,
+    plot_toroidal_phase_panel, extract_panel_axes
 )
 
 
@@ -114,27 +115,7 @@ def run_toroidal_and_radial_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=
         axs_tor[0].legend(loc="upper right", fontsize=8.5)
         axs_tor[0].grid(True, alpha=0.3)
 
-        d_angles_plot = np.linspace(-180, 270, 300)
-        measured_dphi = [measured_pairs[("MP1", "MP3")]["d_tor_deg"], measured_pairs[("MP1", "MP4")]["d_tor_deg"], measured_pairs[("MP3", "MP4")]["d_tor_deg"]]
-        measured_phases_deg = [measured_pairs[("MP1", "MP3")]["phase_deg"], measured_pairs[("MP1", "MP4")]["phase_deg"], measured_pairs[("MP3", "MP4")]["phase_deg"]]
-        pair_names = ["MP1-MP3 (+180 deg)", "MP1-MP4 (+270 deg)", "MP3-MP4 (+90 deg)"]
-
-        for n_test, col, ls in [(-1, "crimson", "-"), (+3, "navy", "--"), (+1, "gray", ":"), (+2, "darkorange", "-.")]:
-            theo_line = [(n_test * np.radians(a) + np.pi) % (2 * np.pi) - np.pi for a in d_angles_plot]
-            axs_tor[1].plot(d_angles_plot, np.degrees(theo_line), color=col, ls=ls, lw=1.5,
-                            label=f"Theory n = {n_test:+d} (RMSE={n_fit_results[n_test]['rmse_deg']:.1f} deg)")
-
-        for a, p, lbl in zip(measured_dphi, measured_phases_deg, pair_names):
-            axs_tor[1].scatter([a], [p], color="blue", s=90, zorder=5, edgecolors="black", lw=1.5)
-            axs_tor[1].annotate(f"{lbl}\n({p:+.1f} deg)", (a, p), textcoords="offset points", xytext=(0, 10), ha="center", fontsize=8.5, fontweight="bold")
-
-        axs_tor[1].set_xlim(-10, 290)
-        axs_tor[1].set_ylim(-195, 195)
-        axs_tor[1].set_xlabel(r"Toroidal Probe Separation $\Delta\varphi$ (deg)")
-        axs_tor[1].set_ylabel(r"Cross-Spectral Phase $\Delta\phi$ (deg)")
-        axs_tor[1].set_title(r"Measured Phase vs. Theoretical Toroidal Phase $\Delta\phi = n \Delta\varphi$", fontsize=10)
-        axs_tor[1].legend(loc="lower right", fontsize=8)
-        axs_tor[1].grid(True, alpha=0.3)
+        plot_toroidal_phase_panel(axs_tor[1], measured_pairs, n_fit_results)
 
         rmse_plot = [n_fit_results[n]["rmse_deg"] for n in n_candidates]
         bar_cols = ["forestgreen" if r < 15.0 else "lightcoral" for r in rmse_plot]
@@ -150,8 +131,13 @@ def run_toroidal_and_radial_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=
         plt.tight_layout()
         out_path_tor = out_dir / out_png_tor
         safe_savefig(fig_tor, out_path_tor, dpi=150)
+        panel_dir = out_dir / "panels"
+        panel_dir.mkdir(parents=True, exist_ok=True)
+        out_p2 = panel_dir / f"{Path(out_png_tor).stem}_panel2_measured_phase_vs_theoretical_toroidal_p.png"
+        extract_panel_axes(fig_tor, axs_tor[1], out_p2, dpi=150)
         plt.close(fig_tor)
         print(f"    Saved figure: {out_path_tor.name}")
+        print(f"    Saved extracted panel 2: {out_p2.name}")
 
         # ECE & HAFAST Radial Profiles
         b_band, a_band = dsp.bessel(4, [(mode_freq - 10.0) * 1e3 / (fs / 2.0), (mode_freq + 10.0) * 1e3 / (fs / 2.0)], btype="bandpass")

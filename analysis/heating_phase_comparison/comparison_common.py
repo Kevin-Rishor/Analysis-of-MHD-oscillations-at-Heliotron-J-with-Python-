@@ -103,3 +103,67 @@ def load_signals(shot=DEFAULT_SHOT, data_dir=None):
             pmp_signals[ch] = ys
 
     return time_ms, dt_s, fs, signals_dict, pmp_signals
+
+
+def plot_toroidal_phase_panel(ax, measured, fits, title=None):
+    """Draw the Measured Phase vs. Theoretical Toroidal Phase panel with consistent layout."""
+    d_angles_plot = np.linspace(-180, 270, 300)
+    for n_test, col, ls in [(-1, "crimson", "-"), (+3, "navy", "--"), (+1, "gray", ":"), (+2, "darkorange", "-.")]:
+        theo_line = [(n_test * np.radians(a) + np.pi) % (2 * np.pi) - np.pi for a in d_angles_plot]
+        rmse_val = fits[n_test]["rmse_deg"] if isinstance(fits[n_test], dict) else fits[n_test]
+        ax.plot(d_angles_plot, np.degrees(theo_line), color=col, ls=ls, lw=1.5,
+                label=f"Theory n = {n_test:+d} (RMSE={rmse_val:.1f} deg)")
+
+    pair_labels = {
+        ("MP1", "MP3"): "MP1-MP3 (+180 deg)",
+        ("MP1", "MP4"): "MP1-MP4 (+270 deg)",
+        ("MP3", "MP4"): "MP3-MP4 (+90 deg)",
+    }
+    for pair_key, lbl in pair_labels.items():
+        pdict = measured[pair_key]
+        a = pdict["d_tor_deg"]
+        ph = pdict["phase_deg"]
+        ax.scatter([a], [ph], color="blue", s=90, zorder=5, edgecolors="black", lw=1.5)
+        # Avoid title overlap when phase is near top (>100 deg) and legend overlap near bottom
+        if ph > 100:
+            xytext = (0, -28)
+            ha = "center"
+        elif ph < -100 and a > 120:
+            xytext = (-10, 10)
+            ha = "right"
+        else:
+            xytext = (0, 10)
+            ha = "center"
+        ax.annotate(f"{lbl}\n({ph:+.1f} deg)", (a, ph), textcoords="offset points",
+                    xytext=xytext, ha=ha, fontsize=9.0, fontweight="bold")
+
+    ax.set_xlim(-10, 290)
+    ax.set_ylim(-195, 195)
+    ax.set_xlabel(r"Toroidal Probe Separation $\Delta\varphi$ (deg)", fontsize=10)
+    ax.set_ylabel(r"Cross-Spectral Phase $\Delta\phi$ (deg)", fontsize=10)
+    if title is None:
+        title = r"Measured Phase vs. Theoretical Toroidal Phase $\Delta\phi = n \Delta\varphi$"
+    ax.set_title(title, fontsize=10)
+    ax.legend(loc="lower right", fontsize=8.0)
+    ax.grid(True, alpha=0.3)
+
+
+def extract_panel_axes(fig, ax, out_path, dpi=150, pad=0.08, facecolor=None, edgecolor='none'):
+    """Extract a single panel axes from a figure using tightbbox and specified padding."""
+    import matplotlib.transforms as mtransforms
+    fig.canvas.draw()
+    renderer = fig.canvas.get_renderer()
+    bbox_display = ax.get_tightbbox(renderer)
+    if bbox_display is None:
+        bbox_display = ax.get_window_extent(renderer)
+    bbox_inches = bbox_display.transformed(fig.dpi_scale_trans.inverted())
+    bbox_padded = mtransforms.Bbox.from_extents(
+        bbox_inches.x0 - pad, bbox_inches.y0 - pad,
+        bbox_inches.x1 + pad, bbox_inches.y1 + pad
+    )
+    fc = facecolor if facecolor is not None else fig.get_facecolor()
+    out_path = Path(out_path)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(str(out_path), dpi=dpi, bbox_inches=bbox_padded,
+                facecolor=fc, edgecolor=edgecolor, pad_inches=0)
+
