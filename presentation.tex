@@ -13,12 +13,12 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
-\setbeamercovered{invisible}
+\setbeamercovered{transparent=15}
 % ------------------------------------------------------------
 % Equal box macro (\qbox) for Dynamic & Mode ID slides
 % ------------------------------------------------------------
 \newlength{\qboxwidth}
-\setlength{\qboxwidth}{\dimexpr(0.5\textwidth - 0.25cm)\relax}
+\setlength{\qboxwidth}{0.485\textwidth}
 \newlength{\qboxbodyH}
 \newlength{\tmpH}
 \newsavebox{\qboxA}
@@ -27,21 +27,19 @@
 \newsavebox{\qboxD}
 
 \newcommand{\qboxmeasure}[2]{%
-  \begin{minipage}{\qboxwidth}%
+  \begin{minipage}{\dimexpr\qboxwidth-1.5ex\relax}%
     \footnotesize
     \begin{itemize}#2\end{itemize}%
   \end{minipage}%
 }
 
 \newcommand{\qbox}[3][\qboxbodyH]{%
-  \begin{minipage}{\qboxwidth}%
-    \begin{block}{#2}%
-      \begin{minipage}[t][#1][t]{\linewidth}%
-        \footnotesize
-        \begin{itemize}#3\end{itemize}%
-      \end{minipage}%
-    \end{block}%
-  \end{minipage}%
+  \begin{block}{#2}%
+    \begin{minipage}[t][#1][t]{\linewidth}%
+      \footnotesize
+      \begin{itemize}#3\end{itemize}%
+    \end{minipage}%
+  \end{block}%
 }
 
 % ------------------------------------------------------------
@@ -193,20 +191,20 @@
     \centering
     \renewcommand{\arraystretch}{1.8}
     \setlength{\tabcolsep}{5pt}
-    \begin{tabular}{|C{2.7cm}|C{3.7cm}||C{2.7cm}|C{3.7cm}|}
+    \begin{tabular}{|C{2.8cm}|C{3.3cm}||C{2.8cm}|C{3.3cm}|}
         \hline
         \multicolumn{2}{|c||}{\cellcolor{blue!12}\winA} &
         \multicolumn{2}{c|}{\cellcolor{blue!12}\winB} \\
         \hline
         \cellcolor{red!8}\Prim\newline $f\approx\SI{89}{kHz}$ &
-        $m=+3$\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{5.2}{\degree}$ &
+        $m=+3$\newline $n\equiv-1$ (mod 4) &
         \cellcolor{red!8}\Prim\newline $f\approx\SI{86}{kHz}$ &
-        $m=+3$\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{6.7}{\degree}$ \\
+        $m=+3$\newline $n\equiv-1$ (mod 4) \\
         \hline
         \cellcolor{orange!12}\Sec\newline $f\approx\SI{49}{kHz}$ &
-        $m=+6$ \incl\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{22.7}{\degree}$ &
+        $m=+6$ \incl\newline $n\equiv-1$ (mod 4) &
         \cellcolor{orange!12}\Sec\newline $f\approx\SI{41}{kHz}$ &
-        $m=+2$ \incl\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{19.3}{\degree}$ \\
+        $m=+2$ \incl\newline $n\equiv-1$ (mod 4) \\
         \hline
     \end{tabular}
 
@@ -226,8 +224,8 @@
 
 % Poloidal structure: same positions as the table
 \begin{frame}{Mode Structure: Poloidal Mode Number $m$}
-    \begin{columns}[T]
-        \begin{column}{0.495\textwidth}
+    \begin{columns}[onlytextwidth,T]
+        \begin{column}{0.485\textwidth}
             \colhead{\winA}
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{89.8}{kHz}): $m=+3$}\\[-0.05cm]
@@ -237,8 +235,9 @@
             {\scriptsize\Sec{} (\SI{48.8}{kHz}): $m=+6$ \incl}\\[-0.05cm]
             \centering
             \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI_panel4_poloidal_phase_structure_verification_at.png}
-        \end{column}
-        \begin{column}{0.495\textwidth}
+        \end{column}%
+        \hfill
+        \begin{column}{0.485\textwidth}
             \colhead{\winB}
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{85.9}{kHz}): $m=+3$}\\[-0.05cm]
@@ -256,8 +255,8 @@
 
 % Toroidal structure: same positions as the table
 \begin{frame}{Mode Structure: Toroidal Mode Number $n$}
-    \begin{columns}[T]
-        \begin{column}{0.495\textwidth}
+    \begin{columns}[onlytextwidth,T]
+        \begin{column}{0.485\textwidth}
             \colhead{\winA}
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{89.0}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{5.2}{\degree}$}\\[-0.05cm]
@@ -267,8 +266,9 @@
             {\scriptsize\Sec{} (\SI{48.8}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{22.7}{\degree}$}\\[-0.05cm]
             \centering
             \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_secondary_mode_toroidal_n_shot_88653_ECH_NBI_panel2_measured_phase_vs_theoretical_toroidal_p.png}
-        \end{column}
-        \begin{column}{0.495\textwidth}
+        \end{column}%
+        \hfill
+        \begin{column}{0.485\textwidth}
             \colhead{\winB}
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{86.0}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{6.7}{\degree}$}\\[-0.05cm]
@@ -311,7 +311,7 @@
     \setlength{\tmpH}{\dimexpr\ht\qboxD+\dp\qboxD\relax}%
     \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
     \typeout{Dynamic Behavior max box body height: \the\qboxbodyH}%
-    \begin{columns}[T]
+    \begin{columns}[onlytextwidth,T]
         \begin{column}{\qboxwidth}
             \colhead{\winA}
             \vspace{0.08cm}
@@ -324,8 +324,8 @@
                 \item Bursty, step-like jumps between branches.%
                 \item Frequency rises: ${\sim}40\to{\sim}\SI{52}{kHz}$ ($\bar{f}=\SI{45.8}{kHz}$, $\sigma=\SI{4.5}{kHz}$).%
             }
-        \end{column}
-        \hspace{0.5cm}
+        \end{column}%
+        \hfill
         \begin{column}{\qboxwidth}
             \colhead{\winB}
             \vspace{0.08cm}
@@ -347,16 +347,17 @@
 \end{frame}
 
 \begin{frame}{Dynamic Behavior: Comparative Zoomed Spectrograms}
-    \begin{columns}[T]
-        \begin{column}{0.5\textwidth}
+    \begin{columns}[onlytextwidth,T]
+        \begin{column}{0.485\textwidth}
             \colhead{\winA}
             \centering
-            \includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png}
+        \end{column}%
+        \hfill
+        \begin{column}{0.485\textwidth}
             \colhead{\winB}
             \centering
-            \includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png}
+            \includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png}
         \end{column}
     \end{columns}
 \end{frame}
@@ -407,7 +408,7 @@
     \setlength{\tmpH}{\dimexpr\ht\qboxD+\dp\qboxD\relax}%
     \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
     \typeout{Mode Identification max box body height: \the\qboxbodyH}%
-    \begin{columns}[T]
+    \begin{columns}[onlytextwidth,T]
         \begin{column}{\qboxwidth}
             \colhead{\winA}
             \vspace{0.04cm}
@@ -420,8 +421,8 @@
                 \item Best model (full burst): current-induced ($I_p$, rotational-transform shift).%
                 \item $r=-0.85$, $p=0.16$ ($N_{\text{eff}}\approx4$, full burst), opposite sign to prediction \incl%
             }
-        \end{column}
-        \hspace{0.5cm}
+        \end{column}%
+        \hfill
         \begin{column}{\qboxwidth}
             \colhead{\winB}
             \vspace{0.04cm}
@@ -463,8 +464,8 @@
 \end{frame}
 
 \begin{frame}{Bicoherence Analysis}
-    \begin{columns}[T]
-        \begin{column}{0.495\textwidth}
+    \begin{columns}[onlytextwidth,T]
+        \begin{column}{0.485\textwidth}
             \colhead{\textbf{NBI + ECH}\\[-0.2ex]{\scriptsize(first 8\,ms: \SIrange{259.1}{267.1}{ms}, $N_{\text{fft}}=512$, $N_{\text{ens}}=30$)}}
             \vspace{0.04cm}
             \footnotesize
@@ -475,8 +476,9 @@
                 $89.8-48.8=\SI{41.0}{kHz}$ (Primary--Secondary, PSD-confirmed).
                 \item Integrated $b^2 = 168.9$ vs 161 expected for Gaussian noise ($1.05\times$, $p=0.015$): no excess.
             \end{itemize}
-        \end{column}
-        \begin{column}{0.495\textwidth}
+        \end{column}%
+        \hfill
+        \begin{column}{0.485\textwidth}
             \colhead{\textbf{NBI only}\\[-0.2ex]{\scriptsize(\SIrange{291.3}{300.0}{ms}, $N_{\text{fft}}=512$, $N_{\text{ens}}=30$)}}
             \vspace{0.04cm}
             \footnotesize
@@ -498,16 +500,17 @@
 \end{frame}
 
 \begin{frame}{Bicoherence Maps}
-    \begin{columns}[T]
-        \begin{column}{0.5\textwidth}
+    \begin{columns}[onlytextwidth,T]
+        \begin{column}{0.485\textwidth}
             \colhead{\winA}
             \centering
-            \includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_bicoherence_objective3_88653_ECH_NBI_panel1_squared_auto_bicoherence_leading_channel.png}
-        \end{column}
-        \begin{column}{0.5\textwidth}
+            \includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_bicoherence_objective3_88653_ECH_NBI_panel1_squared_auto_bicoherence_leading_channel.png}
+        \end{column}%
+        \hfill
+        \begin{column}{0.485\textwidth}
             \colhead{\winB}
             \centering
-            \includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_bicoherence_objective3_88653_NBI_only_panel1_squared_auto_bicoherence_leading_channel.png}
+            \includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_bicoherence_objective3_88653_NBI_only_panel1_squared_auto_bicoherence_leading_channel.png}
         \end{column}
     \end{columns}
 \end{frame}
