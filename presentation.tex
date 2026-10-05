@@ -13,7 +13,37 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{array}
-\setbeamercovered{transparent}
+\setbeamercovered{invisible}
+% ------------------------------------------------------------
+% Equal box macro (\qbox) for Dynamic & Mode ID slides
+% ------------------------------------------------------------
+\newlength{\qboxwidth}
+\setlength{\qboxwidth}{\dimexpr(0.5\textwidth - 0.25cm)\relax}
+\newlength{\qboxbodyH}
+\newlength{\tmpH}
+\newsavebox{\qboxA}
+\newsavebox{\qboxB}
+\newsavebox{\qboxC}
+\newsavebox{\qboxD}
+
+\newcommand{\qboxmeasure}[2]{%
+  \begin{minipage}{\qboxwidth}%
+    \footnotesize
+    \begin{itemize}#2\end{itemize}%
+  \end{minipage}%
+}
+
+\newcommand{\qbox}[3][\qboxbodyH]{%
+  \begin{minipage}{\qboxwidth}%
+    \begin{block}{#2}%
+      \begin{minipage}[t][#1][t]{\linewidth}%
+        \footnotesize
+        \begin{itemize}#3\end{itemize}%
+      \end{minipage}%
+    \end{block}%
+  \end{minipage}%
+}
+
 % ------------------------------------------------------------
 % Helpers for the NBI+ECH (left) | NBI-only (right) layouts
 % ------------------------------------------------------------
@@ -21,7 +51,7 @@
 \newcommand{\winA}{\textbf{NBI + ECH} {\scriptsize(\SIrange{259.1}{291.3}{ms})}}
 \newcommand{\winB}{\textbf{NBI only} {\scriptsize(\SIrange{291.3}{300.0}{ms})}}
 \newcommand{\colhead}[1]{%
-    \begin{beamercolorbox}[wd=\linewidth,ht=2.6ex,dp=1.0ex,center]{block title}#1\end{beamercolorbox}}
+    \begin{beamercolorbox}[wd=\linewidth,sep=0.6ex,center]{block title}#1\end{beamercolorbox}}
 \newcommand{\incl}{{\scriptsize\textcolor{red!70!black}{(inconclusive)}}}
 \definecolor{primcol}{RGB}{214,39,40}
 \definecolor{seccol}{RGB}{230,120,0}
@@ -123,23 +153,18 @@
 % ============================================================
 
 \begin{frame}{Overview: Plasma Heating and Confinement vs.\ Mirnov Signal}
-    \begin{figure}[h!]
-        \centering
-        \includegraphics[height=0.85\textheight]{Images/obj2_dynamics_and_structure/heating_vs_mirnov (Shot_88653).png}
-    \end{figure}
+    \centering
+    \includegraphics[height=0.81\textheight,keepaspectratio]{Images/obj2_dynamics_and_structure/heating_vs_mirnov (Shot_88653).png}
 \end{frame}
 
 \begin{frame}{Overview: Primary and Secondary Modes}
     \centering
-    \includegraphics[width=\textwidth]{Images/obj1_mode_identification/panels/mhd_analysis_objective1_88653_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png}
+    \includegraphics[width=0.94\textwidth,height=0.50\textheight,keepaspectratio]{Images/obj1_mode_identification/panels/mhd_analysis_objective1_88653_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png}
     \vspace{0.1cm}
     \small
     \begin{itemize}
-        \item Two coherent lines pass the dual criterion ($3\sigma$ \emph{and} $\gamma^2>0.7$)
-        during the NBI phase: the \Prim{} mode (${\sim}\SIrange{80}{100}{kHz}$) and the
-        \Sec{} mode (${\sim}\SIrange{40}{50}{kHz}$).
-        \item Both appear with NBI and vanish when the beams turn off
-        (${\sim}\SI{300.6}{ms}$); ECH turns off at \SI{291.3}{ms}.
+        \item Two coherent modes pass the dual criterion ($3\sigma$ and $\gamma^2>0.7$): \Prim{} (${\sim}\SIrange{80}{100}{kHz}$) and \Sec{} (${\sim}\SIrange{40}{50}{kHz}$).
+        \item Both appear with NBI, persist past ECH off (\SI{291.3}{ms}), and disappear when beams stop.
     \end{itemize}
 \end{frame}
 
@@ -166,26 +191,26 @@
 % Mode structure table: 4 quadrants (columns = windows, rows = modes)
 \begin{frame}{Mode Structure}
     \centering
-    \renewcommand{\arraystretch}{2.0}
-    \setlength{\tabcolsep}{6pt}
-    \begin{tabular}{|C{2.9cm}|C{3.5cm}||C{2.9cm}|C{3.5cm}|}
+    \renewcommand{\arraystretch}{1.8}
+    \setlength{\tabcolsep}{5pt}
+    \begin{tabular}{|C{2.7cm}|C{3.7cm}||C{2.7cm}|C{3.7cm}|}
         \hline
         \multicolumn{2}{|c||}{\cellcolor{blue!12}\winA} &
         \multicolumn{2}{c|}{\cellcolor{blue!12}\winB} \\
         \hline
         \cellcolor{red!8}\Prim\newline $f\approx\SI{89}{kHz}$ &
-        $m=+3$\newline $n\equiv-1$ (mod 4) &
+        $m=+3$\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{5.2}{\degree}$ &
         \cellcolor{red!8}\Prim\newline $f\approx\SI{86}{kHz}$ &
-        $m=+3$\newline $n\equiv-1$ (mod 4) \\
+        $m=+3$\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{6.7}{\degree}$ \\
         \hline
         \cellcolor{orange!12}\Sec\newline $f\approx\SI{49}{kHz}$ &
-        $m=+6$ \incl\newline $n\equiv-1$ (mod 4) &
+        $m=+6$ \incl\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{22.7}{\degree}$ &
         \cellcolor{orange!12}\Sec\newline $f\approx\SI{41}{kHz}$ &
-        $m=+2$ \incl\newline $n\equiv-1$ (mod 4) \\
+        $m=+2$ \incl\newline $n\equiv-1$ (mod 4), $\text{RMSE}=\SI{19.3}{\degree}$ \\
         \hline
     \end{tabular}
 
-    \vspace{0.5cm}
+    \vspace{0.3cm}
     \footnotesize
     \raggedright
     \begin{itemize}
@@ -195,6 +220,8 @@
         ($\gamma^2\ge0.95$ on all MP pairs); three probes fix $n$ only modulo 4
         ($n\in\{\dots,-5,-1,+3,\dots\}$).
     \end{itemize}
+    \vfill
+    {\tiny\textsuperscript{*} $f$ = PSD peak used in the fit\par}
 \end{frame}
 
 % Poloidal structure: same positions as the table
@@ -205,24 +232,26 @@
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{89.8}{kHz}): $m=+3$}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI_panel4_poloidal_phase_structure_verification_at.png}\\
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI_panel4_poloidal_phase_structure_verification_at.png}\\
             \raggedright
             {\scriptsize\Sec{} (\SI{48.8}{kHz}): $m=+6$ \incl}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI_panel4_poloidal_phase_structure_verification_at.png}
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI_panel4_poloidal_phase_structure_verification_at.png}
         \end{column}
         \begin{column}{0.495\textwidth}
             \colhead{\winB}
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{85.9}{kHz}): $m=+3$}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only_panel4_poloidal_phase_structure_verification_at.png}\\
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only_panel4_poloidal_phase_structure_verification_at.png}\\
             \raggedright
             {\scriptsize\Sec{} (\SI{41.0}{kHz}): $m=+2$ \incl}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only_panel4_poloidal_phase_structure_verification_at.png}
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only_panel4_poloidal_phase_structure_verification_at.png}
         \end{column}
     \end{columns}
+    \vfill
+    {\tiny\textsuperscript{*} $f$ = PSD peak used in the fit\par}
 \end{frame}
 
 % Toroidal structure: same positions as the table
@@ -233,73 +262,88 @@
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{89.0}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{5.2}{\degree}$}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_primary_mode_toroidal_n_shot_88653_ECH_NBI_panel2_measured_phase_vs_theoretical_toroidal_p.png}\\
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_primary_mode_toroidal_n_shot_88653_ECH_NBI_panel2_measured_phase_vs_theoretical_toroidal_p.png}\\
             \raggedright
             {\scriptsize\Sec{} (\SI{48.8}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{22.7}{\degree}$}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_secondary_mode_toroidal_n_shot_88653_ECH_NBI_panel2_measured_phase_vs_theoretical_toroidal_p.png}
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_secondary_mode_toroidal_n_shot_88653_ECH_NBI_panel2_measured_phase_vs_theoretical_toroidal_p.png}
         \end{column}
         \begin{column}{0.495\textwidth}
             \colhead{\winB}
             \vspace{0.05cm}
             {\scriptsize\Prim{} (\SI{86.0}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{6.7}{\degree}$}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_primary_mode_toroidal_n_shot_88653_NBI_only_panel2_measured_phase_vs_theoretical_toroidal_p.png}\\
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_primary_mode_toroidal_n_shot_88653_NBI_only_panel2_measured_phase_vs_theoretical_toroidal_p.png}\\
             \raggedright
             {\scriptsize\Sec{} (\SI{41.0}{kHz}): $n\equiv-1$ (mod 4), RMSE $=\SI{19.3}{\degree}$}\\[-0.05cm]
             \centering
-            \includegraphics[width=\linewidth,height=0.33\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_secondary_mode_toroidal_n_shot_88653_NBI_only_panel2_measured_phase_vs_theoretical_toroidal_p.png}
+            \includegraphics[width=\linewidth,height=0.31\textheight,keepaspectratio]{Images/heating_phase_comparison/panels/mhd_secondary_mode_toroidal_n_shot_88653_NBI_only_panel2_measured_phase_vs_theoretical_toroidal_p.png}
         \end{column}
     \end{columns}
+    \vfill
+    {\tiny\textsuperscript{*} $f$ = PSD peak used in the fit\par}
 \end{frame}
 
 % Dynamic behaviour: 4 quadrants
 \begin{frame}{Dynamic Behavior of the Modes}
+    % Measure natural box body heights and select maximum
+    \savebox{\qboxA}{\qboxmeasure{Primary -- chirping, $f\uparrow$}{%
+        \item Repetitive ${\sim}$\SI{1}{ms} frequency sweeps, hopping between 2--3 branches.%
+        \item Frequency rises: ${\sim}78\to{\sim}\SI{95}{kHz}$ ($\bar{f}=\SI{87.5}{kHz}$, $\sigma=\SI{4.9}{kHz}$).%
+    }}%
+    \savebox{\qboxB}{\qboxmeasure{Primary -- chirping, $f\downarrow$}{%
+        \item Same chirping and branch-hopping character.%
+        \item Frequency falls: ${\sim}90\to{\sim}\SI{85}{kHz}$ ($\bar{f}=\SI{86.5}{kHz}$, $\sigma=\SI{2.3}{kHz}$) -- consistent with electron cooling after ECH off.%
+    }}%
+    \savebox{\qboxC}{\qboxmeasure{Secondary -- bursting, $f\uparrow$}{%
+        \item Bursty, step-like jumps between branches.%
+        \item Frequency rises: ${\sim}40\to{\sim}\SI{52}{kHz}$ ($\bar{f}=\SI{45.8}{kHz}$, $\sigma=\SI{4.5}{kHz}$).%
+    }}%
+    \savebox{\qboxD}{\qboxmeasure{Secondary -- stable, $f\downarrow$}{%
+        \item Smoother, more stable frequency line.%
+        \item Frequency falls: ${\sim}51\to{\sim}\SI{37}{kHz}$, then stays flat ($\bar{f}=\SI{39.7}{kHz}$, $\sigma=\SI{3.6}{kHz}$).%
+    }}%
+    \setlength{\qboxbodyH}{\dimexpr\ht\qboxA+\dp\qboxA\relax}%
+    \setlength{\tmpH}{\dimexpr\ht\qboxB+\dp\qboxB\relax}%
+    \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
+    \setlength{\tmpH}{\dimexpr\ht\qboxC+\dp\qboxC\relax}%
+    \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
+    \setlength{\tmpH}{\dimexpr\ht\qboxD+\dp\qboxD\relax}%
+    \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
+    \typeout{Dynamic Behavior max box body height: \the\qboxbodyH}%
     \begin{columns}[T]
-        \begin{column}{0.495\textwidth}
+        \begin{column}{\qboxwidth}
             \colhead{\winA}
-            \vspace{0.1cm}
-            \begin{block}{Primary -- chirping, $f\uparrow$}
-                \footnotesize
-                \begin{itemize}
-                    \item Repetitive ${\sim}$\SI{1}{ms} frequency sweeps, hopping between 2--3 branches.
-                    \item Frequency rises with time: ${\sim}78\to{\sim}\SI{95}{kHz}$
-                    ($\bar f=\SI{87.6}{kHz}$, $\sigma=\SI{5.3}{kHz}$).
-                \end{itemize}
-            \end{block}
-            \begin{block}{Secondary -- bursting, $f\uparrow$}
-                \footnotesize
-                \begin{itemize}
-                    \item Bursty, step-like jumps between branches.
-                    \item Frequency rises with time: ${\sim}40\to{\sim}\SI{52}{kHz}$
-                    ($\bar f=\SI{45.5}{kHz}$, $\sigma=\SI{5.9}{kHz}$).
-                \end{itemize}
-            \end{block}
+            \vspace{0.08cm}
+            \qbox{Primary -- chirping, $f\uparrow$}{%
+                \item Repetitive ${\sim}$\SI{1}{ms} frequency sweeps, hopping between 2--3 branches.%
+                \item Frequency rises: ${\sim}78\to{\sim}\SI{95}{kHz}$ ($\bar{f}=\SI{87.5}{kHz}$, $\sigma=\SI{4.9}{kHz}$).%
+            }
+            \vspace{0.12cm}
+            \qbox{Secondary -- bursting, $f\uparrow$}{%
+                \item Bursty, step-like jumps between branches.%
+                \item Frequency rises: ${\sim}40\to{\sim}\SI{52}{kHz}$ ($\bar{f}=\SI{45.8}{kHz}$, $\sigma=\SI{4.5}{kHz}$).%
+            }
         \end{column}
-        \begin{column}{0.495\textwidth}
+        \hspace{0.5cm}
+        \begin{column}{\qboxwidth}
             \colhead{\winB}
-            \vspace{0.1cm}
-            \begin{block}{Primary -- chirping, $f\downarrow$}
-                \footnotesize
-                \begin{itemize}
-                    \item Same chirping/branch-hopping character.
-                    \item Frequency falls: ${\sim}90\to{\sim}\SI{85}{kHz}$
-                    ($\bar f=\SI{86.7}{kHz}$, $\sigma=\SI{3.0}{kHz}$) -- electron cooling after ECH off.
-                \end{itemize}
-            \end{block}
-            \begin{block}{Secondary -- stable, $f\downarrow$}
-                \footnotesize
-                \begin{itemize}
-                    \item Smoother, more stable line.
-                    \item Frequency falls ${\sim}51\to{\sim}\SI{37}{kHz}$, then stays flat
-                    ($\bar f=\SI{40.3}{kHz}$, $\sigma=\SI{4.3}{kHz}$).
-                \end{itemize}
-            \end{block}
+            \vspace{0.08cm}
+            \qbox{Primary -- chirping, $f\downarrow$}{%
+                \item Same chirping and branch-hopping character.%
+                \item Frequency falls: ${\sim}90\to{\sim}\SI{85}{kHz}$ ($\bar{f}=\SI{86.5}{kHz}$, $\sigma=\SI{2.3}{kHz}$) -- consistent with electron cooling after ECH off.%
+            }
+            \vspace{0.12cm}
+            \qbox{Secondary -- stable, $f\downarrow$}{%
+                \item Smoother, more stable frequency line.%
+                \item Frequency falls: ${\sim}51\to{\sim}\SI{37}{kHz}$, then stays flat ($\bar{f}=\SI{39.7}{kHz}$, $\sigma=\SI{3.6}{kHz}$).%
+            }
         \end{column}
     \end{columns}
-    \vspace{0.1cm}
-    {\scriptsize In both windows the $3\sigma$ occupancy is 100\%: the modes are continuously
-    sustained by NBI, ECH only changes the direction of the frequency drift.}
+    \vspace{0.08cm}
+    {\scriptsize In both windows the modes persist (3$\sigma$ occupancy 100\%); the frequency drift reverses when ECH stops.\par}
+    \vfill
+    {\tiny\textsuperscript{*} $\bar{f}$ = mean tracked ridge\par}
 \end{frame}
 
 \begin{frame}{Dynamic Behavior: Comparative Zoomed Spectrograms}
@@ -332,55 +376,70 @@
         \small Bessel band-pass + Hilbert transform $\rightarrow$ envelope and instantaneous
         frequency of each band; Pearson (with $N_{\text{eff}}$) and partial correlation vs.\
         NBI, ECH, $I_p$, $W_p$, $n_e$, H$\alpha$; frequency compared with six scaling models
-        (Alfvén, BAE/GAM, beam drive, $I_p$, $W_p$, \dots).
+        (Alfvénic $1/\sqrt{n_e}$, BAE acoustic $\sqrt{T_e}$, BAE coupled, EPM beam-drive, EPM beam-power, current-induced $I_p$).
     \end{exampleblock}
     \vfill
 \end{frame}
 
 \begin{frame}{Mode Identification}
+    % Measure natural box body heights and select maximum
+    \savebox{\qboxA}{\qboxmeasure{Primary -- BAE/GAM-like (candidate)}{%
+        \item Best model (full burst): $f\propto\sqrt{T_e}$ (acoustic / BAE--GAM).%
+        \item $r=-0.48$, $p=0.20$ (full burst), opposite sign to prediction \incl%
+    }}%
+    \savebox{\qboxB}{\qboxmeasure{Primary -- BAE/GAM-like (candidate)}{%
+        \item Frequency drops ${\sim}$2--\SI{3}{kHz} (291.3--300.0\,ms): consistent with lower $T_e$.%
+        \item Same $m=+3$, same $n$: mode identity preserved without ECH.%
+    }}%
+    \savebox{\qboxC}{\qboxmeasure{Secondary -- $I_p$-driven (candidate)}{%
+        \item Best model (full burst): current-induced ($I_p$, rotational-transform shift).%
+        \item $r=-0.85$, $p=0.16$ ($N_{\text{eff}}\approx4$, full burst), opposite sign to prediction \incl%
+    }}%
+    \savebox{\qboxD}{\qboxmeasure{Secondary -- $I_p$-driven (candidate)}{%
+        \item Envelope follows $I_p$ ($r=0.80$) and $W_p$ ($r=0.81$) (291.3--300.0\,ms).%
+        \item Frequency shifts downward ($\bar{f}=\SI{39.7}{kHz}$); structure ($m$) unresolved.%
+    }}%
+    \setlength{\qboxbodyH}{\dimexpr\ht\qboxA+\dp\qboxA\relax}%
+    \setlength{\tmpH}{\dimexpr\ht\qboxB+\dp\qboxB\relax}%
+    \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
+    \setlength{\tmpH}{\dimexpr\ht\qboxC+\dp\qboxC\relax}%
+    \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
+    \setlength{\tmpH}{\dimexpr\ht\qboxD+\dp\qboxD\relax}%
+    \ifdim\tmpH>\qboxbodyH \setlength{\qboxbodyH}{\tmpH}\fi
+    \typeout{Mode Identification max box body height: \the\qboxbodyH}%
     \begin{columns}[T]
-        \begin{column}{0.495\textwidth}
+        \begin{column}{\qboxwidth}
             \colhead{\winA}
-            \vspace{0.1cm}
-            \begin{block}{Primary -- BAE / GAM-like}
-                \footnotesize
-                \begin{itemize}
-                    \item Best model: $f\propto\sqrt{T_e}$ (acoustic / BAE--GAM).
-                    \item $r=-0.48$, $p=0.20$, opposite sign to prediction \incl
-                \end{itemize}
-            \end{block}
-            \begin{block}{Secondary -- $I_p$-driven}
-                \footnotesize
-                \begin{itemize}
-                    \item Best model: current-induced ($I_p$, rotational-transform shift).
-                    \item $r=-0.85$, $p=0.16$ ($N_{\text{eff}}\approx4$) \incl
-                \end{itemize}
-            \end{block}
+            \vspace{0.04cm}
+            \qbox{Primary -- BAE/GAM-like (candidate)}{%
+                \item Best model (full burst): $f\propto\sqrt{T_e}$ (acoustic / BAE--GAM).%
+                \item $r=-0.48$, $p=0.20$ (full burst), opposite sign to prediction \incl%
+            }
+            \vspace{0.08cm}
+            \qbox{Secondary -- $I_p$-driven (candidate)}{%
+                \item Best model (full burst): current-induced ($I_p$, rotational-transform shift).%
+                \item $r=-0.85$, $p=0.16$ ($N_{\text{eff}}\approx4$, full burst), opposite sign to prediction \incl%
+            }
         \end{column}
-        \begin{column}{0.495\textwidth}
+        \hspace{0.5cm}
+        \begin{column}{\qboxwidth}
             \colhead{\winB}
-            \vspace{0.1cm}
-            \begin{block}{Primary -- BAE / GAM-like}
-                \footnotesize
-                \begin{itemize}
-                    \item Frequency drops ${\sim}$2--\SI{3}{kHz} when ECH stops: consistent with
-                    lower $T_e$ (sound speed).
-                    \item Same $m=+3$, same $n$: same mode, only re-tuned.
-                \end{itemize}
-            \end{block}
-            \begin{block}{Secondary -- $I_p$-driven}
-                \footnotesize
-                \begin{itemize}
-                    \item Envelope follows $I_p$ ($r=0.80$) and $W_p$ ($r=0.81$).
-                    \item Frequency drops ${\sim}\SI{11.5}{kHz}$; structure ($m$) still unresolved.
-                \end{itemize}
-            \end{block}
+            \vspace{0.04cm}
+            \qbox{Primary -- BAE/GAM-like (candidate)}{%
+                \item Frequency drops ${\sim}$2--\SI{3}{kHz} (291.3--300.0\,ms): consistent with lower $T_e$.%
+                \item Same $m=+3$, same $n$: mode identity preserved without ECH.%
+            }
+            \vspace{0.08cm}
+            \qbox{Secondary -- $I_p$-driven (candidate)}{%
+                \item Envelope follows $I_p$ ($r=0.80$) and $W_p$ ($r=0.81$) (291.3--300.0\,ms).%
+                \item Frequency shifts downward ($\bar{f}=\SI{39.7}{kHz}$); structure ($m$) unresolved.%
+            }
         \end{column}
     \end{columns}
-    \vspace{0.1cm}
+    \vspace{0.04cm}
     {\scriptsize Drive: once the ECH on/off step is partialled out, $r_{\text{ECH}}\to0.06$--$0.12$
     while $r_{\text{NBI}}\approx0.61$--$0.64$ survives $\Rightarrow$ NBI fast ions drive both modes.
-    No scaling model is significant (adjusted $p>0.16$); tests use the full active burst.}
+    No scaling model is significant (adjusted $p>0.16$); tests use the full active burst.\par}
 \end{frame}
 
 % ============================================================
@@ -406,31 +465,32 @@
 \begin{frame}{Bicoherence Analysis}
     \begin{columns}[T]
         \begin{column}{0.495\textwidth}
-            \colhead{\winA}
-            \vspace{0.1cm}
-            \small
+            \colhead{\textbf{NBI + ECH}\\[-0.2ex]{\scriptsize(first 8\,ms: \SIrange{259.1}{267.1}{ms}, $N_{\text{fft}}=512$, $N_{\text{ens}}=30$)}}
+            \vspace{0.04cm}
+            \footnotesize
             \begin{itemize}
                 \item Leading triad $82.0-41.0=\SI{41.0}{kHz}$, $b^2=0.29$:
                 above the 95\% floor (0.10), below 0.5.
                 \item Triads line up on $f_2=-f_1/2$ ($f\leftrightarrow f/2$), incl.\
                 $89.8-48.8=\SI{41.0}{kHz}$ (Primary--Secondary, PSD-confirmed).
-                \item Integrated $b^2$ at $0.53\times$ noise floor $\Rightarrow$ weak, narrow-band coupling.
+                \item Integrated $b^2 = 168.9$ vs 161 expected for Gaussian noise ($1.05\times$, $p=0.015$): no excess.
             \end{itemize}
         \end{column}
         \begin{column}{0.495\textwidth}
-            \colhead{\winB}
-            \vspace{0.1cm}
-            \small
+            \colhead{\textbf{NBI only}\\[-0.2ex]{\scriptsize(\SIrange{291.3}{300.0}{ms}, $N_{\text{fft}}=512$, $N_{\text{ens}}=30$)}}
+            \vspace{0.04cm}
+            \footnotesize
             \begin{itemize}
                 \item Leading triad $101.6-50.8=\SI{50.8}{kHz}$, $b^2=0.88$:
-                ${\sim}3\times$ stronger than with ECH.
+                same settings, 8.7\,ms window.
                 \item A second cascade line appears ($f_1$ intercept ${\sim}\SI{41.6}{kHz}$).
-                \item Energy flows \textbf{upward} (coalescence): $\mathrm{Im}[B_{\text{sum}}]>0$ in
-                16/16 highest-SNR windows (threshold-dependent).
+                \item Integrated $b^2 = 349.9$, $2.2\times$ the Gaussian level ($p<0.005$).
             \end{itemize}
         \end{column}
     \end{columns}
-    \vspace{0.3cm}
+    \vspace{0.06cm}
+    {\scriptsize Exploratory: $\mathrm{Im}[B_{\text{sum}}] > 0$ in the 16 highest-SNR windows of a sliding scan (\SIrange{291.3}{308.6}{ms}; 2 independent episodes; windows not stationary; sign convention under validation).\par}
+    \vspace{0.06cm}
     \begin{alertblock}{Validation}
         \footnotesize Not reproduced in shot \#88654 ($b^2\le0.34$), 0/36 Langmuir tips match, and
         quiet-time maxima reach $b^2=0.35$--$0.69$ $\Rightarrow$ coupling is real but not validated.
@@ -458,7 +518,7 @@
 
 \begin{frame}{Discussion: Objective 1 -- Mode Structure \& Dynamics}
     \begin{itemize}[<+->]
-        \item Both modes are coherent ($\gamma^2>0.8$) and \textbf{survive the ECH shut-off}
+        \item Both modes are coherent ($\gamma^2\ge0.95$ on all MP pairs) and \textbf{survive the ECH shut-off}
         with the same toroidal helicity ($n\equiv-1$ mod 4).
         \item The \Prim{} mode has a robust global structure ($m=+3$ in both windows); the
         \Sec{} mode's $m$ is unstable ($+6\to+2$) $\Rightarrow$ inconclusive.
@@ -487,9 +547,8 @@
     \begin{itemize}[<+->]
         \item Three-wave phase coupling is \textbf{statistically real}: asymptotic
         $b^2_\infty\approx0.28$--$0.33$ vs.\ $\approx0$ for noise.
-        \item Coupling \textbf{strengthens ${\sim}3\times$ after ECH off} ($b^2$: $0.29\to0.88$).
-        \item Energy flows \textbf{upward} (coalescence) in the highest-SNR windows; the sign
-        depends on the SNR threshold.
+        \item Coupling \textbf{is stronger in the NBI-only window (exploratory)} ($b^2$: $0.29\to0.88$).
+        \item Exploratory: energy flows \textbf{upward} (coalescence) in highest-SNR windows; sign convention under validation.
         \item Fails the strict double validation (\#88654, Langmuir) and the burst is not
         stronger than quiet periods.
         \item $\Rightarrow$ Link to edge turbulence / heat transport \textbf{not yet established}.
@@ -501,20 +560,18 @@
 % ============================================================
 
 \begin{frame}{Summary}
+    \footnotesize
     \begin{itemize}
-        \item Two coherent modes -- \Prim{} (${\sim}\SI{89}{kHz}$, $m=+3$) and \Sec{}
-        (${\sim}\SI{45}{kHz}$) -- share $n\equiv-1$ (mod 4) and \textbf{keep their identity}
-        when ECH turns off.
+        \item Two coherent modes -- \Prim{} ($m=+3$) and \Sec{} ($m$ tentative) -- persist after ECH turns off.
         \vspace{0.2cm}
-        \item They are \textbf{driven by NBI}; ECH only steers their frequency
-        (up with ECH, down after cooling). Identity: BAE/GAM-like and $I_p$-driven (tentative).
+        \item Both follow NBI; ECH shifts their frequency (up with ECH, down after).
         \vspace{0.2cm}
-        \item Non-linear coupling is real and grows without ECH, but is \textbf{not yet validated}.
+        \item Non-linear coupling: present, not yet validated.
     \end{itemize}
     \vspace{0.6cm}
     \begin{beamercolorbox}[wd=\textwidth,sep=10pt,center,rounded=true,shadow=true]{block title}
-        \large\bfseries NBI fast ions drive the MHD modes of Heliotron J --\\
-        ECH only tunes their frequency.
+        \large\bfseries In shot \#88653, NBI fast ions sustain the MHD modes;\\
+        ECH mainly tunes their frequency.
     \end{beamercolorbox}
 \end{frame}
 
