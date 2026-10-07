@@ -1,4 +1,5 @@
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -35,6 +36,9 @@ def get_objective1_window(shot=88653):
 
 
 def main(target_dir=None):
+    if os.environ.get("ALLOW_LEGACY_LIBRARY_ESTIMATOR") != "1":
+        print("Objective 3 legacy pipeline disabled: it uses the library abicoh2 routine, which has an index error (see analysis/obj3_nonlinear_coupling/SUPERSEDED.md). Set ALLOW_LEGACY_LIBRARY_ESTIMATOR=1 to run it anyway.")
+        sys.exit(2)
     run_cwd = Path(target_dir) if target_dir else root_dir
     print(f"Running Objective 3 pipeline in: {run_cwd}")
 
