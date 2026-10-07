@@ -3,7 +3,7 @@
 Shot 88653 (analysis; both heated windows 259.1-267.0 ms and 291.3-299.2 ms are from this shot) and shot 88654 (reproducibility), probe MP1 (MP3 and MP4 only for the 148 kHz burst check), record 150-412 ms, fs = 1 MHz.
 
 ## Estimator
-`analysis/common/abicoh2_corrected.py` is a corrected copy of the lab routine `abicoh2` in `jpack/libana_signal.py`. The library routine evaluates f1+f2-f3 = -df (one-bin offset) and its biphase is offset by about pi for Hann windows. `jpack` was not modified. `analysis/common/test_abicoh2_corrected.py` checks the corrected routine against an independent brute-force evaluation.
+`analysis/common/abicoh2_corrected.py` is a corrected copy of the lab routine `abicoh2` in `jpack/libana_signal.py`. In the library routine the cell (f1, f2) evaluates X(f2) X(f1-df) X*(f1+f2) instead of X(f1) X(f2) X*(f1+f2), because `np.roll` is applied to the index of the second factor (one-bin offset, a+b-c = -1). `jpack` was not modified. `analysis/common/test_abicoh2_corrected.py` checks the corrected routine against an independent brute-force evaluation.
 
 ## Scripts
 The scripts in this folder were copied unchanged from the working directories in which they were run. They contain absolute paths of that environment and are kept as a record of the computations, not as a portable package. Scripts that import the corrected module were run with the version before the `fs` and `detrend` parameters were added; the defaults reproduce that version exactly (checked once by comparing the outputs of both versions).

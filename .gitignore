@@ -25,3 +25,10 @@ Desktop.ini
 *.log
 .continue/
 logs/
+
+# LaTeX build files of the slides
+presentation.aux
+presentation.nav
+presentation.out
+presentation.snm
+presentation.toc

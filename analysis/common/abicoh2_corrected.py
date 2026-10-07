@@ -1,5 +1,5 @@
 """
-corrected copy of jpack/libana_signal.py abicoh2 (a+b-c = 0 instead of -1 bin); biphase offset about pi for Hann windows in the library routine; units raw FFT^2 / density = fs*sum(w^2).
+corrected copy of jpack/libana_signal.py abicoh2 (a+b-c = 0 instead of -1 bin); the library cell (f1, f2) evaluates X(f2) X(f1-df) X*(f1+f2) because np.roll is applied to the index of the second factor; units raw FFT^2 / density = fs*sum(w^2).
 """
 
 import numpy as np
