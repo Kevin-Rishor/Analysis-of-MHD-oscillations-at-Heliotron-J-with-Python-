@@ -256,7 +256,7 @@ Where $b^2(f_1, f_2)$ is the squared auto-bicoherence. Significant coupling (typ
 \label{eqn:b2_stat}
 b^2_\alpha = -\frac{\ln(\alpha)}{N_{\text{ensemble}}}
 \end{equation}
-Where $b^2_\alpha$ is the statistical significance threshold, $\alpha$ is the significance level, and $N_{\text{ensemble}}$ is the number of independent ensembles. To prevent redundant triad integration due to permutation symmetries, the spectra are mathematically partitioned into sum coupling (up-conversion) and difference coupling (parametric decay) regions, defined in equations \ref{eqn:sum_domain} and \ref{eqn:diff_domain}:
+Where $b^2_\alpha$ is the statistical significance threshold, $\alpha$ is the significance level, and $N_{\text{ensemble}}$ is the number of independent ensembles. To prevent redundant triad integration due to permutation symmetries, the spectra are mathematically partitioned into sum coupling and difference coupling regions, defined in equations \ref{eqn:sum_domain} and \ref{eqn:diff_domain}:
 \begin{equation}
 \label{eqn:sum_domain}
 f_1 + f_2 = f_3 \quad (f_1 > 0, f_2 > 0)
@@ -268,7 +268,7 @@ f_1 + f_2 = f_3 \quad (f_1 > 0, f_2 < 0)
 Where $f_3$ is the resultant coupled frequency ($\text{Hz}$).
 
 \subsubsection{Bias Scaling \& Window Optimization}
-Because finite-sample bicoherence exhibits an intrinsic positive bias ($\text{E}[\hat{b}^2] \approx 1/N$), physical triads are verified through the asymptotic scaling model shown in equation \ref{eqn:bias_extrap}, strictly requiring a non-zero intercept $b_\infty^2 > 0$ \cite{HinichWolinsky2005}:
+Because finite-sample bicoherence exhibits an intrinsic positive bias ($\text{E}[\hat{b}^2] \approx 1/N$ as the leading term, plus about $1\%$ extra from the $50\%$ overlap of Hann segments, estimated by Monte Carlo), a candidate triad would have to show a non-zero intercept $b_\infty^2 > 0$ in the asymptotic scaling model of equation \ref{eqn:bias_extrap} \cite{HinichWolinsky2005}:
 \begin{equation}
 \label{eqn:bias_extrap}
 \hat{b}^2(N) = b_\infty^2 + \frac{C}{N}
