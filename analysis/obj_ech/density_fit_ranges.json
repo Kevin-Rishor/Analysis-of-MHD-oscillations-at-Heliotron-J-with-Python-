@@ -1,0 +1,55 @@
+{
+  "shot": "88653",
+  "overlap_note": "Bins at 0.5 ms from 1.024 ms windows overlap.",
+  "evaluation_times_ms": {
+    "t_pre": 290.2,
+    "t_post": 293.7,
+    "nave_pre": 0.6043142878648007,
+    "nave_post": 0.6726176088506521
+  },
+  "observed_delta_fc_sec_khz": -9.69027328491211,
+  "fit_intervals": {
+    "262-290": {
+      "t_start_ms": 262.0,
+      "t_end_ms": 290.0,
+      "n_points": 57,
+      "gamma": 0.46595563308876664,
+      "f0_khz": 41.25501836484662,
+      "polyfit_slope": -0.46595563308876664,
+      "polyfit_intercept": 3.7197727627106523,
+      "f_pred_290p2_khz": 52.16732720422353,
+      "f_pred_293p7_khz": 49.62827121071168,
+      "delta_f_pred_khz": -2.5390559935118517,
+      "fraction_of_observed": 0.2620210925800408,
+      "fraction_pct_str": "26.2%"
+    },
+    "270-290": {
+      "t_start_ms": 270.0,
+      "t_end_ms": 290.0,
+      "n_points": 41,
+      "gamma": 0.3813307820117868,
+      "f0_khz": 42.6353258149492,
+      "polyfit_slope": -0.3813307820117868,
+      "polyfit_intercept": 3.752683154124452,
+      "f_pred_290p2_khz": 51.663138994874416,
+      "f_pred_293p7_khz": 49.59602390420274,
+      "delta_f_pred_khz": -2.0671150906716775,
+      "fraction_of_observed": 0.21331855458506052,
+      "fraction_pct_str": "21.3%"
+    },
+    "275-291.2": {
+      "t_start_ms": 275.0,
+      "t_end_ms": 291.2,
+      "n_points": 33,
+      "gamma": 0.319540556132857,
+      "f0_khz": 43.71257716271365,
+      "polyfit_slope": -0.319540556132857,
+      "polyfit_intercept": 3.7776358676201616,
+      "f_pred_290p2_khz": 51.34543038511291,
+      "f_pred_293p7_khz": 49.618250420114386,
+      "delta_f_pred_khz": -1.7271799649985269,
+      "fraction_of_observed": 0.17823851961820006,
+      "fraction_pct_str": "17.8%"
+    }
+  }
+}

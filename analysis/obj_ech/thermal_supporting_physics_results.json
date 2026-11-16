@@ -1,0 +1,236 @@
+{
+  "88653": {
+    "shot": 88653,
+    "ece_decays": {
+      "ece_10": {
+        "v_initial": 0.8239926766531698,
+        "v_final": 0.025982258560040553,
+        "pct_drop": -96.84666772376491,
+        "tau_ms": 0.27578995921247385,
+        "tau_ci": [
+          0.2507515602980672,
+          0.3006621379922574
+        ],
+        "fit_success": true
+      },
+      "ece_12": {
+        "v_initial": 1.2151302017112653,
+        "v_final": 0.06033236915663339,
+        "pct_drop": -95.03482676836329,
+        "tau_ms": 0.452658165803731,
+        "tau_ci": [
+          0.4250353684984265,
+          0.48198253919148437
+        ],
+        "fit_success": true
+      },
+      "ece_13": {
+        "v_initial": 1.9888017129415152,
+        "v_final": -0.2748872557438893,
+        "pct_drop": -113.82169553345601,
+        "tau_ms": 3.0141343655052673,
+        "tau_ci": [
+          2.6961331245947866,
+          3.399482653205026
+        ],
+        "fit_success": true
+      }
+    },
+    "sx_proxy": {
+      "pre_ech_mean": -0.009275196344644045,
+      "post_ech_mean": -0.009235472276666669,
+      "delta": 3.972406797737686e-05,
+      "ratio": 0.9958245365379027
+    },
+    "scaling_tests": {
+      "primary_vs_ece12": {
+        "mode": "Primary (80-110 kHz)",
+        "ece_channel": "ECE 12",
+        "pearson_r": 0.20044770017450803,
+        "pearson_ci": [
+          0.11363873889196241,
+          0.28296446353783006
+        ],
+        "n_eff": 56.449692541400644,
+        "actual_drop_pct": -3.6598500392109474,
+        "predicted_acoustic_drop_pct": -25.029745121526936,
+        "ratio_actual_to_predicted": 0.14622003410986845
+      },
+      "primary_vs_ece13": {
+        "mode": "Primary (80-110 kHz)",
+        "ece_channel": "ECE 13",
+        "pearson_r": 0.2458531127380233,
+        "pearson_ci": [
+          0.09825373211942333,
+          0.3658442693431563
+        ],
+        "n_eff": 46.32444050805756,
+        "actual_drop_pct": -3.6598500392109474,
+        "predicted_acoustic_drop_pct": -6.545745640374589,
+        "ratio_actual_to_predicted": 0.5591189758055559
+      },
+      "secondary_vs_ece12": {
+        "mode": "Secondary (30-65 kHz)",
+        "ece_channel": "ECE 12",
+        "pearson_r": 0.4952778666978774,
+        "pearson_ci": [
+          0.2840046455955314,
+          0.5967110178910139
+        ],
+        "n_eff": 32.43737980718743,
+        "actual_drop_pct": -23.38813788421285,
+        "predicted_acoustic_drop_pct": -25.029745121526936,
+        "ratio_actual_to_predicted": 0.93441378268417
+      },
+      "secondary_vs_ece13": {
+        "mode": "Secondary (30-65 kHz)",
+        "ece_channel": "ECE 13",
+        "pearson_r": 0.4567560872553381,
+        "pearson_ci": [
+          0.33298133093826904,
+          0.5403120120703321
+        ],
+        "n_eff": 24.45015142749376,
+        "actual_drop_pct": -23.38813788421285,
+        "predicted_acoustic_drop_pct": -6.545745640374589,
+        "ratio_actual_to_predicted": 3.5730293754438964
+      }
+    },
+    "verdicts": {
+      "primary_acoustic_scaling_hypothesis": {
+        "status": "NULL",
+        "evidence": "Primary mode drops only -3.7% vs predicted acoustic drop of -25.0%. Pearson r = 0.20 [95% CI: 0.11, 0.28] with N_eff = 56.4. Pure sound-speed scaling is ruled out.",
+        "physical_interpretation": "Primary mode is governed by the Alfven velocity v_A = B / sqrt(mu0 * rho) rather than sound speed c_s. Characteristic of fast-ion TAE/GAE branch.",
+        "artifacts_considered": [
+          "ECE uncalibrated baseline offset mitigated via robust floor correction",
+          "Bartlett bivariate autocorrelation correction applied"
+        ]
+      },
+      "secondary_acoustic_coupling_hypothesis": {
+        "status": "SUGGESTIVE",
+        "evidence": "Secondary mode drops -23.4% (vs predicted -25.0%). Pearson r = 0.50 [95% CI: 0.28, 0.60] with N_eff = 32.4.",
+        "physical_interpretation": "Secondary mode exhibits partial frequency tracking with electron cooling, consistent with mixed acoustic-Alfven coupling (BAE branch) or plasma rotation deceleration.",
+        "artifacts_considered": [
+          "Fixed vs adaptive band tracking checked"
+        ]
+      }
+    }
+  },
+  "88654": {
+    "shot": 88654,
+    "ece_decays": {
+      "ece_10": {
+        "v_initial": 0.9722612982725077,
+        "v_final": 0.016140988513049723,
+        "pct_drop": -98.33974961882916,
+        "tau_ms": 0.3136980313371353,
+        "tau_ci": [
+          0.2906582180135379,
+          0.33479518759465454
+        ],
+        "fit_success": true
+      },
+      "ece_12": {
+        "v_initial": 1.0832144481250272,
+        "v_final": 0.03214771119786725,
+        "pct_drop": -97.03210370074446,
+        "tau_ms": 0.5501986567732692,
+        "tau_ci": [
+          0.5225673615299162,
+          0.5786811640170385
+        ],
+        "fit_success": true
+      },
+      "ece_13": {
+        "v_initial": 2.075755047632894,
+        "v_final": -0.11411454640702089,
+        "pct_drop": -105.49744496888982,
+        "tau_ms": 1.9587646494019384,
+        "tau_ci": [
+          1.8080036114968627,
+          2.1227831132230257
+        ],
+        "fit_success": true
+      }
+    },
+    "sx_proxy": {
+      "pre_ech_mean": -0.00935606811310712,
+      "post_ech_mean": -0.009115566408333333,
+      "delta": 0.0002405017047737868,
+      "ratio": 0.9743987214333343
+    },
+    "scaling_tests": {
+      "primary_vs_ece12": {
+        "mode": "Primary (80-110 kHz)",
+        "ece_channel": "ECE 12",
+        "pearson_r": 0.28985813162474067,
+        "pearson_ci": [
+          0.07002880911752037,
+          0.4085522419647917
+        ],
+        "n_eff": 62.6423034874032,
+        "actual_drop_pct": -12.136894566539718,
+        "predicted_acoustic_drop_pct": -59.75516805046741,
+        "ratio_actual_to_predicted": 0.20311037799106582
+      },
+      "primary_vs_ece13": {
+        "mode": "Primary (80-110 kHz)",
+        "ece_channel": "ECE 13",
+        "pearson_r": 0.21625438599564775,
+        "pearson_ci": [
+          0.02002127498543997,
+          0.36021433850686363
+        ],
+        "n_eff": 56.64464629666645,
+        "actual_drop_pct": -12.136894566539718,
+        "predicted_acoustic_drop_pct": -36.272750699120884,
+        "ratio_actual_to_predicted": 0.3346008964639885
+      },
+      "secondary_vs_ece12": {
+        "mode": "Secondary (30-65 kHz)",
+        "ece_channel": "ECE 12",
+        "pearson_r": 0.42193018816390315,
+        "pearson_ci": [
+          0.2190904728827963,
+          0.5220084528777046
+        ],
+        "n_eff": 43.61762116848463,
+        "actual_drop_pct": -17.933477786404033,
+        "predicted_acoustic_drop_pct": -59.75516805046741,
+        "ratio_actual_to_predicted": 0.3001159342631903
+      },
+      "secondary_vs_ece13": {
+        "mode": "Secondary (30-65 kHz)",
+        "ece_channel": "ECE 13",
+        "pearson_r": 0.42028195683274033,
+        "pearson_ci": [
+          0.2556144045506532,
+          0.512026448619398
+        ],
+        "n_eff": 34.19457005279236,
+        "actual_drop_pct": -17.933477786404033,
+        "predicted_acoustic_drop_pct": -36.272750699120884,
+        "ratio_actual_to_predicted": 0.4944063500881675
+      }
+    },
+    "verdicts": {
+      "primary_acoustic_scaling_hypothesis": {
+        "status": "NULL",
+        "evidence": "Primary mode drops only -12.1% vs predicted acoustic drop of -59.8%. Pearson r = 0.29 [95% CI: 0.07, 0.41] with N_eff = 62.6. Pure sound-speed scaling is ruled out.",
+        "physical_interpretation": "Primary mode is governed by the Alfven velocity v_A = B / sqrt(mu0 * rho) rather than sound speed c_s. Characteristic of fast-ion TAE/GAE branch.",
+        "artifacts_considered": [
+          "ECE uncalibrated baseline offset mitigated via robust floor correction",
+          "Bartlett bivariate autocorrelation correction applied"
+        ]
+      },
+      "secondary_acoustic_coupling_hypothesis": {
+        "status": "SUGGESTIVE",
+        "evidence": "Secondary mode drops -17.9% (vs predicted -59.8%). Pearson r = 0.42 [95% CI: 0.22, 0.52] with N_eff = 43.6.",
+        "physical_interpretation": "Secondary mode exhibits partial frequency tracking with electron cooling, consistent with mixed acoustic-Alfven coupling (BAE branch) or plasma rotation deceleration.",
+        "artifacts_considered": [
+          "Fixed vs adaptive band tracking checked"
+        ]
+      }
+    }
+  }
+}

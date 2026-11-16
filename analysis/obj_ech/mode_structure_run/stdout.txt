@@ -1,0 +1,13 @@
+--- Spatial Modal Structure (m) Comparison (Shot 88653) ---
+  Processing Secondary Band (40-80 kHz) - ECH+NBI...
+    Dominant m = +6 at 48.8 kHz | r_circ = 0.216, err = 92.3 deg -> UNCONFIRMED
+    Saved figure: mhd_analysis_objective2_structure_88653_40_80kHz_ECH_NBI.png
+  Processing Secondary Band (40-80 kHz) - Just NBI...
+    Dominant m = +2 at 41.0 kHz | r_circ = 0.632, err = 81.1 deg -> UNCONFIRMED
+    Saved figure: mhd_analysis_objective2_structure_88653_40_80kHz_NBI_only.png
+  Processing Primary Band (80-120 kHz) - ECH+NBI...
+    Dominant m = +3 at 89.8 kHz | r_circ = 0.882, err = 26.7 deg -> CONFIRMED
+    Saved figure: mhd_analysis_objective2_structure_88653_80_120kHz_ECH_NBI.png
+  Processing Primary Band (80-120 kHz) - Just NBI...
+    Dominant m = +3 at 85.9 kHz | r_circ = 0.902, err = 22.2 deg -> CONFIRMED
+    Saved figure: mhd_analysis_objective2_structure_88653_80_120kHz_NBI_only.png

@@ -1,0 +1,22 @@
+
+\begin{table}[H]
+\centering
+\small
+\caption[Bicoherence map maxima in heated and reference windows]{Bicoherence map maxima in heated and reference windows.}
+\label{tab:bicoherence_maps}
+\sbox0{%
+\begin{tabular}{llcccc}
+\toprule
+Shot & Window type & Window (ms) & Map max $b^2$ (-) & Reference windows above / 33 & Reference windows above / 23 \\
+\midrule
+\#88653 & ECH+NBI & 259.1--267.0 & 0.335 & 23/33 & 18/23 \\
+\#88653 & NBI-only & 291.3--299.2 & 0.712 & 3/33 & 3/23 \\
+\#88653 & Reference windows & -- & median 0.419 [0.239, 0.967] & $N=33$ & median 0.492, $N=23$ \\
+\#88654 & ECH+NBI & 259.1--267.0 & 0.398 & 24/33 & 19/23 \\
+\#88654 & NBI-only & 291.3--299.2 & 0.729 & 7/33 & 6/23 \\
+\#88654 & Reference windows & -- & median 0.499 [0.224, 0.958] & $N=33$ & median 0.565, $N=23$ \\
+\bottomrule
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
+\par\smallskip{\footnotesize Strict comparison ($>$); bracketed values denote min--max range, not uncertainties. Reference set: 33 contiguous 7.936~ms windows from 150~ms (23 excluding NBI overlap; not a heating-free null).}
+\end{table}

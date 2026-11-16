@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4.5pt}
+\renewcommand{\arraystretch}{1.15}
+\caption[Heating phases and Mirnov spectral summary for shot \#88653]{Heating phases and Mirnov spectral summary for shot \#88653.}
+\label{tab:discharge_phases}
+\begin{tabular}{lccccrl}
+\toprule
+Phase & \shortstack{Coherence\\window (ms)} & \shortstack{RMS\\window (ms)} & \shortstack{MP1\\RMS (V)} & \shortstack{Peak\\$\gamma^2$ (-)} & \shortstack{Power /\\threshold (-)} & \shortstack{Discrete\\modes (kHz)} \\
+\midrule
+Pre-plasma & 150.0--171.2 & 150.0--171.2 & 0.016 & 0.765 & 0.7 & none \\
+ECH only & 171.2--222.4 & 171.0--222.0 & 0.040 & 0.158 & 33.8 & none \\
+Early ECH+NBI & 222.4--259.1 & 222.0--259.0 & 0.087 & 0.931 & 450.6 & 87.9, 139.6 \\
+Late ECH+NBI & 259.1--291.2 & 259.0--291.0 & 0.274 & 0.972 & 7052.3 & 40.0, 88.9 \\
+NBI only & 291.2--300.4 & 291.2--300.4 & 0.281 & 0.997 & 9232.6 & \shortstack[l]{37.1, 50.8,\\86.9, 115.2} \\
+\shortstack[l]{Post-heating\\decay} & 300.4--350.0 & 300.4--350.0 & 0.054 & 0.990 & 131.4 & \shortstack[l]{31.2, 35.2, 41.0,\\48.8 (+5)} \\
+\bottomrule
+\end{tabular}
+\par\smallskip{\footnotesize Peak $\gamma^2$ computed from MP1--MP3; RMS amplitude evaluated over the specified time intervals. Pre-plasma exhibits no spectral line above the detection threshold, so its $\gamma^2$ value does not represent a coherent mode. Line frequencies correspond to fixed phase windows and may differ by one STFT bin from those in Table~\ref{tab:mode_structure}.}
+\end{table}

@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{2.6pt}
+\renewcommand{\arraystretch}{1.15}
+\caption[Spatial mode structure across heating phases and slices]{Spatial mode structure across heating phases and slices.}
+\label{tab:mode_structure}
+\sbox0{%
+\begin{tabular}{llcccclccc}
+\toprule
+Band & Phase & \shortstack{$f$\\(kHz)} & \shortstack{$m$\\(-)} & \shortstack{$r_{\rm circ}$\\(-)} & \shortstack{Pol.\\Err. ($^\circ$)} & Label & \shortstack{Tor. $n$\\(mod 4, -)$^\dagger$} & \shortstack{Tor.\\RMSE ($^\circ$)} & \shortstack{Radial $\rho$ (-)\\(ECE12/13)} \\
+\midrule
+Secondary & ECH+NBI & 48.8 & $+1 \wedge +12$ & 0.832 & 24.9 & \emph{supported} & $-1$ & 22.7 & $0.29\text{--}0.47$ \\
+Secondary & NBI only & 41.0 & $+1 \wedge +12$ & 0.854 & 25.7 & \emph{supported} & $-1$ & 19.3 & $0.29\text{--}0.47$ \\
+Primary & ECH+NBI & 89.8 & $+3$ & 0.882 & 26.7 & \emph{supported} & $-1$ & 5.2 & $0.29\text{--}0.47$ \\
+Primary & NBI only & 85.9 & $+3$ & 0.902 & 22.2 & \emph{supported} & $-1$ & 6.7 & $0.29\text{--}0.47$ \\
+\shortstack[l]{Primary slice\\\#88653} & \shortstack[l]{post-transition\\291.4--291.8 ms} & -- & $+1$ & 0.608 & 65.0 & \emph{unresolved} & -- & -- & -- \\
+\shortstack[l]{Primary slice\\\#88654} & \shortstack[l]{post-transition\\292.0--293.0 ms} & -- & $+3$ & 0.951 & 15.8 & \emph{supported} & -- & -- & -- \\
+\bottomrule
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
+\par\smallskip Rows 1--4 correspond to shot \#88653; slices were analyzed individually. $^\dagger$Toroidal fit yields $n \bmod 4$ only (from three toroidal probes). \emph{Supported} requires $r_{\rm circ}\ge 0.70$ and mean poloidal error $\le 45^\circ$; ECE12/13 were calibrated via 3D \textsc{TRAVIS}. Post-transition slices were evaluated at 1~MHz using 256-sample segments with 192-sample overlap ($3$ and $12$ segments for $0.4$~ms and $1.0$~ms windows, respectively); ``--'' indicates parameters omitted in these single-frequency ($87$~kHz) short-window analyses.
+\end{table}

@@ -1,0 +1,30 @@
+\begin{table}[H]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+\caption[Primary-mode correlations and scaling models for both shots]{Primary-mode correlations and scaling models for both shots.}
+\label{tab:obj2_both_shots}
+\begin{tabular}{lcccccccc}
+\toprule
+ & \multicolumn{4}{c}{\#88653} & \multicolumn{4}{c}{\#88654} \\
+\cmidrule(lr){2-5}\cmidrule(lr){6-9}
+Quantity & \shortstack{Pearson\\$r$ (-)} & $N_{\rm eff}$ (-) & \shortstack{Lag\\(ms)} & $p$ (-) & \shortstack{Pearson\\$r$ (-)} & $N_{\rm eff}$ (-) & \shortstack{Lag\\(ms)} & $p$ (-) \\
+\midrule
+$I_p$ & 0.7575 & 34.1 & $+1.10$ & $2.08\times10^{-7}$ & 0.6555 & 46.8 & $+1.30$ & $6.10\times10^{-7}$ \\
+$W_p$ & 0.7840 & 30.9 & $+26.70$ & $1.88\times10^{-7}$ & 0.6590 & 42.3 & $+28.90$ & $1.89\times10^{-6}$ \\
+\shortstack[l]{$n_e$ (270 ms\\to end)} & 0.8666 & 15.8 & $-21.50$ & $1.64\times10^{-5}$ & 0.7099 & 22.9 & $-21.20$ & $1.55\times10^{-4}$ \\
+\midrule
+\multicolumn{9}{l}{\textbf{Candidate Frequency Scaling Models (Best Fit in Burst Window)}} \\
+\midrule
+\shortstack[l]{Primary best\\scaling $r$} & \multicolumn{4}{c}{\shortstack{BAE Coupled ($\sqrt{v_A^2 + c_s^2}$):\\$+0.545$ ($p_{\mathrm{adj}}=0.139$)}} & \multicolumn{4}{c}{\shortstack{Stored Energy ($W_p$):\\$+0.604$ ($p_{\mathrm{adj}}=0.099$)}} \\
+\shortstack[l]{Secondary best\\scaling $r$} & \multicolumn{4}{c}{\shortstack{BAE Acoustic ($\sqrt{T_e}$):\\$+0.848$ ($p_{\mathrm{adj}}=0.162$)}} & \multicolumn{4}{c}{\shortstack{Stored Energy ($W_p$):\\$+0.343$ ($p_{\mathrm{adj}}=0.157$)}} \\
+\midrule
+\multicolumn{9}{l}{\textbf{ECH-Step-Controlled Partial Correlations}} \\
+\midrule
+\shortstack[l]{Envelope, ECH-step-\\controlled $r$} & \multicolumn{4}{c}{$+0.0609$} & \multicolumn{4}{c}{$+0.0023$} \\
+\shortstack[l]{Frequency, ECH-step-\\controlled $r$} & \multicolumn{4}{c}{$+0.076$} & \multicolumn{4}{c}{$-0.074$} \\
+\bottomrule
+\end{tabular}
+\par\smallskip Primary band ($80\text{--}120$~kHz) correlations evaluated per discharge (\#88654 serves as an independent same-direction check); secondary band ($40\text{--}80$~kHz) best scaling models are listed alongside primary scaling for completeness. Lag denotes peak cross-correlation offset; $p$-values use autocorrelation-adjusted $N_{\rm eff}$. Correlations remain \emph{suggestive} at most due to shared heating ramps and limited $N_{\rm eff}$.
+\end{table}

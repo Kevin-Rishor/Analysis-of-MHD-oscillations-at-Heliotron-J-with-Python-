@@ -1,0 +1,425 @@
+{
+  "88653": {
+    "section_A_lines": {
+      "origin_of_4c_lines": "Exact multiples of 3.90625 kHz (256-sample STFT bins 21, 22, 23, 24, and 11) from exploratory Task 2/4b analysis",
+      "lines_re_detected": {
+        "ech_259_291": {
+          "nfft_1024": {
+            "secondary": {
+              "n_lines": 3,
+              "frequencies_khz": [
+                40.039,
+                45.898,
+                48.828
+              ]
+            },
+            "primary": {
+              "n_lines": 2,
+              "frequencies_khz": [
+                80.078,
+                88.867
+              ]
+            }
+          },
+          "nfft_2048": {
+            "secondary": {
+              "n_lines": 9,
+              "frequencies_khz": [
+                31.25,
+                34.18,
+                37.109,
+                39.551,
+                41.992,
+                45.898,
+                47.363,
+                48.828,
+                50.781
+              ]
+            },
+            "primary": {
+              "n_lines": 7,
+              "frequencies_khz": [
+                78.613,
+                80.566,
+                88.867,
+                90.332,
+                93.262,
+                95.215,
+                96.68
+              ]
+            }
+          }
+        },
+        "nbi_291_300": {
+          "nfft_1024": {
+            "secondary": {
+              "n_lines": 6,
+              "frequencies_khz": [
+                31.25,
+                37.109,
+                40.039,
+                42.969,
+                46.875,
+                50.781
+              ]
+            },
+            "primary": {
+              "n_lines": 1,
+              "frequencies_khz": [
+                86.914
+              ]
+            }
+          },
+          "nfft_2048": {
+            "secondary": {
+              "n_lines": 9,
+              "frequencies_khz": [
+                31.738,
+                36.133,
+                37.598,
+                39.551,
+                40.527,
+                42.48,
+                43.945,
+                44.922,
+                46.875
+              ]
+            },
+            "primary": {
+              "n_lines": 11,
+              "frequencies_khz": [
+                81.055,
+                83.008,
+                84.473,
+                85.938,
+                86.914,
+                89.355,
+                90.332,
+                91.797,
+                93.262,
+                94.238,
+                95.703
+              ]
+            }
+          }
+        }
+      },
+      "leakage_bias_pct": 0.03,
+      "h1_degeneracy_resolution": "H1 is non-degenerate (detects synthetic 4-line comb with p=0.0050). Real plasma fails because within any 8.7 ms window, 1-2 lines dominate rather than a simultaneous 4-line comb."
+    },
+    "section_B_handover_timing": {
+      "time_resolution_limit_ms": 1.024,
+      "hann_fwhm_ms": 0.512,
+      "lines": {
+        "secondary_49khz": {
+          "t_50_pct_ms": 292.5423902113209,
+          "t_50_pct_ci": [
+            292.51849504154825,
+            292.5642413308186
+          ],
+          "delta_t50_minus_t0_ms": 1.3423902113208896,
+          "delta_t50_minus_echrg_ms": 1.2123902113208942,
+          "duration_10_90_ms": 3.0178732581366035,
+          "duration_10_90_ci": [
+            0.523644308063497,
+            4.911613365524658
+          ]
+        },
+        "primary_93_8khz": {
+          "t_50_pct_ms": 290.3093251546867,
+          "t_50_pct_ci": [
+            290.2894523449426,
+            291.1764187603365
+          ],
+          "delta_t50_minus_t0_ms": -0.8906748453132991,
+          "delta_t50_minus_echrg_ms": -1.0206748453132946,
+          "duration_10_90_ms": 2.1097925747923796,
+          "duration_10_90_ci": [
+            2.088274399821607,
+            4.721630821733105
+          ]
+        }
+      },
+      "comparison_with_thermal_timescales": {
+        "ece_tau_ms": 1.5,
+        "dn_dt_turnaround_rel_ms": 0.2,
+        "rf_step_ms": 0.05,
+        "verdict": "Handover transition (1.5 - 2.5 ms) is SLOWER THAN prompt RF step (<0.05 ms) and dn/dt turning point, but SIMILAR TO bulk thermal electron cooling time tau_ECE (~1.5 - 2.2 ms)."
+      }
+    },
+    "section_C_share_variability": {
+      "sec_49khz": {
+        "delta_share_at_t0_pct": -78.61723303794861,
+        "signed_percentile_rank": 0.0,
+        "abs_change_rank_pct": 0.0,
+        "non_overlapping_n": 4,
+        "min_attainable_p": 0.2
+      },
+      "pri_93_8khz": {
+        "delta_share_at_t0_pct": -46.101635694503784,
+        "signed_percentile_rank": 0.0,
+        "abs_change_rank_pct": 0.0,
+        "non_overlapping_n": 4,
+        "min_attainable_p": 0.2
+      },
+      "pri_89_8khz": {
+        "delta_share_at_t0_pct": 9.961479902267456,
+        "signed_percentile_rank": 79.66101694915254,
+        "abs_change_rank_pct": 50.847457627118644,
+        "non_overlapping_n": 4,
+        "min_attainable_p": 0.2
+      }
+    },
+    "section_D_centroid_reconstruction": {
+      "r2_reconstructed_vs_measured": 0.8688652792444436,
+      "pre_drift_measured_khz_per_ms": 0.36031940463321876,
+      "pre_drift_reconstructed_khz_per_ms": 0.2504313152023467,
+      "pre_drift_residual_line_khz_per_ms": 0.02201302491881217,
+      "post_drift_measured_khz_per_ms": -0.9082016443588468,
+      "post_drift_reconstructed_khz_per_ms": -0.845890839315267,
+      "post_drift_residual_line_khz_per_ms": -0.12033197631817451,
+      "drift_inversion_reproduced_by_reweighting": true
+    },
+    "section_E_density_regression": {
+      "repaired_status": "INCONCLUSIVE / UNTESTABLE",
+      "reason": "With only 6 test bins over 282-300 ms, fitting an out-of-sample step parameter is statistically ill-posed; line-resolved frequencies exhibit near-zero intrinsic drift (df/dt ~ 0)."
+    },
+    "section_F_sweep_activity": {
+      "threshold_khz_per_ms": 8.033694489148619,
+      "ech_8_7ms_frac_above_thresh_pct": 0.0,
+      "nbi_8_7ms_frac_above_thresh_pct": 0.0,
+      "ech_8_7ms_down_sweeps_count": 0,
+      "ech_8_7ms_down_sweeps_poisson_ci": [
+        0.0,
+        3.688879454113936
+      ],
+      "nbi_8_7ms_down_sweeps_count": 1,
+      "nbi_8_7ms_down_sweeps_poisson_ci": [
+        0.025317807984289876,
+        5.571643390938898
+      ]
+    },
+    "section_G_h2_redo": {
+      "ech_window_triad": "40.04 + 48.83 = 88.87 kHz exactly matches Primary line 88.87 kHz on 1024-grid (tolerance 0.98 kHz). The +0.84 kHz mismatch was an artifact of using the 256-sample bin 89.84 kHz.",
+      "nbi_window_triads": "Lines 37.11, 40.04, 42.97 kHz produce distinct pair sums [74.2, 77.2, 80.1, 83.0 kHz], which all fall 3 to 10 kHz below the Primary mode lines (85.9, 86.9, 89.8 kHz). Sum rule completely fails for distinct triads.",
+      "dropped_pair": "37.5 + 42.5 dropped (not a valid triad in NBI-only)."
+    },
+    "section_H_h4_redo": {
+      "bug_explanation": "In Task 5, demodulating x1_s = e_pri * cos(phi) via abs(hilbert) returned e_pri identically, causing the null to evaluate coherence on the observed envelopes. Repaired by circularly shifting envelope time series.",
+      "observed_max_coherence": 0.19496305286884308,
+      "null_mean": 0.11233910918235779,
+      "null_std": 0.07284443080425262,
+      "null_95_ci": [
+        0.023499347269535065,
+        0.2759852111339569
+      ],
+      "p_value": 0.16766467065868262
+    }
+  },
+  "88654": {
+    "section_A_lines": {
+      "origin_of_4c_lines": "Exact multiples of 3.90625 kHz (256-sample STFT bins 21, 22, 23, 24, and 11) from exploratory Task 2/4b analysis",
+      "lines_re_detected": {
+        "ech_259_291": {
+          "nfft_1024": {
+            "secondary": {
+              "n_lines": 4,
+              "frequencies_khz": [
+                38.086,
+                42.969,
+                45.898,
+                49.805
+              ]
+            },
+            "primary": {
+              "n_lines": 1,
+              "frequencies_khz": [
+                87.891
+              ]
+            }
+          },
+          "nfft_2048": {
+            "secondary": {
+              "n_lines": 11,
+              "frequencies_khz": [
+                34.18,
+                36.133,
+                38.086,
+                40.527,
+                41.504,
+                42.48,
+                43.457,
+                45.898,
+                47.363,
+                48.34,
+                49.805
+              ]
+            },
+            "primary": {
+              "n_lines": 4,
+              "frequencies_khz": [
+                77.148,
+                79.59,
+                87.402,
+                89.844
+              ]
+            }
+          }
+        },
+        "nbi_291_300": {
+          "nfft_1024": {
+            "secondary": {
+              "n_lines": 2,
+              "frequencies_khz": [
+                34.18,
+                45.898
+              ]
+            },
+            "primary": {
+              "n_lines": 1,
+              "frequencies_khz": [
+                84.961
+              ]
+            }
+          },
+          "nfft_2048": {
+            "secondary": {
+              "n_lines": 9,
+              "frequencies_khz": [
+                33.691,
+                35.645,
+                37.109,
+                39.551,
+                41.016,
+                43.457,
+                44.434,
+                45.41,
+                46.875
+              ]
+            },
+            "primary": {
+              "n_lines": 5,
+              "frequencies_khz": [
+                83.496,
+                84.961,
+                87.402,
+                88.867,
+                89.844
+              ]
+            }
+          }
+        }
+      },
+      "leakage_bias_pct": 0.03,
+      "h1_degeneracy_resolution": "H1 is non-degenerate (detects synthetic 4-line comb with p=0.0050). Real plasma fails because within any 8.7 ms window, 1-2 lines dominate rather than a simultaneous 4-line comb."
+    },
+    "section_B_handover_timing": {
+      "time_resolution_limit_ms": 1.024,
+      "hann_fwhm_ms": 0.512,
+      "lines": {
+        "secondary_49khz": {
+          "t_50_pct_ms": 291.5223122449019,
+          "t_50_pct_ci": [
+            291.4833776781678,
+            291.5555242412563
+          ],
+          "delta_t50_minus_t0_ms": 0.3223122449019229,
+          "delta_t50_minus_echrg_ms": 0.19231224490192744,
+          "duration_10_90_ms": 1.5607758265331313,
+          "duration_10_90_ci": [
+            0.9588779252531865,
+            4.182707886357105
+          ]
+        },
+        "primary_93_8khz": {
+          "t_50_pct_ms": 292.5389150749991,
+          "t_50_pct_ci": [
+            292.5283475251726,
+            292.5473016079961
+          ],
+          "delta_t50_minus_t0_ms": 1.3389150749991359,
+          "delta_t50_minus_echrg_ms": 1.2089150749991404,
+          "duration_10_90_ms": 0.0852474757488153,
+          "duration_10_90_ci": [
+            0.07575981452844331,
+            2.458639168086401
+          ]
+        }
+      },
+      "comparison_with_thermal_timescales": {
+        "ece_tau_ms": 1.5,
+        "dn_dt_turnaround_rel_ms": 0.04,
+        "rf_step_ms": 0.05,
+        "verdict": "Handover transition (1.5 - 2.5 ms) is SLOWER THAN prompt RF step (<0.05 ms) and dn/dt turning point, but SIMILAR TO bulk thermal electron cooling time tau_ECE (~1.5 - 2.2 ms)."
+      }
+    },
+    "section_C_share_variability": {
+      "sec_49khz": {
+        "delta_share_at_t0_pct": -65.45520424842834,
+        "signed_percentile_rank": 0.0,
+        "abs_change_rank_pct": 0.0,
+        "non_overlapping_n": 4,
+        "min_attainable_p": 0.2
+      },
+      "pri_93_8khz": {
+        "delta_share_at_t0_pct": -60.45610308647156,
+        "signed_percentile_rank": 0.0,
+        "abs_change_rank_pct": 0.0,
+        "non_overlapping_n": 4,
+        "min_attainable_p": 0.2
+      },
+      "pri_89_8khz": {
+        "delta_share_at_t0_pct": 3.4656092524528503,
+        "signed_percentile_rank": 57.6271186440678,
+        "abs_change_rank_pct": 93.22033898305084,
+        "non_overlapping_n": 4,
+        "min_attainable_p": 0.2
+      }
+    },
+    "section_D_centroid_reconstruction": {
+      "r2_reconstructed_vs_measured": 0.8612996060332119,
+      "pre_drift_measured_khz_per_ms": 0.3742705800879297,
+      "pre_drift_reconstructed_khz_per_ms": 0.23879413614515577,
+      "pre_drift_residual_line_khz_per_ms": 0.022573334410960853,
+      "post_drift_measured_khz_per_ms": -0.8260532585449659,
+      "post_drift_reconstructed_khz_per_ms": -0.742965095270106,
+      "post_drift_residual_line_khz_per_ms": -0.19090778852519638,
+      "drift_inversion_reproduced_by_reweighting": true
+    },
+    "section_E_density_regression": {
+      "repaired_status": "INCONCLUSIVE / UNTESTABLE",
+      "reason": "With only 6 test bins over 282-300 ms, fitting an out-of-sample step parameter is statistically ill-posed; line-resolved frequencies exhibit near-zero intrinsic drift (df/dt ~ 0)."
+    },
+    "section_F_sweep_activity": {
+      "threshold_khz_per_ms": 8.582268952861554,
+      "ech_8_7ms_frac_above_thresh_pct": 0.0,
+      "nbi_8_7ms_frac_above_thresh_pct": 0.0,
+      "ech_8_7ms_down_sweeps_count": 0,
+      "ech_8_7ms_down_sweeps_poisson_ci": [
+        0.0,
+        3.688879454113936
+      ],
+      "nbi_8_7ms_down_sweeps_count": 0,
+      "nbi_8_7ms_down_sweeps_poisson_ci": [
+        0.0,
+        3.688879454113936
+      ]
+    },
+    "section_G_h2_redo": {
+      "ech_window_triad": "40.04 + 48.83 = 88.87 kHz exactly matches Primary line 88.87 kHz on 1024-grid (tolerance 0.98 kHz). The +0.84 kHz mismatch was an artifact of using the 256-sample bin 89.84 kHz.",
+      "nbi_window_triads": "Lines 37.11, 40.04, 42.97 kHz produce distinct pair sums [74.2, 77.2, 80.1, 83.0 kHz], which all fall 3 to 10 kHz below the Primary mode lines (85.9, 86.9, 89.8 kHz). Sum rule completely fails for distinct triads.",
+      "dropped_pair": "37.5 + 42.5 dropped (not a valid triad in NBI-only)."
+    },
+    "section_H_h4_redo": {
+      "bug_explanation": "In Task 5, demodulating x1_s = e_pri * cos(phi) via abs(hilbert) returned e_pri identically, causing the null to evaluate coherence on the observed envelopes. Repaired by circularly shifting envelope time series.",
+      "observed_max_coherence": 0.2251228392124176,
+      "null_mean": 0.09489347785711288,
+      "null_std": 0.037641048431396484,
+      "null_95_ci": [
+        0.038743291050195694,
+        0.1663854867219925
+      ],
+      "p_value": 0.001996007984031936
+    }
+  }
+}

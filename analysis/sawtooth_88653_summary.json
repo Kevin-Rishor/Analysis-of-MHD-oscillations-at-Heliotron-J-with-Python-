@@ -1,0 +1,133 @@
+{
+  "analysis_window_ms": [
+    277.0,
+    294.0
+  ],
+  "n_cycles": 15,
+  "reference_channel": "MP1",
+  "reference_similitude_pct": 100.0,
+  "top5_magnetic": [
+    {
+      "rank": 2,
+      "channel": "MP4",
+      "family": "MP",
+      "similitude_pct": 99.6645741122474,
+      "offset_ms": 0.0
+    },
+    {
+      "rank": 3,
+      "channel": "MP3",
+      "family": "MP",
+      "similitude_pct": 99.59683985924991,
+      "offset_ms": 0.0
+    },
+    {
+      "rank": 4,
+      "channel": "PMP3",
+      "family": "PMP",
+      "similitude_pct": 98.64842726101752,
+      "offset_ms": 0.0
+    },
+    {
+      "rank": 5,
+      "channel": "PMP4",
+      "family": "PMP",
+      "similitude_pct": 98.29916911699993,
+      "offset_ms": 0.0
+    },
+    {
+      "rank": 6,
+      "channel": "PMP2",
+      "family": "PMP",
+      "similitude_pct": 98.14295879768895,
+      "offset_ms": 0.0
+    }
+  ],
+  "top5_non_magnetic": [
+    {
+      "rank": 16,
+      "channel": "Wp",
+      "family": "Wp",
+      "similitude_pct": 64.01071149983503,
+      "offset_ms": 1.088000000005195
+    },
+    {
+      "rank": 17,
+      "channel": "DivPro_38",
+      "family": "DivProArr",
+      "similitude_pct": 60.513372140614955,
+      "offset_ms": 0.19200000000091677
+    },
+    {
+      "rank": 18,
+      "channel": "GASPUFF#2",
+      "family": "GASPUFF",
+      "similitude_pct": 60.24804663086839,
+      "offset_ms": 0.5760000000027503
+    },
+    {
+      "rank": 19,
+      "channel": "DivPro_16",
+      "family": "DivProArr",
+      "similitude_pct": 58.50368323380512,
+      "offset_ms": -0.8960000000042783
+    },
+    {
+      "rank": 20,
+      "channel": "ECE12FAST",
+      "family": "ECE",
+      "similitude_pct": 56.28641331713705,
+      "offset_ms": 0.44800000000213913
+    }
+  ],
+  "top6_categories": [
+    {
+      "category_id": "I",
+      "category_name": "Cat. 1: Carrier-Modulated Magnetic",
+      "channel": "MP4",
+      "family": "MP",
+      "similitude_pct": 99.6645741122474,
+      "offset_ms": 0.0
+    },
+    {
+      "category_id": "II",
+      "category_name": "Cat. 2: Core Thermal & SXR Sawtooth",
+      "channel": "ECE12FAST",
+      "family": "ECE",
+      "similitude_pct": 56.28641331713705,
+      "offset_ms": 0.44800000000213913
+    },
+    {
+      "category_id": "III",
+      "category_name": "Cat. 3: Divertor & Edge Boundary Sawtooth",
+      "channel": "DivPro_38",
+      "family": "DivProArr",
+      "similitude_pct": 60.513372140614955,
+      "offset_ms": 0.19200000000091677
+    },
+    {
+      "category_id": "IV",
+      "category_name": "Cat. 4: Radiative & Bulk Density Response",
+      "channel": "Wp",
+      "family": "Wp",
+      "similitude_pct": 64.01071149983503,
+      "offset_ms": 1.088000000005195
+    },
+    {
+      "category_id": "V",
+      "category_name": "Cat. 5: Plasma Current & Heating Actuators",
+      "channel": "GASPUFF#2",
+      "family": "GASPUFF",
+      "similitude_pct": 60.24804663086839,
+      "offset_ms": 0.5760000000027503
+    },
+    {
+      "category_id": "VI",
+      "category_name": "Cat. 6: Non-Responsive / Low-fs / Saturated",
+      "channel": "Ip135",
+      "family": "Ip",
+      "similitude_pct": 0.0,
+      "offset_ms": 0.0
+    }
+  ]
+}

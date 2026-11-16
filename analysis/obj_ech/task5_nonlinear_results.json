@@ -1,0 +1,334 @@
+{
+  "88653": {
+    "h1_line_spacing": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "primary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "secondary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "carrier_envelope_coherence_peaks_khz": [
+          1.2,
+          2.2
+        ],
+        "steady_state_chirp_rep_rate_khz": 0.05,
+        "common_spacing_found": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "primary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "secondary": {
+          "peak_lag_khz": 4.8828125,
+          "peak_autocorr": 0.0854228213429451,
+          "p_value": 0.9867109634551495,
+          "all_peaks_khz": [
+            4.8828125,
+            7.8125,
+            9.27734375
+          ]
+        },
+        "carrier_envelope_coherence_peaks_khz": [
+          1.2,
+          2.2
+        ],
+        "steady_state_chirp_rep_rate_khz": 0.05,
+        "common_spacing_found": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "primary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "secondary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "carrier_envelope_coherence_peaks_khz": [
+          1.2,
+          2.2
+        ],
+        "steady_state_chirp_rep_rate_khz": 0.05,
+        "common_spacing_found": false
+      }
+    },
+    "h2_sum_rule": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "mean_diff_khz": 0.8257697820663452,
+        "rms_mismatch_khz": 1.3631809949874878,
+        "null_rms_95_ci": [
+          1.373430609703064,
+          1.7941575050354004
+        ],
+        "p_value": 0.021989005497251374,
+        "sum_rule_holds": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "mean_diff_khz": 10.139016151428223,
+        "rms_mismatch_khz": 10.272354125976562,
+        "null_rms_95_ci": [
+          10.201094627380371,
+          10.280542373657227
+        ],
+        "p_value": 0.9425287356321839,
+        "sum_rule_holds": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "mean_diff_khz": 0.8462244868278503,
+        "rms_mismatch_khz": 1.576950192451477,
+        "null_rms_95_ci": [
+          1.4902373552322388,
+          1.8630452156066895
+        ],
+        "p_value": 0.16891554222888555,
+        "sum_rule_holds": false
+      }
+    },
+    "h3_bicoherence": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "box_mean_b2": 0.08612710982561111,
+        "box_max_b2": 0.14776712656021118,
+        "box_biphase_deg": -8.059173583984375,
+        "surrogate_null_mean_b2": 0.05832227726091996,
+        "surrogate_p_value": 0.10379241516966067,
+        "empirical_rank_pct": 0.5847953216374269,
+        "significant": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "box_mean_b2": 0.05624520778656006,
+        "box_max_b2": 0.1371970921754837,
+        "box_biphase_deg": 149.9112548828125,
+        "surrogate_null_mean_b2": 0.05976596478085074,
+        "surrogate_p_value": 0.5469061876247505,
+        "empirical_rank_pct": 29.82456140350877,
+        "significant": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "box_mean_b2": 0.008887256495654583,
+        "box_max_b2": 0.02067231759428978,
+        "box_biphase_deg": 45.40340805053711,
+        "surrogate_null_mean_b2": 0.007582696577164369,
+        "surrogate_p_value": 0.30538922155688625,
+        "empirical_rank_pct": 37.42690058479532,
+        "significant": false
+      }
+    },
+    "h4_envelope_coupling": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "envelope_pearson_r": 0.006167593241772975,
+        "observed_max_coherence": 0.19496305286884308,
+        "observed_mean_coherence": 0.09116971492767334,
+        "null_mean_max_coherence": 0.19495944144439498,
+        "p_value": 0.373134328358209,
+        "coupling_significant": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "envelope_pearson_r": -0.06214812626562192,
+        "observed_max_coherence": 0.11319181323051453,
+        "observed_mean_coherence": 0.07918298989534378,
+        "null_mean_max_coherence": 0.11319186335132521,
+        "p_value": 0.4975124378109453,
+        "coupling_significant": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "envelope_pearson_r": 0.17141022438823528,
+        "observed_max_coherence": 0.03537239134311676,
+        "observed_mean_coherence": 0.021913988515734673,
+        "null_mean_max_coherence": 0.03537314809822349,
+        "p_value": 0.6417910447761194,
+        "coupling_significant": false
+      }
+    }
+  },
+  "88654": {
+    "h1_line_spacing": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "primary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "secondary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "carrier_envelope_coherence_peaks_khz": [
+          1.2,
+          2.2
+        ],
+        "steady_state_chirp_rep_rate_khz": 0.05,
+        "common_spacing_found": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "primary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "secondary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "carrier_envelope_coherence_peaks_khz": [
+          1.2,
+          2.2
+        ],
+        "steady_state_chirp_rep_rate_khz": 0.05,
+        "common_spacing_found": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "primary": {
+          "peak_lag_khz": null,
+          "peak_autocorr": null,
+          "p_value": 1.0,
+          "all_peaks_khz": []
+        },
+        "secondary": {
+          "peak_lag_khz": 8.30078125,
+          "peak_autocorr": -0.11260886490345001,
+          "p_value": 1.0,
+          "all_peaks_khz": [
+            8.30078125
+          ]
+        },
+        "carrier_envelope_coherence_peaks_khz": [
+          1.2,
+          2.2
+        ],
+        "steady_state_chirp_rep_rate_khz": 0.05,
+        "common_spacing_found": false
+      }
+    },
+    "h2_sum_rule": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "mean_diff_khz": 0.9191176295280457,
+        "rms_mismatch_khz": 1.7565354108810425,
+        "null_rms_95_ci": [
+          1.5118407011032104,
+          1.927919864654541
+        ],
+        "p_value": 0.6411794102948526,
+        "sum_rule_holds": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "mean_diff_khz": 10.512408256530762,
+        "rms_mismatch_khz": 10.608844757080078,
+        "null_rms_95_ci": [
+          10.59296989440918,
+          10.701638221740723
+        ],
+        "p_value": 0.10694652673663169,
+        "sum_rule_holds": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "mean_diff_khz": 0.7781374454498291,
+        "rms_mismatch_khz": 1.63897705078125,
+        "null_rms_95_ci": [
+          1.531107783317566,
+          1.7758334875106812
+        ],
+        "p_value": 0.4007996001999001,
+        "sum_rule_holds": false
+      }
+    },
+    "h3_bicoherence": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "box_mean_b2": 0.03294459730386734,
+        "box_max_b2": 0.07476525753736496,
+        "box_biphase_deg": -53.21898651123047,
+        "surrogate_null_mean_b2": 0.02632540510529256,
+        "surrogate_p_value": 0.22554890219560877,
+        "empirical_rank_pct": 26.608187134502927,
+        "significant": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "box_mean_b2": 0.08016156405210495,
+        "box_max_b2": 0.15445877611637115,
+        "box_biphase_deg": -40.48971176147461,
+        "surrogate_null_mean_b2": 0.08790626820169363,
+        "surrogate_p_value": 0.718562874251497,
+        "empirical_rank_pct": 8.771929824561402,
+        "significant": false
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "box_mean_b2": 0.018756087869405746,
+        "box_max_b2": 0.040114372968673706,
+        "box_biphase_deg": -46.95487594604492,
+        "surrogate_null_mean_b2": 0.009456316639589393,
+        "surrogate_p_value": 0.007984031936127744,
+        "empirical_rank_pct": 11.988304093567251,
+        "significant": false
+      }
+    },
+    "h4_envelope_coupling": {
+      "ech_8_7ms": {
+        "window": "ECH+NBI 8.7ms",
+        "envelope_pearson_r": 0.0782254838733745,
+        "observed_max_coherence": 0.2251228392124176,
+        "observed_mean_coherence": 0.11377116292715073,
+        "null_mean_max_coherence": 0.22512297934340558,
+        "p_value": 0.5621890547263682,
+        "coupling_significant": false
+      },
+      "nbi_8_7ms": {
+        "window": "NBI-only 8.7ms",
+        "envelope_pearson_r": 0.09100235990790506,
+        "observed_max_coherence": 0.13323307037353516,
+        "observed_mean_coherence": 0.08017190545797348,
+        "null_mean_max_coherence": 0.1331517612680887,
+        "p_value": 0.004975124378109453,
+        "coupling_significant": true
+      },
+      "ech_32_1ms": {
+        "window": "Full ECH 32.1ms",
+        "envelope_pearson_r": 0.06583030622950646,
+        "observed_max_coherence": 0.02435324527323246,
+        "observed_mean_coherence": 0.011614951305091381,
+        "null_mean_max_coherence": 0.024355444365895665,
+        "p_value": 0.582089552238806,
+        "coupling_significant": false
+      }
+    }
+  }
+}

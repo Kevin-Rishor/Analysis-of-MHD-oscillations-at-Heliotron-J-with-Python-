@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\small
+\caption[Mode frequency shifts across ECH switch-off]{Mode frequency shifts across ECH switch-off.}
+\label{tab:ech_switchoff_summary}
+\sbox0{%
+\begin{tabular}{lcccccccc}
+\toprule
+Quantity & \#88653 shift (kHz) & Sliding rank (-) & $p$ sliding (-) & Non-overlap rank (-) & $p$ non-overlap (-) & Surrogate $p$ (-) & \#88654 shift (kHz) & Same sign \\
+\midrule
+Secondary centroid & $-9.69$ & 0/54 & 0.018 & 0/5 & 0.167 & 0.004 & $-9.86$ & yes \\
+Secondary dominant & $-10.74$ & 0/54 & 0.018 & 0/5 & 0.167 & 0.124 & $-12.70$ & yes \\
+Primary centroid & $-3.94$ & 7/54 & 0.145 & 1/5 & 0.333 & 0.194 & $-8.55$ & yes \\
+Primary dominant & $-5.86$ & 1/54 & 0.036 & 0/5 & 0.167 & 0.240 & $-11.72$ & yes \\
+\bottomrule
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
+\par\smallskip{\footnotesize Two-sided rank $p$-values (500 surrogates for surrogate $p$); sliding placements overlap, whereas non-overlapping placements bound $p\ge 0.167$. One transition per shot.}
+\end{table}
+\begin{table}[H]
+\centering
+\small
+\caption[Stored-energy slope change across ECH switch-off]{Stored-energy slope change across ECH switch-off.}
+\label{tab:ech_wp_step}
+\sbox0{%
+\begin{tabular}{lcc}
+\toprule
+Fit window (ms) & \#88653 [95\,\% CI] (kW) & \#88654 [95\,\% CI] (kW) \\
+\midrule
+2 & $-54.3$ [$-61.6$, $-47.6$] & $-81.1$ [$-90.8$, $-71.3$] \\
+5 & $-60.9$ [$-65.3$, $-56.9$] & $-68.3$ [$-79.0$, $-59.2$] \\
+\bottomrule
+\end{tabular}}
+\ifdim\wd0>\textwidth\resizebox{\textwidth}{!}{\usebox0}\else\usebox0\fi
+\par\smallskip{\footnotesize Post- minus pre-291.2~ms slope (negative: slower rise or faster decay of $W_p$; not absorbed gyrotron power); window-dependent; $95\,\%$ block-bootstrap confidence intervals (CI) in brackets. Post-ECH $n_e$ minimum in \#88653: $+0.40$~ms raw, $+0.36$~ms Savitzky--Golay smoothed (not evaluated for \#88654).}
+\end{table}

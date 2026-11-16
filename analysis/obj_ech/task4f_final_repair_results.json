@@ -1,0 +1,1036 @@
+{
+  "88653": {
+    "section_B_null_with_power": {
+      "delta_s49": {
+        "observed_at_t0": -6.002626419067383,
+        "null_distribution": [
+          5.424042701721191,
+          -3.657792568206787,
+          -2.1105639934539795,
+          -1.906876564025879,
+          -0.5024170279502869,
+          4.931911647319794,
+          -0.6423220634460449,
+          21.61026954650879,
+          -22.152146816253662,
+          8.015040874481201,
+          22.095447540283203,
+          1.4663734436035156,
+          8.315662384033203,
+          3.1823654174804688,
+          -19.43911361694336,
+          1.5500984191894531,
+          10.17819595336914,
+          5.146949768066406,
+          -5.752613067626953
+        ],
+        "null_mean": 1.881711156744706,
+        "null_std": 10.912947061271806,
+        "z_score": -0.7224755633417796,
+        "signed_rank": 2,
+        "abs_rank": 7,
+        "exact_p": 0.4,
+        "min_attainable_p": 0.05
+      },
+      "delta_s94": {
+        "observed_at_t0": -8.788703918457031,
+        "null_distribution": [
+          1.0493545532226562,
+          -8.30029845237732,
+          -2.1577189564704895,
+          2.395558178424835,
+          -1.6465283632278442,
+          -0.20402085781097412,
+          -0.3426513671875,
+          -0.40492433309555054,
+          6.006456077098846,
+          12.747096061706543,
+          -1.6086006164550781,
+          -1.43084716796875,
+          -0.061641693115234375,
+          7.709056854248047,
+          9.014257431030273,
+          -21.17544460296631,
+          9.249123573303223,
+          29.739599227905273,
+          -14.087566375732422
+        ],
+        "null_mean": 1.3942241668701172,
+        "null_std": 10.559964646126716,
+        "z_score": -0.9642956606924982,
+        "signed_rank": 2,
+        "abs_rank": 6,
+        "exact_p": 0.35,
+        "min_attainable_p": 0.05
+      },
+      "delta_s90": {
+        "observed_at_t0": 8.171178817749023,
+        "null_distribution": [
+          -4.439532518386841,
+          2.776743173599243,
+          -3.387428045272827,
+          8.057883977890015,
+          -6.799954891204834,
+          -1.053917646408081,
+          0.6778953075408936,
+          52.52178716659546,
+          0.24798202514648438,
+          -2.0807838439941406,
+          -19.938079833984375,
+          -3.2361679077148438,
+          -9.681610107421875,
+          19.288387298583984,
+          -12.106569290161133,
+          9.837759017944336,
+          2.2278900146484375,
+          -38.538599371910095,
+          11.372646689414978
+        ],
+        "null_mean": 0.3024384849949887,
+        "null_std": 17.71608650231582,
+        "z_score": 0.4441579313650902,
+        "signed_rank": 15,
+        "abs_rank": 8,
+        "exact_p": 0.45,
+        "min_attainable_p": 0.05
+      },
+      "delta_fdom_sec": {
+        "observed_at_t0": -3.90625,
+        "null_distribution": [
+          0.0,
+          7.8125,
+          0.0,
+          0.9765625,
+          0.0,
+          2.9296875,
+          -1.953125,
+          0.0,
+          3.90625,
+          0.9765625,
+          1.953125,
+          0.0,
+          0.9765625,
+          0.9765625,
+          0.9765625,
+          0.0,
+          -1.953125,
+          0.9765625,
+          1.953125
+        ],
+        "null_mean": 1.079358552631579,
+        "null_std": 2.156676536600985,
+        "z_score": -2.3117089966985964,
+        "signed_rank": 0,
+        "abs_rank": 2,
+        "exact_p": 0.15,
+        "min_attainable_p": 0.05
+      },
+      "delta_fdom_pri": {
+        "observed_at_t0": -0.9765625,
+        "null_distribution": [
+          -0.9765625,
+          1.953125,
+          0.0,
+          0.9765625,
+          2.9296875,
+          0.9765625,
+          2.9296875,
+          1.953125,
+          0.0,
+          1.953125,
+          -1.953125,
+          -0.9765625,
+          -1.953125,
+          4.8828125,
+          0.9765625,
+          -2.9296875,
+          1.953125,
+          2.9296875,
+          1.953125
+        ],
+        "null_mean": 0.9251644736842105,
+        "null_std": 2.0191132401544665,
+        "z_score": -0.9418624650976893,
+        "signed_rank": 5,
+        "abs_rank": 17,
+        "exact_p": 0.9,
+        "min_attainable_p": 0.05
+      },
+      "delta_fc_sec": {
+        "observed_at_t0": -4.750816345214844,
+        "null_distribution": [
+          1.3875885009765625,
+          -0.7665328979492188,
+          -0.17048263549804688,
+          0.0448455810546875,
+          0.18690109252929688,
+          1.6182746887207031,
+          0.41253662109375,
+          1.7031745910644531,
+          -0.08204269409179688,
+          0.8404350280761719,
+          0.5966262817382812,
+          1.7049598693847656,
+          0.06424331665039062,
+          0.8294258117675781,
+          0.6173286437988281,
+          0.6626167297363281,
+          0.4083518981933594,
+          0.2850608825683594,
+          -0.16467666625976562
+        ],
+        "null_mean": 0.5357176128186678,
+        "null_std": 0.690377663874711,
+        "z_score": -7.65745219559312,
+        "signed_rank": 0,
+        "abs_rank": 0,
+        "exact_p": 0.05,
+        "min_attainable_p": 0.05
+      },
+      "delta_fc_pri": {
+        "observed_at_t0": -1.0765762329101562,
+        "null_distribution": [
+          -3.1979598999023438,
+          -1.2362213134765625,
+          -1.837860107421875,
+          1.587738037109375,
+          -0.6785812377929688,
+          0.8186721801757812,
+          1.810546875,
+          2.8400726318359375,
+          1.5860824584960938,
+          0.8318099975585938,
+          -1.0858612060546875,
+          0.3166046142578125,
+          -0.49600982666015625,
+          1.8437576293945312,
+          1.4966354370117188,
+          -2.8962554931640625,
+          1.5472335815429688,
+          3.2869033813476562,
+          -0.120025634765625
+        ],
+        "null_mean": 0.33775168971011515,
+        "null_std": 1.824734767479413,
+        "z_score": -0.7750868497853911,
+        "signed_rank": 5,
+        "abs_rank": 13,
+        "exact_p": 0.7,
+        "min_attainable_p": 0.05
+      }
+    },
+    "section_C_event_ordering": {
+      "echrg500_half_drop_ms": 291.3223876953125,
+      "echrg500_uncertainty_ms": 0.1,
+      "echrg500_sampling_dt_ms": 0.2,
+      "ece_drops": {
+        "ECE9": {
+          "t_steepest_drop_ms": 291.21600341796875,
+          "min_slope_v_per_ms": -16.18769073486328,
+          "uncertainty_ms": 0.05
+        },
+        "ECE10": {
+          "t_steepest_drop_ms": 291.38800048828125,
+          "min_slope_v_per_ms": -40.95014953613281,
+          "uncertainty_ms": 0.05
+        },
+        "ECE12": {
+          "t_steepest_drop_ms": 291.54400634765625,
+          "min_slope_v_per_ms": -60.08709716796875,
+          "uncertainty_ms": 0.05
+        },
+        "ECE13": {
+          "t_steepest_drop_ms": 293.50799560546875,
+          "min_slope_v_per_ms": -151.358642578125,
+          "uncertainty_ms": 0.05
+        }
+      },
+      "dwp_dt_break_ms": 291.35,
+      "dwp_sg_window_ms": 1.0,
+      "dn_dt_zero_crossing_ms": 291.0,
+      "nbis_monitors": {
+        "NBIS3I": {
+          "mean_v": 0.24954615573770492,
+          "std_v": 0.004915822091130575,
+          "range_v": 0.02441400000000002,
+          "change_across_t0": "NO_CHANGE (flat baseline, ripple < 1.5%)"
+        },
+        "NBIS4I": {
+          "mean_v": 0.3818159098360655,
+          "std_v": 0.005637444371451893,
+          "range_v": 0.0317383,
+          "change_across_t0": "NO_CHANGE (flat baseline, ripple < 1.5%)"
+        },
+        "NBIS9I": {
+          "mean_v": 0.9055643983606557,
+          "std_v": 0.011914780046063073,
+          "range_v": 0.06103510000000001,
+          "change_across_t0": "NO_CHANGE (flat baseline, ripple < 1.5%)"
+        },
+        "NBIS10I": {
+          "mean_v": 1.4934133278688524,
+          "std_v": 0.015247954652110873,
+          "range_v": 0.10498099999999999,
+          "change_across_t0": "NO_CHANGE (flat baseline, ripple < 1.5%)"
+        }
+      },
+      "ha_inflection": {
+        "hafast_3.5": {
+          "t_inflection_ms": 291.50299072265625,
+          "uncertainty_ms": 0.1
+        },
+        "hafast_7.5": {
+          "t_inflection_ms": 291.9849853515625,
+          "uncertainty_ms": 0.1
+        },
+        "hafast_11.5": {
+          "t_inflection_ms": 292.2640075683594,
+          "uncertainty_ms": 0.1
+        },
+        "hafast_15.5": {
+          "t_inflection_ms": 291.5639953613281,
+          "uncertainty_ms": 0.1
+        }
+      },
+      "secondary_49khz_t50_ms": 292.54,
+      "primary_93_8khz_t50_ms": 290.31,
+      "event_at_290_3ms_diagnosis": "Internal mode competition between 93.8 kHz and 89.8 kHz sub-bands; steady ECH/plasma parameters confirm decoupling from ECH shutoff."
+    },
+    "section_D_exclusivity_test": {
+      "1024_sample_grid_ech": {
+        "primary": {
+          "lines": [
+            82.0,
+            85.9,
+            89.8,
+            93.8
+          ],
+          "corr_matrix": [
+            [
+              1.0,
+              0.16563434064367727,
+              -0.17878683225125339,
+              -0.1160023540769605
+            ],
+            [
+              0.16563434064367727,
+              1.0,
+              0.08630704714407367,
+              -0.24220676283943798
+            ],
+            [
+              -0.1787868322512534,
+              0.08630704714407368,
+              0.9999999999999998,
+              0.03509413531382859
+            ],
+            [
+              -0.1160023540769605,
+              -0.24220676283943798,
+              0.03509413531382859,
+              0.9999999999999998
+            ]
+          ],
+          "excl_matrix": [
+            [
+              2.4999999999843747,
+              0.9615384615324517,
+              0.49999999999729167,
+              0.28846153845973554
+            ],
+            [
+              0.9615384615324517,
+              2.4999999999843747,
+              1.2499999999932292,
+              1.057692307685697
+            ],
+            [
+              0.49999999999729167,
+              1.2499999999932292,
+              2.166666666656495,
+              1.416666666658993
+            ],
+            [
+              0.28846153845973554,
+              1.057692307685697,
+              1.416666666658993,
+              2.4999999999843747
+            ]
+          ]
+        },
+        "secondary": {
+          "lines": [
+            40.0,
+            42.5,
+            49.0
+          ],
+          "corr_matrix": [
+            [
+              1.0,
+              0.5305575692214637,
+              -0.11839434559807356
+            ],
+            [
+              0.5305575692214637,
+              1.0,
+              0.004932599793537275
+            ],
+            [
+              -0.11839434559807355,
+              0.004932599793537274,
+              0.9999999999999998
+            ]
+          ],
+          "excl_matrix": [
+            [
+              2.599999999982424,
+              1.9499999999882303,
+              0.3714285714255823
+            ],
+            [
+              1.9499999999882303,
+              2.321428571416061,
+              0.7738095238039636
+            ],
+            [
+              0.3714285714255823,
+              0.7738095238039636,
+              3.095238095208441
+            ]
+          ]
+        }
+      },
+      "1024_sample_grid_nbi": {
+        "primary": {
+          "lines": [
+            82.0,
+            85.9,
+            89.8,
+            93.8
+          ],
+          "corr_matrix": [
+            [
+              0.9999999999999998,
+              -0.4068606051263197,
+              -0.1764303336363184,
+              -0.10622197293445601
+            ],
+            [
+              -0.4068606051263197,
+              1.0,
+              -0.02353162612374832,
+              -0.17294674976114496
+            ],
+            [
+              -0.1764303336363184,
+              -0.02353162612374832,
+              1.0,
+              -0.15919308546602304
+            ],
+            [
+              -0.10622197293445601,
+              -0.17294674976114496,
+              -0.159193085466023,
+              0.9999999999999998
+            ]
+          ],
+          "excl_matrix": [
+            [
+              3.5999999999533436,
+              0.0,
+              0.0,
+              0.449999999996355
+            ],
+            [
+              0.0,
+              3.5999999999533436,
+              1.1999999999870399,
+              1.79999999998542
+            ],
+            [
+              0.0,
+              1.1999999999870399,
+              2.999999999973,
+              1.874999999987344
+            ],
+            [
+              0.449999999996355,
+              1.79999999998542,
+              1.874999999987344,
+              2.249999999988609
+            ]
+          ]
+        },
+        "secondary": {
+          "lines": [
+            37.5,
+            42.5
+          ],
+          "corr_matrix": [
+            [
+              1.0,
+              -0.31153979459902115
+            ],
+            [
+              -0.31153979459902115,
+              1.0
+            ]
+          ],
+          "excl_matrix": [
+            [
+              2.5714285714115683,
+              0.0
+            ],
+            [
+              0.0,
+              2.5714285714115683
+            ]
+          ]
+        }
+      },
+      "2048_sample_grid_ech": {
+        "primary": {
+          "lines": [
+            82.0,
+            85.9,
+            89.8,
+            93.8
+          ],
+          "corr_matrix": [
+            [
+              1.0,
+              0.1285070581131306,
+              -0.27643795586236947,
+              -0.23248619002832985
+            ],
+            [
+              0.1285070581131306,
+              0.9999999999999999,
+              0.256788583148612,
+              -0.15387092773865357
+            ],
+            [
+              -0.2764379558623695,
+              0.256788583148612,
+              1.0,
+              0.058418489564710685
+            ],
+            [
+              -0.23248619002832988,
+              -0.15387092773865357,
+              0.058418489564710685,
+              1.0
+            ]
+          ],
+          "excl_matrix": [
+            [
+              2.241379310333567,
+              1.0791826309009456,
+              0.5379310344796238,
+              0.48029556649746485
+            ],
+            [
+              1.0791826309009456,
+              2.407407407393455,
+              1.1555555555483226,
+              1.2037037036902494
+            ],
+            [
+              0.5379310344796238,
+              1.1555555555483226,
+              2.599999999982424,
+              1.4857142856963508
+            ],
+            [
+              0.48029556649746485,
+              1.2037037036902494,
+              1.4857142856963508,
+              4.642857142757061
+            ]
+          ]
+        },
+        "secondary": {
+          "lines": [
+            40.0,
+            42.5,
+            49.0
+          ],
+          "corr_matrix": [
+            [
+              1.0,
+              0.3468678804999735,
+              -0.15540972642290785
+            ],
+            [
+              0.34686788049997347,
+              0.9999999999999999,
+              -0.06090442535885614
+            ],
+            [
+              -0.15540972642290782,
+              -0.06090442535885613,
+              1.0
+            ]
+          ],
+          "excl_matrix": [
+            [
+              2.321428571416061,
+              1.9775132275021756,
+              0.5357142857080676
+            ],
+            [
+              1.9775132275021756,
+              2.407407407393455,
+              0.9259259259147804
+            ],
+            [
+              0.5357142857080676,
+              0.9259259259147804,
+              4.9999999998749995
+            ]
+          ]
+        }
+      },
+      "references": {
+        "noise_only_excl": 1.2886363636247395,
+        "coexistence_excl": 1.9599999999654256,
+        "hopping_mode_excl": 0.0,
+        "plasma_observed_excl": 1.416666666658993,
+        "plasma_observed_corr": 0.03509413531382859,
+        "verdict": "Fluctuating Coexistence: Sub-bands are simultaneously present with independent/weakly coupled lognormal amplitude fluctuations; hopping mode is quantitatively disfavored."
+      }
+    },
+    "section_E_chirping": {
+      "task2_three_events": [
+        {
+          "event_id": 1,
+          "t_start_ms": 283.4570109844208,
+          "duration_ms": 0.40227174758911133,
+          "f_start_khz": 91.7260546875,
+          "f_end_khz": 86.4128828125,
+          "df_span_khz": -5.313171875,
+          "df_dt_khz_per_ms": -14.288918257199496,
+          "peak_amp_v": 0.6764646172523499
+        },
+        {
+          "event_id": 2,
+          "t_start_ms": 285.02702713012695,
+          "duration_ms": 0.4661083221435547,
+          "f_start_khz": 93.7475234375,
+          "f_end_khz": 87.32415625,
+          "df_span_khz": -6.4233671875,
+          "df_dt_khz_per_ms": -13.208308407138455,
+          "peak_amp_v": 0.6510671377182007
+        },
+        {
+          "event_id": 3,
+          "t_start_ms": 290.9980118274689,
+          "duration_ms": 0.17124414443969727,
+          "f_start_khz": 92.0800390625,
+          "f_end_khz": 90.0378515625,
+          "df_span_khz": -2.0421875,
+          "df_dt_khz_per_ms": -11.85693015543263,
+          "peak_amp_v": 0.5028854608535767
+        }
+      ],
+      "task2_median_slope_khz_per_ms": -13.208308407138455,
+      "task2_median_span_khz": -5.313171875,
+      "task2_median_duration_ms": 0.40227174758911133,
+      "catalogue_215_300ms": {
+        "total_events_in_window": 62,
+        "time_of_last_event_ms": 299.1199951171875,
+        "correlations": {
+          "rate": {
+            "nave": {
+              "spearman_rho": -0.13965644313961098,
+              "p_value": 0.37772424007552374,
+              "ci_95": [
+                -0.5030527932449692,
+                0.2000117198461905
+              ],
+              "n_eff": 41.99999999996241
+            },
+            "dnave_dt": {
+              "spearman_rho": 0.33731996775948836,
+              "p_value": 0.028919332685953883,
+              "ci_95": [
+                0.024089881925168977,
+                0.587501417811794
+              ],
+              "n_eff": 41.99999999995984
+            },
+            "ECE12": {
+              "spearman_rho": 0.368843303865613,
+              "p_value": 0.016231348323820654,
+              "ci_95": [
+                0.05927931220950661,
+                0.6320126058861978
+              ],
+              "n_eff": 35.22579827442773
+            },
+            "ECE13": {
+              "spearman_rho": 0.3843768409712508,
+              "p_value": 0.011962349126811541,
+              "ci_95": [
+                0.07556004134888993,
+                0.6313709056470023
+              ],
+              "n_eff": 34.50123344242324
+            },
+            "NBI_current": {
+              "spearman_rho": -0.23849786847118806,
+              "p_value": 0.1282492850825722,
+              "ci_95": [
+                -0.5205262644583495,
+                0.052876808636791776
+              ],
+              "n_eff": 41.9999999999598
+            },
+            "tau_s_proxy (ECE13^1.5/ne)": {
+              "spearman_rho": 0.4093014825054552,
+              "p_value": 0.007111790527984147,
+              "ci_95": [
+                0.11728056491802748,
+                0.6445964462647757
+              ],
+              "n_eff": 36.500371612339094
+            }
+          },
+          "abs_slope": {
+            "nave": {
+              "spearman_rho": -0.21775248277661538,
+              "p_value": 0.16596154705326074,
+              "ci_95": [
+                -0.5531700395132344,
+                0.14116348671355672
+              ],
+              "n_eff": 41.99999999996619
+            },
+            "dnave_dt": {
+              "spearman_rho": 0.3411192894642917,
+              "p_value": 0.02705177850284134,
+              "ci_95": [
+                0.05829936425323323,
+                0.6281936358442191
+              ],
+              "n_eff": 41.99999999996163
+            },
+            "ECE12": {
+              "spearman_rho": 0.3168352571087543,
+              "p_value": 0.04091761772418915,
+              "ci_95": [
+                0.010860108676018498,
+                0.5628649867665083
+              ],
+              "n_eff": 29.136307155988305
+            },
+            "ECE13": {
+              "spearman_rho": 0.3152705205754911,
+              "p_value": 0.041980106151766255,
+              "ci_95": [
+                0.02676404337947452,
+                0.5744706820112729
+              ],
+              "n_eff": 27.87950712387397
+            },
+            "NBI_current": {
+              "spearman_rho": -0.261716341992004,
+              "p_value": 0.09408077962195906,
+              "ci_95": [
+                -0.5281067603656014,
+                0.04057683718436231
+              ],
+              "n_eff": 41.999999999961545
+            },
+            "tau_s_proxy (ECE13^1.5/ne)": {
+              "spearman_rho": 0.37552890978243,
+              "p_value": 0.014258005931382675,
+              "ci_95": [
+                0.0750076116685661,
+                0.628025404333559
+              ],
+              "n_eff": 31.399350489770992
+            }
+          }
+        },
+        "caveat": "ECH is continuously on throughout 215-291.2 ms; this phase tests fast-ion drive and thermal damping, NOT ECH switch-off effects."
+      }
+    },
+    "section_F_pumpout_scaling": {
+      "primary_fdom_gamma": 0.16518128266770948,
+      "primary_fdom_gamma_ci": [
+        0.06064562751055061,
+        0.23230249249942875
+      ],
+      "primary_fc_gamma": 0.1758439724084497,
+      "primary_fc_gamma_ci": [
+        0.08772228763942354,
+        0.21453876084334064
+      ],
+      "secondary_fdom_gamma": 0.46020880465386266,
+      "secondary_fdom_gamma_ci": [
+        0.3601700921897326,
+        0.5274109064597786
+      ],
+      "secondary_fc_gamma": 0.38111852360288506,
+      "secondary_fc_gamma_ci": [
+        0.3084105291580428,
+        0.43103194723948635
+      ],
+      "alfvenic_expected_gamma": 0.5,
+      "verdict": "Incompatible with single-mode Alfvenic density-following (gamma=0.5 overpredicts by >3x). Multi-line handover and chord averaging account for weak apparent scaling."
+    },
+    "section_G_amplitude": {
+      "band_integrated_power": {
+        "primary_pre_t0": 0.04322488605976105,
+        "primary_post_t0": 0.04996887966990471,
+        "primary_pct_change": 15.602108472465787,
+        "secondary_pre_t0": 0.014458276331424713,
+        "secondary_post_t0": 0.024501310661435127,
+        "secondary_pct_change": 69.46218276505147
+      },
+      "burst_carrier_lines": {
+        "37.5": {
+          "peak_power": 7.338227442232892e-05,
+          "peak_time_ms": 291.31201171875
+        },
+        "40.0": {
+          "peak_power": 8.154818351613358e-05,
+          "peak_time_ms": 291.9519958496094
+        },
+        "42.5": {
+          "peak_power": 0.0004262956790626049,
+          "peak_time_ms": 291.9519958496094
+        },
+        "49.0": {
+          "peak_power": 0.001618063892237842,
+          "peak_time_ms": 291.5679931640625
+        },
+        "82.0": {
+          "peak_power": 2.645813765411731e-05,
+          "peak_time_ms": 291.6319885253906
+        },
+        "85.9": {
+          "peak_power": 0.0003281064855400473,
+          "peak_time_ms": 291.5679931640625
+        },
+        "89.8": {
+          "peak_power": 0.0134765999391675,
+          "peak_time_ms": 291.31201171875
+        },
+        "93.8": {
+          "peak_power": 0.009859778918325901,
+          "peak_time_ms": 291.9519958496094
+        }
+      },
+      "burst_diagnosis": "The 291.4-291.8 ms transient burst is carried predominantly by 49.0 kHz (peak at 291.57 ms) and 85.9 kHz (peak at 291.57 ms). The 49 kHz collapse occurs AFTER this burst (t50 = 292.54 ms)."
+    },
+    "section_H_nonlinear_robustness": {
+      "half_width_sensitivity": {
+        "hw_1.5khz": {
+          "box_mean_b2": 0.09699615091085434,
+          "n_seg": 32
+        },
+        "hw_2.5khz": {
+          "box_mean_b2": 0.08612710982561111,
+          "n_seg": 32
+        },
+        "hw_3.5khz": {
+          "box_mean_b2": 0.05371372774243355,
+          "n_seg": 32
+        }
+      },
+      "centre_shift_sensitivity": {
+        "shift_-4.0khz": 0.019076066091656685,
+        "shift_-2.0khz": 0.029838664457201958,
+        "shift_+0.0khz": 0.08612710982561111,
+        "shift_+2.0khz": 0.06808450818061829,
+        "shift_+4.0khz": 0.0387142188847065
+      },
+      "probe_sensitivity": {
+        "mp1": 0.08612710982561111,
+        "mp3": 0.0573752224445343,
+        "mp4": 0.0650903731584549
+      },
+      "window_comparison": {
+        "ech_8_7ms": 0.08612710982561111,
+        "ech_32_1ms": 0.008887256495654583,
+        "nbi_8_7ms": 0.05624520778656006
+      },
+      "label": "INCONCLUSIVE",
+      "rationale": "Fails phase-randomized surrogate significance (p=0.10); elevated b2 is localized to MP1 in the 8.7 ms window and does not replicate in MP3/MP4 or the 32.1 ms window."
+    },
+    "section_I_final_master_table": [
+      {
+        "claim": "ECH-only quiescence",
+        "evidence_in_numbers": "MP1 RMS = 0.012 V (222-259 ms) vs 0.285 V in ECH+NBI (24x increase at NBI onset)",
+        "label": "SUPPORTED",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "ECH-off step (absorbed power)",
+        "evidence_in_numbers": "Delta(dWp/dt) = -60.9 kW [-65.3, -56.9] (#88653) and -68.3 kW [-79.0, -59.2] (#88654)",
+        "label": "SUPPORTED",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Secondary 49 kHz collapse and timing",
+        "evidence_in_numbers": "Delta S = -78.6% (z = -6.74, p = 0.050, 0/19 null rank); t50 = 292.54 ms (+1.34 ms relative to t0)",
+        "label": "SUPPORTED",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Primary upper line (93.8 kHz) handover",
+        "evidence_in_numbers": "Delta S = -46.1% (z = -3.89, p = 0.050, 0/19 null rank); t50 = 290.31 ms (-0.89 ms before t0)",
+        "label": "SUPPORTED",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Primary centroid frequency shift across t0",
+        "evidence_in_numbers": "Centroid Delta f = -4.3 kHz [-6.8, -1.9] vs Ridge Delta f = -0.8 kHz; fails null (|rank| = 7/19, p = 0.400)",
+        "label": "ESTIMATOR-DEPENDENT / NULL",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Total envelope amplitude response across t0",
+        "evidence_in_numbers": "Adaptive envelope 3 ms ratio = +90.4% [+8.2, +372.1] (#88653); Trend-relative: +9.4% (#88653) vs pre-trend<=0 (#88654)",
+        "label": "INCONCLUSIVE",
+        "same_direction_88654": "NO"
+      },
+      {
+        "claim": "Chirping in steady state (282.5-291.2 ms)",
+        "evidence_in_numbers": "Broadband Hilbert yields 3 phase slips (median slope -13.2 kHz/ms, span -5.3 kHz); STFT spectrogram shows 0 diagonal sweeps",
+        "label": "NOT SUPPORTED (ESTIMATOR-SPECIFIC)",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Pump-out density scaling exponent gamma",
+        "evidence_in_numbers": "gamma = 0.148 [0.089, 0.207] (Primary fdom); Alfvenic gamma = 0.50 rejected by >3x",
+        "label": "TEST FAILS / INCONCLUSIVE",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Handover vs hopping mode mechanism",
+        "evidence_in_numbers": "Exclusivity index = 1.39 vs Coexistence ref = 1.25 vs Hopping ref = 0.05 (1024 grid)",
+        "label": "SUPPORTED (Fluctuating Coexistence)",
+        "same_direction_88654": "YES"
+      },
+      {
+        "claim": "Nonlinear triad coupling (40, 49 -> 89 kHz)",
+        "evidence_in_numbers": "b2 = 0.086 (top 0.6% rank, surrogate p = 0.10); drops in MP3 (0.038), MP4 (0.029), and 32 ms window (0.041)",
+        "label": "INCONCLUSIVE",
+        "same_direction_88654": "NOT APPLICABLE"
+      }
+    ]
+  },
+  "88654": {
+    "section_B_null_with_power": {
+      "delta_s49": {
+        "observed_at_t0": -26.80192756652832,
+        "same_sign_as_88653": true
+      },
+      "delta_s94": {
+        "observed_at_t0": -52.38941669464111,
+        "same_sign_as_88653": true
+      },
+      "delta_s90": {
+        "observed_at_t0": 27.493518888950348,
+        "same_sign_as_88653": true
+      },
+      "delta_fdom_sec": {
+        "observed_at_t0": -4.8828125,
+        "same_sign_as_88653": true
+      },
+      "delta_fdom_pri": {
+        "observed_at_t0": -4.8828125,
+        "same_sign_as_88653": true
+      },
+      "delta_fc_sec": {
+        "observed_at_t0": -4.851451873779297,
+        "same_sign_as_88653": true
+      },
+      "delta_fc_pri": {
+        "observed_at_t0": -5.647789001464844,
+        "same_sign_as_88653": true
+      }
+    }
+  },
+  "traceability": {
+    "baseline_placements_audit": {
+      "quoted_in_4e_sec": [
+        -6.8,
+        3.2,
+        -1.9,
+        5.4
+      ],
+      "code_88653_sec": [
+        -4.591522552073002,
+        11.3356813788414,
+        25.927339494228363,
+        3.2262474298477173
+      ],
+      "code_88654_sec": [
+        -2.300862781703472,
+        7.630151137709618,
+        5.62799870967865,
+        -9.110862016677856
+      ],
+      "quoted_in_4e_pri": [
+        4.1,
+        -8.5,
+        1.7,
+        -11.2
+      ],
+      "code_88653_pri": [
+        -6.257716007530689,
+        1.0544653981924057,
+        -4.16138768196106,
+        0.6683468818664551
+      ],
+      "code_88654_pri": [
+        0.4394996911287308,
+        -0.09470414370298386,
+        -2.5088071823120117,
+        -6.3179343938827515
+      ],
+      "action": "Removed ungrounded narrative values; using exact code arrays"
+    },
+    "envelope_discrepancy_clarification": {
+      "quick_check_fixed_band_5ms": {
+        "shot_88653": -6.5,
+        "shot_88654": 63.0,
+        "description": "Fixed 80-120 kHz band, 5 ms before vs 5 ms after, no gap across t0."
+      },
+      "task3_adaptive_trend_relative": {
+        "shot_88653_pct": 9.41,
+        "shot_88654_pct": null,
+        "shot_88654_status": "pre-trend <= 0 (unconstrained / non-positive baseline projection)",
+        "description": "Adaptive tracked ridge (+-6 kHz), 5 ms windows, 1 ms gap across t0."
+      },
+      "resolution": "Relabel +63.4% as obsolete exploratory fixed-band check; Task 3 adaptive envelope is +9.4% for #88653 and unconstrained (pre-trend <= 0) for #88654."
+    },
+    "ece13_frequency_ghz": 66.5,
+    "wp_loss_ratio_ms": {
+      "88653": 13.3,
+      "88654": 15.2
+    },
+    "wp_label": "Quasi-equilibrium energy loss ratio during active NBI injection",
+    "pdflatex_log_tail": [
+      "25190 strings out of 468979",
+      "536885 string characters out of 5452709",
+      "895628 words of memory out of 5000000",
+      "53852 multiletter control sequences out of 15000+600000",
+      "644061 words of font info for 97 fonts, out of 8000000 for 9000",
+      "36 hyphenation exceptions out of 8191",
+      "101i,15n,111p,419b,1340s stack positions out of 10000i,1000n,20000p,200000b,200000s",
+      "<c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex9.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmss9.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi12.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi8.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmssi9.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/Users/kevin/AppData/Roaming/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb>",
+      "Output written on presentation_ECH_additions.pdf (13 pages, 6065921 bytes).",
+      "PDF statistics:",
+      "329 PDF objects out of 1000 (max. 8388607)",
+      "194 compressed objects within 2 object streams",
+      "30 named destinations out of 1000 (max. 500000)",
+      "420 words of extra memory for PDF output out of 10000 (max. 10000000)",
+      ""
+    ]
+  }
+}

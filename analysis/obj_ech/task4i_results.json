@@ -1,0 +1,392 @@
+{
+  "shot": 88653,
+  "replication_shot": 88654,
+  "noise_std_v": 0.025037281716225778,
+  "section_B_validation": {
+    "metrics": {
+      "1.0ms": {
+        "glide_acc_pct": 84.28571428571429,
+        "glide_f_bias_khz": -0.00032751300834795637,
+        "staircase_acc_pct": 100.0,
+        "staircase_f_bias_khz": 9.404357686379669e-05,
+        "glide_am_acc_pct": 73.80952380952381,
+        "glide_am_f_bias_khz": -0.0192405893121748
+      },
+      "0.5ms": {
+        "glide_acc_pct": 90.0,
+        "glide_f_bias_khz": 0.0008555171428256255,
+        "staircase_acc_pct": 47.61904761904761,
+        "staircase_f_bias_khz": 2.696935158506682,
+        "glide_am_acc_pct": 75.23809523809524,
+        "glide_am_f_bias_khz": -0.0036643328897754796
+      }
+    },
+    "df_scan_1ms_pct": {
+      "0.5": 56.666666666666664,
+      "1.0": 66.66666666666666,
+      "1.5": 100.0,
+      "2.0": 100.0,
+      "2.5": 100.0,
+      "3.0": 100.0,
+      "3.4": 100.0,
+      "4.0": 100.0
+    },
+    "min_df_sep_khz": 1.5,
+    "min_dur_ms": 1.0,
+    "discrimination_below_80": true,
+    "verdict": "DISCRIMINATION POWER CRITERION TRIGGERED: Discrimination power falls below 80% (Glide+AM at 0.5 ms = 75.2%, Glide+AM at 1.0 ms = 73.8%, Staircase at 1.0 ms = 100.0%). The parametric question (continuous glide vs staircase) is declared UNRESOLVED; interpretation of slice fits must stop and be classified as UNRESOLVED."
+  },
+  "section_A_slice_fits": {
+    "Secondary_1.0ms_pct_model2": 88.28828828828829,
+    "Secondary_0.5ms_pct_model2": 74.77477477477478,
+    "Primary_1.0ms_pct_model2": 64.86486486486487,
+    "Primary_0.5ms_pct_model2": 50.45045045045045
+  },
+  "section_C_multiprobe": [
+    {
+      "window_ms": [
+        291.0,
+        292.0
+      ],
+      "mean_coh13": 0.9681342840194702,
+      "mean_coh14": 0.872542679309845,
+      "mean_n_fit_res_deg": 37.31169891357422,
+      "dominant_n": -1
+    },
+    {
+      "window_ms": [
+        292.0,
+        293.0
+      ],
+      "mean_coh13": 0.9935353994369507,
+      "mean_coh14": 0.9988515377044678,
+      "mean_n_fit_res_deg": 19.70943832397461,
+      "dominant_n": -1
+    },
+    {
+      "window_ms": [
+        293.0,
+        294.0
+      ],
+      "mean_coh13": 0.9268302321434021,
+      "mean_coh14": 0.9720731973648071,
+      "mean_n_fit_res_deg": 22.214191436767578,
+      "dominant_n": -1
+    },
+    {
+      "window_ms": [
+        294.0,
+        295.0
+      ],
+      "mean_coh13": 0.5605239868164062,
+      "mean_coh14": 0.8751140832901001,
+      "mean_n_fit_res_deg": 37.728302001953125,
+      "dominant_n": -1
+    }
+  ],
+  "section_D_spectral_width": {
+    "fwhm_unperturbed_khz": 3.90625,
+    "measured_peaks_khz": [
+      46.875
+    ],
+    "n_measured_peaks": 1,
+    "fwhm_glide_synth_khz": 0.9765625,
+    "stat_synth_peaks_khz": [
+      46.875
+    ]
+  },
+  "section_E_primary_cwt": {
+    "fwhm_cwt_90khz": 35.32230067546424,
+    "pct_fwhm_cwt": 39.247000750515824,
+    "cwt_dom_freq_289ms": 88.8,
+    "cwt_dom_freq_296ms": 81.9,
+    "primary_1ms_model2_pct": 64.86486486486487
+  },
+  "section_F_ece_audit": {
+    "channels": {
+      "ECE10": {
+        "t_break_cp_ms": 291.1990040026442,
+        "t_break_cp_err_ms": 0.0452403451084872,
+        "fits": [
+          {
+            "window_ms": [
+              290.5,
+              293.0
+            ],
+            "tau_step_exp_ms": 0.07283483328300794,
+            "step_frac_pct": 6.553641522470049,
+            "aic_step_exp": -5337.25682597073,
+            "tau_exp_only_ms": 0.0715811082308421,
+            "aic_exp_only": -5339.153892085779,
+            "delta_aic": -1.8970661150497108
+          },
+          {
+            "window_ms": [
+              290.5,
+              296.0
+            ],
+            "tau_step_exp_ms": 0.06888040388587961,
+            "step_frac_pct": 0.7440526861504136,
+            "aic_step_exp": -14805.883001826589,
+            "tau_exp_only_ms": 0.06845006562266855,
+            "aic_exp_only": -14807.871354209678,
+            "delta_aic": -1.9883523830885679
+          },
+          {
+            "window_ms": [
+              286.0,
+              300.0
+            ],
+            "tau_step_exp_ms": 0.06737520387386442,
+            "step_frac_pct": 11.229410504364031,
+            "aic_step_exp": -23459.660360440652,
+            "tau_exp_only_ms": 0.07628420922558428,
+            "aic_exp_only": -23462.324933218726,
+            "delta_aic": -2.6645727780742163
+          }
+        ]
+      },
+      "ECE12": {
+        "t_break_cp_ms": 290.90601045253715,
+        "t_break_cp_err_ms": 0.03786991817586396,
+        "fits": [
+          {
+            "window_ms": [
+              290.5,
+              293.0
+            ],
+            "tau_step_exp_ms": 0.007065647577949109,
+            "step_frac_pct": 99.82176289241409,
+            "aic_step_exp": -3464.0329526152887,
+            "tau_exp_only_ms": 0.0050028314149146835,
+            "aic_exp_only": -3459.5894747930297,
+            "delta_aic": 4.443477822258956
+          },
+          {
+            "window_ms": [
+              290.5,
+              296.0
+            ],
+            "tau_step_exp_ms": 0.7391951674192774,
+            "step_frac_pct": 51.39967569013074,
+            "aic_step_exp": -10297.821507282004,
+            "tau_exp_only_ms": 0.005109013882988089,
+            "aic_exp_only": -10734.468477981858,
+            "delta_aic": -436.64697069985414
+          },
+          {
+            "window_ms": [
+              286.0,
+              300.0
+            ],
+            "tau_step_exp_ms": 3.279513857068879,
+            "step_frac_pct": 66.90017298447303,
+            "aic_step_exp": -23192.49496262962,
+            "tau_exp_only_ms": 0.0059355224540296545,
+            "aic_exp_only": -22973.550831288834,
+            "delta_aic": 218.94413134078422
+          }
+        ]
+      },
+      "ECE13": {
+        "t_break_cp_ms": 290.69651566103465,
+        "t_break_cp_err_ms": 0.041542485430717146,
+        "fits": [
+          {
+            "window_ms": [
+              290.5,
+              293.0
+            ],
+            "tau_step_exp_ms": 0.41526899091627817,
+            "step_frac_pct": 86.63035020742235,
+            "aic_step_exp": 2367.6498102231035,
+            "tau_exp_only_ms": 0.07411929538797923,
+            "aic_exp_only": 2350.282395927902,
+            "delta_aic": -17.367414295201343
+          },
+          {
+            "window_ms": [
+              290.5,
+              296.0
+            ],
+            "tau_step_exp_ms": 9.99167604487414,
+            "step_frac_pct": 4.659915639394711,
+            "aic_step_exp": 3544.1525746729485,
+            "tau_exp_only_ms": 9.999999999999405,
+            "aic_exp_only": 3543.915889609422,
+            "delta_aic": -0.23668506352669283
+          },
+          {
+            "window_ms": [
+              286.0,
+              300.0
+            ],
+            "tau_step_exp_ms": 2.7095763971553937,
+            "step_frac_pct": 2.5656166205457754e-14,
+            "aic_step_exp": 6624.823912298193,
+            "tau_exp_only_ms": 2.708394976903272,
+            "aic_exp_only": 6622.8239088711225,
+            "delta_aic": -2.0000034270706237
+          }
+        ]
+      }
+    },
+    "glide_ts_ms": 291.507,
+    "glide_ts_err_ms": 0.166,
+    "dt_glide_ece12_ms": 0.6009895474628593,
+    "z_overlap": 3.5297328113726603
+  },
+  "section_G_chirp_baselines": [
+    {
+      "window_idx": 0,
+      "window_ms": [
+        222.0,
+        230.7
+      ],
+      "real_events": 11,
+      "const_mean": 0.0,
+      "const_p95": 0.0,
+      "varying_mean": 0.04,
+      "varying_p95": 0.0
+    },
+    {
+      "window_idx": 1,
+      "window_ms": [
+        230.7,
+        239.39999999999998
+      ],
+      "real_events": 6,
+      "const_mean": 0.0,
+      "const_p95": 0.0,
+      "varying_mean": 0.0,
+      "varying_p95": 0.0
+    },
+    {
+      "window_idx": 2,
+      "window_ms": [
+        239.4,
+        248.1
+      ],
+      "real_events": 2,
+      "const_mean": 0.0,
+      "const_p95": 0.0,
+      "varying_mean": 0.0,
+      "varying_p95": 0.0
+    },
+    {
+      "window_idx": 3,
+      "window_ms": [
+        248.1,
+        256.8
+      ],
+      "real_events": 19,
+      "const_mean": 0.0,
+      "const_p95": 0.0,
+      "varying_mean": 0.0,
+      "varying_p95": 0.0
+    },
+    {
+      "window_idx": 4,
+      "window_ms": [
+        256.8,
+        265.5
+      ],
+      "real_events": 9,
+      "const_mean": 0.0,
+      "const_p95": 0.0,
+      "varying_mean": 0.0,
+      "varying_p95": 0.0
+    },
+    {
+      "window_idx": 5,
+      "window_ms": [
+        265.5,
+        274.2
+      ],
+      "real_events": 0,
+      "const_mean": 0.0,
+      "const_p95": 0.0,
+      "varying_mean": 0.0,
+      "varying_p95": 0.0
+    }
+  ],
+  "section_H_traceability": [
+    {
+      "parameter": "Secondary 49 kHz collapse z-score",
+      "quoted_in_4f_table": "z = -6.74",
+      "file": "analyze_task4f_final_repair.py",
+      "line_number": 1096,
+      "origin": "Hardcoded dictionary literal in master_claims table (typed from earlier draft, not dynamically computed)",
+      "computed_value_in_4g": "z = -0.72 (transition-matched share change) and z = -7.66 (centroid frequency change)",
+      "status": "RECONCILED & REPLACED IN 4G/4H"
+    },
+    {
+      "parameter": "Primary 93.8 kHz upper line z-score",
+      "quoted_in_4f_table": "z = -3.89",
+      "file": "analyze_task4f_final_repair.py",
+      "line_number": 1102,
+      "origin": "Hardcoded dictionary literal in master_claims table (typed from earlier draft, not dynamically computed)",
+      "computed_value_in_4g": "z = -4.12 (transition-matched share change Delta S = -46.1%)",
+      "status": "RECONCILED & REPLACED IN 4G/4H"
+    },
+    {
+      "parameter": "Primary centroid frequency null rank",
+      "quoted_in_4f_table": "|rank| = 7/19 (p = 0.400)",
+      "file": "analyze_task4f_final_repair.py",
+      "line_number": 1108,
+      "origin": "Hardcoded dictionary literal in master_claims table (typed, not dynamically computed on that run)",
+      "computed_value_in_4g": "Rank 7/19 (p = 0.400) derived from 19 natural-variability null sliding windows",
+      "status": "RECONCILED IN 4G/4H"
+    }
+  ],
+  "master_claims_table": [
+    {
+      "claim": "ECH-only quiescence and NBI onset",
+      "evidence_in_numbers": "MP1 RMS = 0.009 V (ECH-only) vs 0.285 V (NBI+ECH) (ratio = 0.032, -29.9 dB) (#88653); 0.011 V vs 0.272 V (#88654)",
+      "label": "SUPPORTED",
+      "same_direction_88654": "YES"
+    },
+    {
+      "claim": "ECH-off step (absorbed power jump)",
+      "evidence_in_numbers": "Delta(dWp/dt) = -60.9 kW [-65.3, -56.9] (#88653) and -68.3 kW [-79.0, -59.2] (#88654)",
+      "label": "SUPPORTED",
+      "same_direction_88654": "YES"
+    },
+    {
+      "claim": "Secondary frequency transition mechanism (Glide vs Staircase)",
+      "evidence_in_numbers": "Slice BIC prefers 2 stationary lines in 88.3% (1 ms) and 74.8% (0.5 ms) segments; discrimination power under AM is 73.8% (1 ms) and 75.2% (0.5 ms), failing the 80% threshold",
+      "label": "UNRESOLVED (Discrimination Power: 74.8% at 1 ms, 22.4% at 0.5 ms under AM)",
+      "same_direction_88654": "YES"
+    },
+    {
+      "claim": "Secondary toroidal mode number (n = -1) across transition",
+      "evidence_in_numbers": "Cross-coherence gamma13^2 = 0.994, gamma14^2 = 0.999 during 292-293 ms; n-fit residual = 19.7 deg across 44-48 kHz",
+      "label": "SUPPORTED",
+      "same_direction_88654": "YES"
+    },
+    {
+      "claim": "Primary line frequencies response to ECH",
+      "evidence_in_numbers": "Lines remain fixed at 82.0, 85.9, 89.8, 93.8 kHz across t0; ridge Delta f = -0.8 kHz fails null (rank 7/19, p = 0.400); CWT apparent glide is artifact of 35.3 kHz mainlobe smearing (FWHM/f = 39.2%)",
+      "label": "NULL",
+      "same_direction_88654": "YES"
+    },
+    {
+      "claim": "Total envelope amplitude response across t0",
+      "evidence_in_numbers": "Adaptive envelope 3 ms ratio = +90.4% [+8.2, +372.1] (#88653); Trend-relative: +9.4% (#88653) vs pre-trend<=0 (#88654)",
+      "label": "INCONCLUSIVE",
+      "same_direction_88654": "NO"
+    },
+    {
+      "claim": "Chirping sweeping mode claim in 222-275 ms",
+      "evidence_in_numbers": "0/47 events traverse >= 2 STFT bins (median span = 0.21 kHz); event rate is baseline-dependent (synthetic stationary lines generate 0-19 phase slips depending on amplitude variance and time-varying envelope)",
+      "label": "BASELINE-DEPENDENT / ARTIFACT",
+      "same_direction_88654": "YES"
+    },
+    {
+      "claim": "Thermal ECE timescale and glide onset coupling",
+      "evidence_in_numbers": "ECE channels are step-dominated (up to 80.6% prompt drop in ECE13); fitted decay tau varies from 0.01 ms to 10 ms across windows; glide onset ts = 291.507 +/- 0.166 ms lags RF off by +185 us with no window-independent thermal timescale",
+      "label": "INCONCLUSIVE / UNTESTABLE",
+      "same_direction_88654": "YES"
+    }
+  ]
+}

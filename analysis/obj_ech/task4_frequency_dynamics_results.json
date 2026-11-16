@@ -1,0 +1,384 @@
+{
+  "88653": {
+    "shot": 88653,
+    "fiducial_t0_ms": 291.2,
+    "window_3ms_pre": [
+      288.2,
+      291.2
+    ],
+    "window_3ms_post": [
+      292.2,
+      295.2
+    ],
+    "frequency_measurements": {
+      "primary_adaptive_ridge": {
+        "mean_pre": 87.8364303600578,
+        "mean_post": 87.07534819639268,
+        "delta_f": -0.7610821636651224,
+        "delta_f_ci": [
+          -1.5486700385826186,
+          0.14283953508996206
+        ],
+        "delta_f_over_f_pct": -0.8664766550112585,
+        "delta_f_over_f_ci": [
+          -1.76208264192503,
+          0.16265249302889562
+        ],
+        "tau_int_pre": 4.72271639056795,
+        "tau_int_post": 15.01479956635745,
+        "n_eff_pre": 4.975949867947483,
+        "n_eff_post": 1.5651224577552612
+      },
+      "secondary_adaptive_ridge": {
+        "mean_pre": 48.32756502855014,
+        "mean_post": 40.96410195002372,
+        "delta_f": -7.363463078526422,
+        "delta_f_ci": [
+          -8.885770462423636,
+          -5.836077973038517
+        ],
+        "delta_f_over_f_pct": -15.236569593722256,
+        "delta_f_over_f_ci": [
+          -18.386748830415804,
+          -12.078037789432504
+        ],
+        "tau_int_pre": 3.7142302837762227,
+        "tau_int_post": 16.043398776890317,
+        "n_eff_pre": 6.327017498793255,
+        "n_eff_post": 1.4647769046201438
+      },
+      "primary_hilbert_ifreq": {
+        "mean_pre": 92.89471894386327,
+        "mean_post": 88.86455229275266,
+        "delta_f": -4.030166651110605,
+        "delta_f_ci": [
+          -6.260875941714118,
+          -1.9907565537513299
+        ],
+        "delta_f_over_f_pct": -4.338423859752517,
+        "delta_f_over_f_ci": [
+          -6.65439110720765,
+          -2.1668620942539287
+        ]
+      },
+      "secondary_hilbert_ifreq": {
+        "mean_pre": 50.06685058128335,
+        "mean_post": 41.730491993174475,
+        "delta_f": -8.336358588108872,
+        "delta_f_ci": [
+          -10.140988457102797,
+          -6.957271410002111
+        ],
+        "delta_f_over_f_pct": -16.650455323877072,
+        "delta_f_over_f_ci": [
+          -20.035879538914568,
+          -13.968239210762047
+        ]
+      }
+    },
+    "density_measurement": {
+      "nave_pre": 0.6089814305305481,
+      "nave_post": 0.6679716110229492,
+      "delta_nave": 0.05899018049240112,
+      "delta_nave_pct": 9.68669610188418
+    },
+    "ece_proxy_measurement": {
+      "ece12_pre": 0.8279905915260315,
+      "ece12_post": 0.15544874966144562,
+      "delta_ece12_pct": -81.22578308831443,
+      "ece13_pre": 1.6522724628448486,
+      "ece13_post": 0.8644692301750183,
+      "delta_ece13_pct": -47.67998319801366
+    },
+    "acoustic_sound_speed_test": {
+      "predicted_cs_drop_2x_pct": -29.28932188134524,
+      "predicted_cs_drop_4x_pct": -50.0,
+      "observed_primary_df_pct": -0.8664766550112585,
+      "observed_primary_hilb_df_pct": -4.338423859752517,
+      "is_consistent": false,
+      "verdict": "INCONSISTENT: A 2-4x Te drop predicts a -29% to -50% frequency drop, whereas the Primary mode drifts by only -0.87% (ridge) or -4.34% (Hilbert), an order of magnitude smaller than predicted."
+    },
+    "hypothesis_comparisons": {
+      "acoustic_f_sqrt_T": {
+        "primary_ridge_implied_dT_over_T_pct": -1.725445492085731,
+        "primary_hilb_implied_dT_over_T_pct": -8.488628503636331,
+        "secondary_ridge_implied_dT_over_T_pct": -28.151608657601102,
+        "observed_ece12_dT_over_T_pct": -81.22578308831443,
+        "observed_ece13_dT_over_T_pct": -47.67998319801366,
+        "proxy_caveats": "Non-thermal emission step (f_step ~ 52% on ECE12), lack of absolute eV calibration, optical thickness limits.",
+        "status": "EXCLUDED for Primary; SUGGESTIVE for Secondary (local edge acoustic or BAE)."
+      },
+      "alfven_f_inv_sqrt_ne": {
+        "measured_delta_ne_over_ne_pct": 9.68669610188418,
+        "predicted_alfven_df_over_f_pct": -4.517666899775607,
+        "observed_primary_df_over_f_ridge_pct": -0.8664766550112585,
+        "observed_primary_df_over_f_hilb_pct": -4.338423859752517,
+        "status": "SUPPORTED for Primary mode (matches Hilbert drift ~ -4.3% to -6.0% and ridge order of magnitude). EXCLUDED for Secondary mode."
+      },
+      "doppler_shift": {
+        "doppler_rot_req_pri_khz": {
+          "-1": 0.7610821636651224,
+          "3": -0.2536940545550408,
+          "-5": 0.1522164327330245
+        },
+        "doppler_rot_req_sec_khz": {
+          "-1": 7.363463078526422,
+          "3": -2.454487692842141,
+          "-5": 1.4726926157052844
+        },
+        "ratio_df_pri_to_sec_ridge": 0.10335926934768176,
+        "ratio_df_pri_to_sec_hilb": 0.48344449300193315,
+        "ratio_freq_pri_to_sec_thermal_pred": 1.8175223665452063,
+        "doppler_n_pred_ratio": 1.0,
+        "verdict": "Neither global uniform Doppler (ratio=1.0) nor global acoustic (ratio=1.93) fits both modes simultaneously. Secondary shifts 10x more than Primary on ridge.",
+        "status": "UNTESTABLE globally without spatial rotation profile (CXRS); simple uniform Doppler EXCLUDED."
+      },
+      "fast_ion_epm": {
+        "tau_s_drop_pct_2x": -67.76697601823376,
+        "tau_s_drop_pct_4x": -88.60390508217225,
+        "observable_to_test": "Neutral Particle Analyzer (NPA), fast-ion D-alpha (FIDA), beam modulation, chirping phase-space hole/clump velocity.",
+        "status": "UNTESTABLE directly with current diagnostics (no fast-ion diagnostics available on disk)."
+      }
+    },
+    "time_resolved_dynamics": {
+      "lagged_cross_correlations": {
+        "pri_vs_ece12": {
+          "best_lag_ms": 1.983856201171875,
+          "peak_corr": 0.5525014053762097
+        },
+        "sec_vs_ece12": {
+          "best_lag_ms": 0.063995361328125,
+          "peak_corr": 0.6241380782410134
+        },
+        "sec_vs_ece13": {
+          "best_lag_ms": 0.0,
+          "peak_corr": 0.4939893853374109
+        },
+        "sec_vs_ne": {
+          "best_lag_ms": 0.0,
+          "peak_corr": -0.907519734892661
+        }
+      },
+      "exponential_relaxation_fit": {
+        "tau_f_sec_ms": 2.4033724475595886,
+        "f_inf_sec_khz": 35.64865996304025,
+        "df_relax_sec_khz": 13.673591608603534,
+        "task1_ece12_tau_ms": 1.9031464531733164,
+        "task1_ece13_tau_ms": 2.9759779439024374,
+        "relaxation_comparison": "Secondary frequency relaxation tau_f (2.40 ms) aligns with ECE12/ECE13 thermal decay tau (1.90 to 2.98 ms)."
+      }
+    },
+    "external_assumption_bae_gam": {
+      "formula": "f_GAM/BAE = (1 / 2 pi R0) * sqrt(e Te / mi) * sqrt(2 * (1 + 7/4 Ti/Te))",
+      "source": "Winsor et al. 1968 (Phys. Fluids 11, 2448); Zonca & Chen 1996 (Phys. Plasmas 3, 323); Gorelenkov et al. 2007 (Nucl. Fusion 47, 1343)",
+      "assumptions": "R0 = 1.2 m, Hydrogen plasma (mi = 1.67e-27 kg), Ti/Te in [0.2, 1.0]",
+      "te_required_primary_eV": {
+        "Ti_over_Te_0.2": 1695.833403554192,
+        "Ti_over_Te_0.5": 1221.0000505590183,
+        "Ti_over_Te_1.0": 832.5000344720579
+      },
+      "te_required_secondary_pre_eV": {
+        "Ti_over_Te_0.2": 513.3619281423714,
+        "Ti_over_Te_0.5": 369.62058826250745,
+        "Ti_over_Te_1.0": 252.01403745170958
+      },
+      "te_required_secondary_post_eV": {
+        "Ti_over_Te_0.2": 368.8422871346156,
+        "Ti_over_Te_0.5": 265.5664467369233,
+        "Ti_over_Te_1.0": 181.06803186608406
+      },
+      "verdict": "Primary mode requires Te ~ 800-1660 eV which is impossible for post-ECH cooling plasma (Te < 300 eV); Secondary matches plausible edge/gradient Te ~ 130-445 eV."
+    }
+  },
+  "88654": {
+    "shot": 88654,
+    "fiducial_t0_ms": 291.2,
+    "window_3ms_pre": [
+      288.2,
+      291.2
+    ],
+    "window_3ms_post": [
+      292.2,
+      295.2
+    ],
+    "frequency_measurements": {
+      "primary_adaptive_ridge": {
+        "mean_pre": 86.26063829787235,
+        "mean_post": 86.20382191557833,
+        "delta_f": -0.05681638229401642,
+        "delta_f_ci": [
+          -0.3193853170947847,
+          0.35106382978722195
+        ],
+        "delta_f_over_f_pct": -0.065865942352316,
+        "delta_f_over_f_ci": [
+          -0.370211632911362,
+          0.4069803292840705
+        ],
+        "tau_int_pre": 1.1248843663276378,
+        "tau_int_post": 13.125136749851581,
+        "n_eff_pre": 20.891036184207493,
+        "n_eff_post": 1.7904575356341135
+      },
+      "secondary_adaptive_ridge": {
+        "mean_pre": 45.84574468085106,
+        "mean_post": 36.81868708445047,
+        "delta_f": -9.027057596400596,
+        "delta_f_ci": [
+          -10.654463232730132,
+          -7.6515686982146605
+        ],
+        "delta_f_over_f_pct": -19.690066459256432,
+        "delta_f_over_f_ci": [
+          -23.224126547093398,
+          -16.684059602788427
+        ],
+        "tau_int_pre": 3.629961428393677,
+        "tau_int_post": 15.11181962049676,
+        "n_eff_pre": 6.4738979913621755,
+        "n_eff_post": 1.5550741466054834
+      },
+      "primary_hilbert_ifreq": {
+        "mean_pre": 93.68369891582657,
+        "mean_post": 88.04853131739274,
+        "delta_f": -5.635167598433824,
+        "delta_f_ci": [
+          -8.993521062013722,
+          -2.6878866554972136
+        ],
+        "delta_f_over_f_pct": -6.015099386177034,
+        "delta_f_over_f_ci": [
+          -9.53699678095047,
+          -2.8907722441992942
+        ]
+      },
+      "secondary_hilbert_ifreq": {
+        "mean_pre": 47.783242188249666,
+        "mean_post": 38.012602184017716,
+        "delta_f": -9.77064000423195,
+        "delta_f_ci": [
+          -11.784961289471907,
+          -8.205214091265773
+        ],
+        "delta_f_over_f_pct": -20.44783810554119,
+        "delta_f_over_f_ci": [
+          -24.233566397516327,
+          -17.36160263869825
+        ]
+      }
+    },
+    "density_measurement": {
+      "nave_pre": 0.6093508005142212,
+      "nave_post": 0.668951690196991,
+      "delta_nave": 0.059600889682769775,
+      "delta_nave_pct": 9.781047244456486
+    },
+    "ece_proxy_measurement": {
+      "ece12_pre": 0.8400401473045349,
+      "ece12_post": 0.1024211123585701,
+      "delta_ece12_pct": -87.8075931623968,
+      "ece13_pre": 1.5896025896072388,
+      "ece13_post": 0.5627326965332031,
+      "delta_ece13_pct": -64.59915829199524
+    },
+    "acoustic_sound_speed_test": {
+      "predicted_cs_drop_2x_pct": -29.28932188134524,
+      "predicted_cs_drop_4x_pct": -50.0,
+      "observed_primary_df_pct": -0.065865942352316,
+      "observed_primary_hilb_df_pct": -6.015099386177034,
+      "is_consistent": false,
+      "verdict": "INCONSISTENT: A 2-4x Te drop predicts a -29% to -50% frequency drop, whereas the Primary mode drifts by only -0.07% (ridge) or -6.02% (Hilbert), an order of magnitude smaller than predicted."
+    },
+    "hypothesis_comparisons": {
+      "acoustic_f_sqrt_T": {
+        "primary_ridge_implied_dT_over_T_pct": -0.13168850148100875,
+        "primary_hilb_implied_dT_over_T_pct": -11.6683845660982,
+        "secondary_ridge_implied_dT_over_T_pct": -35.5031457468135,
+        "observed_ece12_dT_over_T_pct": -87.8075931623968,
+        "observed_ece13_dT_over_T_pct": -64.59915829199524,
+        "proxy_caveats": "Non-thermal emission step (f_step ~ 52% on ECE12), lack of absolute eV calibration, optical thickness limits.",
+        "status": "EXCLUDED for Primary; SUGGESTIVE for Secondary (local edge acoustic or BAE)."
+      },
+      "alfven_f_inv_sqrt_ne": {
+        "measured_delta_ne_over_ne_pct": 9.781047244456486,
+        "predicted_alfven_df_over_f_pct": -4.558706787561206,
+        "observed_primary_df_over_f_ridge_pct": -0.065865942352316,
+        "observed_primary_df_over_f_hilb_pct": -6.015099386177034,
+        "status": "SUPPORTED for Primary mode (matches Hilbert drift ~ -4.3% to -6.0% and ridge order of magnitude). EXCLUDED for Secondary mode."
+      },
+      "doppler_shift": {
+        "doppler_rot_req_pri_khz": {
+          "-1": 0.05681638229401642,
+          "3": -0.018938794098005474,
+          "-5": 0.011363276458803284
+        },
+        "doppler_rot_req_sec_khz": {
+          "-1": 9.027057596400596,
+          "3": -3.0090191988001984,
+          "-5": 1.8054115192801192
+        },
+        "ratio_df_pri_to_sec_ridge": 0.006294009059681984,
+        "ratio_df_pri_to_sec_hilb": 0.5767449825183476,
+        "ratio_freq_pri_to_sec_thermal_pred": 1.8815407819932708,
+        "doppler_n_pred_ratio": 1.0,
+        "verdict": "Neither global uniform Doppler (ratio=1.0) nor global acoustic (ratio=1.93) fits both modes simultaneously. Secondary shifts 10x more than Primary on ridge.",
+        "status": "UNTESTABLE globally without spatial rotation profile (CXRS); simple uniform Doppler EXCLUDED."
+      },
+      "fast_ion_epm": {
+        "tau_s_drop_pct_2x": -67.79467863829046,
+        "tau_s_drop_pct_4x": -88.61369943742162,
+        "observable_to_test": "Neutral Particle Analyzer (NPA), fast-ion D-alpha (FIDA), beam modulation, chirping phase-space hole/clump velocity.",
+        "status": "UNTESTABLE directly with current diagnostics (no fast-ion diagnostics available on disk)."
+      }
+    },
+    "time_resolved_dynamics": {
+      "lagged_cross_correlations": {
+        "pri_vs_ece12": {
+          "best_lag_ms": 1.7918701171875,
+          "peak_corr": 0.48127424777273314
+        },
+        "sec_vs_ece12": {
+          "best_lag_ms": 0.0,
+          "peak_corr": 0.6182069944063434
+        },
+        "sec_vs_ece13": {
+          "best_lag_ms": 0.0,
+          "peak_corr": 0.40245369618799454
+        },
+        "sec_vs_ne": {
+          "best_lag_ms": 0.0,
+          "peak_corr": -0.8802305876843273
+        }
+      },
+      "exponential_relaxation_fit": {
+        "tau_f_sec_ms": 1.8430898659927992,
+        "f_inf_sec_khz": 32.16855086103185,
+        "df_relax_sec_khz": 16.363867948648956,
+        "task1_ece12_tau_ms": 1.4401589719646433,
+        "task1_ece13_tau_ms": 1.9492654617888452,
+        "relaxation_comparison": "Secondary frequency relaxation tau_f (1.84 ms) aligns with ECE12/ECE13 thermal decay tau (1.44 to 1.95 ms)."
+      }
+    },
+    "external_assumption_bae_gam": {
+      "formula": "f_GAM/BAE = (1 / 2 pi R0) * sqrt(e Te / mi) * sqrt(2 * (1 + 7/4 Ti/Te))",
+      "source": "Winsor et al. 1968 (Phys. Fluids 11, 2448); Zonca & Chen 1996 (Phys. Plasmas 3, 323); Gorelenkov et al. 2007 (Nucl. Fusion 47, 1343)",
+      "assumptions": "R0 = 1.2 m, Hydrogen plasma (mi = 1.67e-27 kg), Ti/Te in [0.2, 1.0]",
+      "te_required_primary_eV": {
+        "Ti_over_Te_0.2": 1635.5324476197575,
+        "Ti_over_Te_0.5": 1177.5833622862253,
+        "Ti_over_Te_1.0": 802.8977470133354
+      },
+      "te_required_secondary_pre_eV": {
+        "Ti_over_Te_0.2": 461.9892739295548,
+        "Ti_over_Te_0.5": 332.6322772292795,
+        "Ti_over_Te_1.0": 226.79473447450874
+      },
+      "te_required_secondary_post_eV": {
+        "Ti_over_Te_0.2": 297.96854867169947,
+        "Ti_over_Te_0.5": 214.53735504362362,
+        "Ti_over_Te_1.0": 146.2754693479252
+      },
+      "verdict": "Primary mode requires Te ~ 800-1660 eV which is impossible for post-ECH cooling plasma (Te < 300 eV); Secondary matches plausible edge/gradient Te ~ 130-445 eV."
+    }
+  }
+}

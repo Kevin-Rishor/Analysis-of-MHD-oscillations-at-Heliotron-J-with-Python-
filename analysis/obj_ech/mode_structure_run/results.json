@@ -1,0 +1,54 @@
+{
+  "secondary_ech_nbi": {
+    "band": "Secondary Band (40-80 kHz)",
+    "phase": "ECH+NBI",
+    "time_window_ms": [
+      259.1,
+      291.3
+    ],
+    "frequency_khz": 48.82812499976685,
+    "m": 6,
+    "r_circ": 0.21555883245347468,
+    "err_deg": 92.2951664963429,
+    "is_confirmed": false
+  },
+  "secondary_nbi_only": {
+    "band": "Secondary Band (40-80 kHz)",
+    "phase": "NBI-only",
+    "time_window_ms": [
+      291.3,
+      300.0
+    ],
+    "frequency_khz": 41.01562499980415,
+    "m": 2,
+    "r_circ": 0.6323937714793983,
+    "err_deg": 81.1201511967272,
+    "is_confirmed": false
+  },
+  "primary_ech_nbi": {
+    "band": "Primary Band (80-120 kHz)",
+    "phase": "ECH+NBI",
+    "time_window_ms": [
+      259.1,
+      291.3
+    ],
+    "frequency_khz": 89.843749999571,
+    "m": 3,
+    "r_circ": 0.8824916196195002,
+    "err_deg": 26.726586963014817,
+    "is_confirmed": true
+  },
+  "primary_nbi_only": {
+    "band": "Primary Band (80-120 kHz)",
+    "phase": "NBI-only",
+    "time_window_ms": [
+      291.3,
+      300.0
+    ],
+    "frequency_khz": 85.93749999958966,
+    "m": 3,
+    "r_circ": 0.9017346365988039,
+    "err_deg": 22.22173400121814,
+    "is_confirmed": true
+  }
+}

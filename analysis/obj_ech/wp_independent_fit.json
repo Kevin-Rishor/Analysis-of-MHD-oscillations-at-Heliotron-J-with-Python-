@@ -1,0 +1,66 @@
+{
+  "88653": {
+    "window_2ms": {
+      "window_ms": 2.0,
+      "slope_pre_kj_s": -9.72105074880066,
+      "slope_post_kj_s": -63.994089682957245,
+      "delta_slope_kj_s": -54.27303893415659,
+      "residual_rms_kj": 0.005352282088412697,
+      "r_squared": 0.9821955653689213,
+      "wp_min_time_ms": 293.2,
+      "wp_min_value_kj": 0.8469299
+    },
+    "window_5ms": {
+      "window_ms": 5.0,
+      "slope_pre_kj_s": -16.074164967677945,
+      "slope_post_kj_s": -77.00351264438115,
+      "delta_slope_kj_s": -60.9293476767032,
+      "residual_rms_kj": 0.010827481106587418,
+      "r_squared": 0.9930873470428867,
+      "wp_min_time_ms": 296.2,
+      "wp_min_value_kj": 0.6534624
+    },
+    "window_10ms": {
+      "window_ms": 10.0,
+      "slope_pre_kj_s": -20.587440467404925,
+      "slope_post_kj_s": -19.739091171493392,
+      "delta_slope_kj_s": 0.8483492959115324,
+      "residual_rms_kj": 0.05778786562925272,
+      "r_squared": 0.8890920609477544,
+      "wp_min_time_ms": 296.28,
+      "wp_min_value_kj": 0.653114
+    }
+  },
+  "88654": {
+    "window_2ms": {
+      "window_ms": 2.0,
+      "slope_pre_kj_s": 14.85035328389887,
+      "slope_post_kj_s": -66.2010245224802,
+      "delta_slope_kj_s": -81.05137780637907,
+      "residual_rms_kj": 0.007002460471215098,
+      "r_squared": 0.957774820799723,
+      "wp_min_time_ms": 293.2,
+      "wp_min_value_kj": 0.9947329
+    },
+    "window_5ms": {
+      "window_ms": 5.0,
+      "slope_pre_kj_s": 2.6223073607272855,
+      "slope_post_kj_s": -65.6907944359717,
+      "delta_slope_kj_s": -68.31310179669899,
+      "residual_rms_kj": 0.019045960009361304,
+      "r_squared": 0.9629455481996706,
+      "wp_min_time_ms": 295.24,
+      "wp_min_value_kj": 0.8610287
+    },
+    "window_10ms": {
+      "window_ms": 10.0,
+      "slope_pre_kj_s": -16.11939339433195,
+      "slope_post_kj_s": 1.6118042265173487,
+      "delta_slope_kj_s": 17.7311976208493,
+      "residual_rms_kj": 0.06246568067576026,
+      "r_squared": 0.6790280255027239,
+      "wp_min_time_ms": 295.24,
+      "wp_min_value_kj": 0.8610287
+    }
+  }
+}

@@ -1,0 +1,27 @@
+\begin{table}[H]
+\centering
+\footnotesize
+\linespread{0.91}\selectfont
+\setlength{\tabcolsep}{2.95pt}
+\setlength{\aboverulesep}{2pt}
+\setlength{\belowrulesep}{2pt}
+\renewcommand{\arraystretch}{0.92}
+\caption[Asymptotic bicoherence convergence in the ECH+NBI window]{Asymptotic bicoherence convergence in the ECH+NBI window.}
+\label{tab:convergence_general}
+\begin{tabular}{@{}l >{\raggedright\arraybackslash}m{3.00cm} >{\centering\arraybackslash}m{3.32cm} c c c >{\raggedright\arraybackslash}m{3.68cm}@{}}
+\toprule
+Discharge & \shortstack[l]{Triad\\Type} & \shortstack{$f_1, f_2 \to f_3$\\(kHz)} & \shortstack{Intercept\\$b_0$ (-)} & \shortstack{Slope\\$C$ (-)} & \shortstack{Surrogate\\$p_{\rm surr}$ (-)} & \shortstack[l]{Validation Status\\($p < 0.05$)} \\
+\midrule
+\#88653 & Primary Sum Harmonic & $87.9 + 87.9 \to 175.8$ & $+0.144$ & $2.06$ & $0.016$ & Validated ($2/K$ overlap scaling) \\
+\#88653 & Difference Triad & $115.2 - 33.2 \to 82.0$ & $+0.146$ & $0.84$ & $0.014$ & Validated (Inter-mode coupling) \\
+\#88653 & Cross-Mode Interaction & $46.9 + 80.1 \to 127.0$ & $+0.092$ & $1.31$ & $0.044$ & Validated (Secondary-\newline to-primary flank) \\
+\#88653 & Noise Contrast Baseline & $33.2 + 80.1 \to 113.3$ & $+0.017$ & $1.06$ & $0.315$ & Negative Control ($1/K \to 0$) \\
+\midrule
+\#88654 & Primary Harmonic\newline (Diff./Conj.) & $(89.8, 89.8) \leftrightarrow 179.7$\newline $(179.7\!-\!89.8\!\to\!89.8)$ & $+0.546$ & $1.27$ & $0.002$ & Validated (Adjacent-bin\newline conjugate replicate) \\
+\#88654 & Primary Sum Harmonic & $87.9 + 87.9 \to 175.8$ & $+0.267$ & $0.02$ & $0.002$ & Validated (Cross-shot\newline harmonic replicate) \\
+\#88654 & Sub-Harmonic Triad & $39.1 - 19.5 \to 19.5$ & $+0.154$ & $0.77$ & $0.066$ & Candidate (Marginal significance) \\
+\#88654 & Noise Contrast Baseline & $72.3 + 76.2 \to 148.4$ & $+0.016$ & $1.22$ & $0.303$ & Negative Control ($1/K \to 0$) \\
+\bottomrule
+\end{tabular}
+\par\vspace{2pt}\noindent\parbox{\textwidth}{\footnotesize ECH+NBI window ($259.1\text{--}291.2~\mathrm{ms}$), asymptotic regime $1/K \le 0.055$ ($K \ge 18$); \#88653 ($N_{\mathrm{est}}=40$), \#88654 ($N=124$). Mean of 500 random sub-ensembles without replacement ($95\,\%$ bounds $[q_{2.5}, q_{97.5}]$ reflect finite-$K$ sub-ensemble dispersion, whereas $p_{\rm surr}$ tests mean $b_0$ vs.\ 500 phase-randomized surrogates). In \#88654, marker~[2] at $(f_1, f_2) = (89.8, 89.8)~\mathrm{kHz}$ (adjacent to $(87.9, 87.9)~\mathrm{kHz}$ within the scanned $f_1, f_2 \in [11.7, 99.6]~\mathrm{kHz}$ plane) couples the fundamental $89.8~\mathrm{kHz}$ mode with its second harmonic at $f_1 + f_2 = 179.7~\mathrm{kHz}$---equivalent by Hermitian conjugate symmetry to $179.7 - 89.8 \to 89.8~\mathrm{kHz}$---marking an adjacent-bin conjugate realization of the same primary self-harmonic steepening over $N=124$ rather than an independent triad. The brief $8.7~\mathrm{ms}$ NBI-only interval ($291.3\text{--}300.0~\mathrm{ms}$, $N_{\mathrm{seg}}=32$) yielded only $2$ estimation units ($<6$ required) and was \emph{untestable} in both \#88653 and \#88654.}
+\end{table}

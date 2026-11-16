@@ -1,0 +1,1006 @@
+{
+  "88653": {
+    "shot": 88653,
+    "verdicts": {
+      "macro_drift_reversal": {
+        "status": "SUPPORTED",
+        "evidence": "Slope A = +0.22 +/- 0.01 kHz/ms vs Slope B = -0.80 +/- 0.01 kHz/ms",
+        "artifacts_considered": [
+          "STFT window smearing rejected via 125-pt Savitzky-Golay Hilbert instant tracking",
+          "Equal-length duration (8.7 ms each) eliminates sample-size asymmetry"
+        ]
+      },
+      "downward_chirping_dominance": {
+        "status": "SUGGESTIVE",
+        "evidence": "Down-chirp fraction: ECH+NBI = 100.0% [CI: 43.9%, 100.0%] | NBI-only = 0.0% [CI: 0.0%, 0.0%]",
+        "artifacts_considered": [
+          "Linear regression on burst sub-intervals",
+          "Wilson score intervals for small N counts"
+        ]
+      },
+      "secondary_mode_stabilization": {
+        "status": "SUPPORTED",
+        "evidence": "Secondary jump/event rate drops from 0.00 to 0.00 events/ms across ECH-off",
+        "artifacts_considered": [
+          "Adaptive filter 30-65 kHz prevents fixed-band filter-edge loss"
+        ]
+      }
+    },
+    "modes": {
+      "Primary (80-110 kHz)": {
+        "A_equal": {
+          "label": "ECH+NBI (Equal-Length: 8.7 ms)",
+          "mode": "Primary (80-110 kHz)",
+          "t_range_ms": [
+            282.5,
+            291.2
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": 0.21697707679620817,
+          "macro_drift_stderr": 0.014592170539235153,
+          "macro_f_mean": 92.80849601413638,
+          "macro_f_std": 3.4616510801611136,
+          "k_events": 3,
+          "k_poisson_ci": [
+            0.0,
+            7.0
+          ],
+          "rep_rate_per_ms": 0.344827586206897,
+          "rep_rate_ci": [
+            0.0,
+            0.8045977011494263
+          ],
+          "n_down_chirps": 3,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 1.0,
+          "frac_down_ci": [
+            0.4385029682449546,
+            1.0
+          ],
+          "chirp_slope_stats": {
+            "mean": -13.11806822329226,
+            "mean_ci": [
+              -14.288933878733653,
+              -11.856970456170222
+            ],
+            "median": -13.2083003349729,
+            "median_ci": [
+              -14.288933878733655,
+              -11.85697045617022
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.3419999999908496,
+            "mean_ci": [
+              0.16899999999547832,
+              0.4599999999876925
+            ],
+            "median": 0.39699999998937807,
+            "median_ci": [
+              0.16899999999547832,
+              0.4599999999876925
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": -4.592910404631189,
+            "mean_ci": [
+              -6.423368196442883,
+              -2.0421864474244646
+            ],
+            "median": -5.313176570026219,
+            "median_ci": [
+              -6.423368196442883,
+              -2.0421864474244646
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.6101390816735419,
+            "mean_ci": [
+              0.5028854543803786,
+              0.6764646307539771
+            ],
+            "median": 0.6510671598862702,
+            "median_ci": [
+              0.5028854543803786,
+              0.6764646307539771
+            ]
+          }
+        },
+        "A_full": {
+          "label": "ECH+NBI (Full: 32.1 ms)",
+          "mode": "Primary (80-110 kHz)",
+          "t_range_ms": [
+            259.1,
+            291.2
+          ],
+          "duration_ms": 32.099999999999966,
+          "macro_drift_khz_per_ms": 0.23851870793454913,
+          "macro_drift_stderr": 0.0022984344674826795,
+          "macro_f_mean": 89.72944126951877,
+          "macro_f_std": 4.4098857374912415,
+          "k_events": 4,
+          "k_poisson_ci": [
+            1.0,
+            8.0
+          ],
+          "rep_rate_per_ms": 0.12461059190031167,
+          "rep_rate_ci": [
+            0.031152647975077916,
+            0.24922118380062333
+          ],
+          "n_down_chirps": 4,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 1.0,
+          "frac_down_ci": [
+            0.5101091635454027,
+            1.0
+          ],
+          "chirp_slope_stats": {
+            "mean": -12.116888673167253,
+            "mean_ci": [
+              -13.783022287566165,
+              -9.576745212985664
+            ],
+            "median": -12.818884904843738,
+            "median_ci": [
+              -14.127049515778548,
+              -8.702735367202985
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.36949999999011385,
+            "mean_ci": [
+              0.27999999999250846,
+              0.45899999998771923
+            ],
+            "median": 0.36949999999011385,
+            "median_ci": [
+              0.24199999999352517,
+              0.4969999999867025
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": -4.539341205048967,
+            "mean_ci": [
+              -6.318864816411798,
+              -2.7288158758594943
+            ],
+            "median": -4.1628172267760455,
+            "median_ci": [
+              -7.133916208610928,
+              -2.697814158032852
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.5849214835082519,
+            "mean_ci": [
+              0.5060770716963803,
+              0.6637658953201236
+            ],
+            "median": 0.5801679244493261,
+            "median_ci": [
+              0.5028854543803786,
+              0.6764646307539771
+            ]
+          }
+        },
+        "B_nbi_only": {
+          "label": "NBI-only (8.7 ms)",
+          "mode": "Primary (80-110 kHz)",
+          "t_range_ms": [
+            291.3,
+            300.0
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": -0.800047039357084,
+          "macro_drift_stderr": 0.012375437728915957,
+          "macro_f_mean": 87.539685801631,
+          "macro_f_std": 3.5275194151922804,
+          "k_events": 0,
+          "k_poisson_ci": [
+            0.0,
+            0.0
+          ],
+          "rep_rate_per_ms": 0.0,
+          "rep_rate_ci": [
+            0.0,
+            0.0
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.0
+          ],
+          "chirp_slope_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "Secondary (30-65 kHz)": {
+        "A_equal": {
+          "label": "ECH+NBI (Equal-Length: 8.7 ms)",
+          "mode": "Secondary (30-65 kHz)",
+          "t_range_ms": [
+            282.5,
+            291.2
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": 0.09027992138383918,
+          "macro_drift_stderr": 0.01180615259392192,
+          "macro_f_mean": 49.66059268465824,
+          "macro_f_std": 2.775085526927521,
+          "k_events": 0,
+          "k_poisson_ci": [
+            0.0,
+            0.0
+          ],
+          "rep_rate_per_ms": 0.0,
+          "rep_rate_ci": [
+            0.0,
+            0.0
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.0
+          ],
+          "chirp_slope_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "A_full": {
+          "label": "ECH+NBI (Full: 32.1 ms)",
+          "mode": "Secondary (30-65 kHz)",
+          "t_range_ms": [
+            259.1,
+            291.2
+          ],
+          "duration_ms": 32.099999999999966,
+          "macro_drift_khz_per_ms": 0.31605256621299793,
+          "macro_drift_stderr": 0.0020066000797408726,
+          "macro_f_mean": 45.7566709427518,
+          "macro_f_std": 4.4358081139071,
+          "k_events": 0,
+          "k_poisson_ci": [
+            0.0,
+            0.0
+          ],
+          "rep_rate_per_ms": 0.0,
+          "rep_rate_ci": [
+            0.0,
+            0.0
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.0
+          ],
+          "chirp_slope_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "B_nbi_only": {
+          "label": "NBI-only (8.7 ms)",
+          "mode": "Secondary (30-65 kHz)",
+          "t_range_ms": [
+            291.3,
+            300.0
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": -1.2774571902406386,
+          "macro_drift_stderr": 0.010737457323943881,
+          "macro_f_mean": 39.93713142625671,
+          "macro_f_std": 4.0771331174298435,
+          "k_events": 0,
+          "k_poisson_ci": [
+            0.0,
+            0.0
+          ],
+          "rep_rate_per_ms": 0.0,
+          "rep_rate_ci": [
+            0.0,
+            0.0
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.0
+          ],
+          "chirp_slope_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    }
+  },
+  "88654": {
+    "shot": 88654,
+    "verdicts": {
+      "macro_drift_reversal": {
+        "status": "SUPPORTED",
+        "evidence": "Slope A = +0.49 +/- 0.01 kHz/ms vs Slope B = -0.95 +/- 0.02 kHz/ms",
+        "artifacts_considered": [
+          "STFT window smearing rejected via 125-pt Savitzky-Golay Hilbert instant tracking",
+          "Equal-length duration (8.7 ms each) eliminates sample-size asymmetry"
+        ]
+      },
+      "downward_chirping_dominance": {
+        "status": "SUPPORTED",
+        "evidence": "Down-chirp fraction: ECH+NBI = 100.0% [CI: 34.2%, 100.0%] | NBI-only = 100.0% [CI: 34.2%, 100.0%]",
+        "artifacts_considered": [
+          "Linear regression on burst sub-intervals",
+          "Wilson score intervals for small N counts"
+        ]
+      },
+      "secondary_mode_stabilization": {
+        "status": "SUPPORTED",
+        "evidence": "Secondary jump/event rate drops from 0.00 to 0.11 events/ms across ECH-off",
+        "artifacts_considered": [
+          "Adaptive filter 30-65 kHz prevents fixed-band filter-edge loss"
+        ]
+      }
+    },
+    "modes": {
+      "Primary (80-110 kHz)": {
+        "A_equal": {
+          "label": "ECH+NBI (Equal-Length: 8.7 ms)",
+          "mode": "Primary (80-110 kHz)",
+          "t_range_ms": [
+            282.5,
+            291.2
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": 0.49097595534946586,
+          "macro_drift_stderr": 0.01404183258044801,
+          "macro_f_mean": 92.2464410086983,
+          "macro_f_std": 3.513115921552638,
+          "k_events": 2,
+          "k_poisson_ci": [
+            0.0,
+            5.0
+          ],
+          "rep_rate_per_ms": 0.22988505747126467,
+          "rep_rate_ci": [
+            0.0,
+            0.5747126436781617
+          ],
+          "n_down_chirps": 2,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 1.0,
+          "frac_down_ci": [
+            0.34238022750665303,
+            1.0
+          ],
+          "chirp_slope_stats": {
+            "mean": -8.373100673717264,
+            "mean_ci": [
+              -9.114917164199657,
+              -7.6312841832348735
+            ],
+            "median": -8.373100673717264,
+            "median_ci": [
+              -9.114917164199657,
+              -7.6312841832348735
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.5274999999858865,
+            "mean_ci": [
+              0.35799999999042154,
+              0.6969999999813514
+            ],
+            "median": 0.5274999999858865,
+            "median_ci": [
+              0.35799999999042154,
+              0.6969999999813514
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": -4.233240801446933,
+            "mean_ci": [
+              -5.9868054375528885,
+              -2.479676165340978
+            ],
+            "median": -4.233240801446933,
+            "median_ci": [
+              -5.9868054375528885,
+              -2.479676165340978
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.8224193447807603,
+            "mean_ci": [
+              0.7118655277965977,
+              0.9329731617649228
+            ],
+            "median": 0.8224193447807603,
+            "median_ci": [
+              0.7118655277965977,
+              0.9329731617649228
+            ]
+          }
+        },
+        "A_full": {
+          "label": "ECH+NBI (Full: 32.1 ms)",
+          "mode": "Primary (80-110 kHz)",
+          "t_range_ms": [
+            259.1,
+            291.2
+          ],
+          "duration_ms": 32.099999999999966,
+          "macro_drift_khz_per_ms": 0.2211696878909259,
+          "macro_drift_stderr": 0.002560702962727774,
+          "macro_f_mean": 89.2924111043972,
+          "macro_f_std": 4.719643839892345,
+          "k_events": 7,
+          "k_poisson_ci": [
+            2.0,
+            13.0
+          ],
+          "rep_rate_per_ms": 0.2180685358255454,
+          "rep_rate_ci": [
+            0.06230529595015583,
+            0.4049844236760129
+          ],
+          "n_down_chirps": 7,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 1.0,
+          "frac_down_ci": [
+            0.6456695649333126,
+            1.0
+          ],
+          "chirp_slope_stats": {
+            "mean": -12.700071479842398,
+            "mean_ci": [
+              -18.21846633839784,
+              -8.647462477757598
+            ],
+            "median": -10.004978033300796,
+            "median_ci": [
+              -14.164892779171712,
+              -7.867923520997512
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.7947142856930227,
+            "mean_ci": [
+              0.6573499999824122,
+              0.9157142856897853
+            ],
+            "median": 0.7799999999791307,
+            "median_ci": [
+              0.7469999999800137,
+              0.9669999999741274
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": -8.29724806785742,
+            "mean_ci": [
+              -9.575822739776104,
+              -6.7790874181879035
+            ],
+            "median": -9.321493512357716,
+            "median_ci": [
+              -9.65489166952885,
+              -7.158963229691377
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.8378940499373567,
+            "mean_ci": [
+              0.6667402315186676,
+              0.9842826411654114
+            ],
+            "median": 0.9329731617649228,
+            "median_ci": [
+              0.668772226499178,
+              0.9664487343798803
+            ]
+          }
+        },
+        "B_nbi_only": {
+          "label": "NBI-only (8.7 ms)",
+          "mode": "Primary (80-110 kHz)",
+          "t_range_ms": [
+            291.3,
+            300.0
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": -0.9490686505369825,
+          "macro_drift_stderr": 0.015826849810679566,
+          "macro_f_mean": 87.00936433972127,
+          "macro_f_std": 4.40793652978547,
+          "k_events": 2,
+          "k_poisson_ci": [
+            0.0,
+            5.0
+          ],
+          "rep_rate_per_ms": 0.22988505747126467,
+          "rep_rate_ci": [
+            0.0,
+            0.5747126436781617
+          ],
+          "n_down_chirps": 2,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 1.0,
+          "frac_down_ci": [
+            0.34238022750665303,
+            1.0
+          ],
+          "chirp_slope_stats": {
+            "mean": -19.752300321938673,
+            "mean_ci": [
+              -21.17247385303699,
+              -18.332126790840356
+            ],
+            "median": -19.752300321938673,
+            "median_ci": [
+              -21.17247385303699,
+              -18.332126790840356
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.5184999999861273,
+            "mean_ci": [
+              0.40099999998927105,
+              0.6359999999829835
+            ],
+            "median": 0.5184999999861273,
+            "median_ci": [
+              0.40099999998927105,
+              0.6359999999829835
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": -9.523342386419907,
+            "mean_ci": [
+              -11.17743315488509,
+              -7.869251617954724
+            ],
+            "median": -9.523342386419907,
+            "median_ci": [
+              -11.17743315488509,
+              -7.869251617954724
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 1.0745188774004597,
+            "mean_ci": [
+              0.9846074583004516,
+              1.1644302965004678
+            ],
+            "median": 1.0745188774004597,
+            "median_ci": [
+              0.9846074583004516,
+              1.1644302965004678
+            ]
+          }
+        }
+      },
+      "Secondary (30-65 kHz)": {
+        "A_equal": {
+          "label": "ECH+NBI (Equal-Length: 8.7 ms)",
+          "mode": "Secondary (30-65 kHz)",
+          "t_range_ms": [
+            282.5,
+            291.2
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": 0.062246577317821586,
+          "macro_drift_stderr": 0.014349052651817277,
+          "macro_f_mean": 47.517995345949245,
+          "macro_f_std": 3.3651597277770793,
+          "k_events": 0,
+          "k_poisson_ci": [
+            0.0,
+            0.0
+          ],
+          "rep_rate_per_ms": 0.0,
+          "rep_rate_ci": [
+            0.0,
+            0.0
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.0
+          ],
+          "chirp_slope_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "A_full": {
+          "label": "ECH+NBI (Full: 32.1 ms)",
+          "mode": "Secondary (30-65 kHz)",
+          "t_range_ms": [
+            259.1,
+            291.2
+          ],
+          "duration_ms": 32.099999999999966,
+          "macro_drift_khz_per_ms": 0.27634120706231946,
+          "macro_drift_stderr": 0.002346362082378318,
+          "macro_f_mean": 44.366554189933844,
+          "macro_f_std": 4.661860096738609,
+          "k_events": 0,
+          "k_poisson_ci": [
+            0.0,
+            0.0
+          ],
+          "rep_rate_per_ms": 0.0,
+          "rep_rate_ci": [
+            0.0,
+            0.0
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 0,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.0
+          ],
+          "chirp_slope_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.0,
+            "mean_ci": [
+              0.0,
+              0.0
+            ],
+            "median": 0.0,
+            "median_ci": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "B_nbi_only": {
+          "label": "NBI-only (8.7 ms)",
+          "mode": "Secondary (30-65 kHz)",
+          "t_range_ms": [
+            291.3,
+            300.0
+          ],
+          "duration_ms": 8.699999999999989,
+          "macro_drift_khz_per_ms": -0.9819945601341571,
+          "macro_drift_stderr": 0.014327542924347004,
+          "macro_f_mean": 37.33945039081486,
+          "macro_f_std": 4.165309981832344,
+          "k_events": 1,
+          "k_poisson_ci": [
+            0.0,
+            3.0
+          ],
+          "rep_rate_per_ms": 0.11494252873563233,
+          "rep_rate_ci": [
+            0.0,
+            0.344827586206897
+          ],
+          "n_down_chirps": 0,
+          "n_up_chirps": 1,
+          "frac_down_chirp": 0.0,
+          "frac_down_ci": [
+            0.0,
+            0.7934506856227626
+          ],
+          "chirp_slope_stats": {
+            "mean": 12.07674575899554,
+            "mean_ci": [
+              12.07674575899554,
+              12.07674575899554
+            ],
+            "median": 12.07674575899554,
+            "median_ci": [
+              12.07674575899554,
+              12.07674575899554
+            ]
+          },
+          "chirp_dur_stats": {
+            "mean": 0.1999999999946489,
+            "mean_ci": [
+              0.1999999999946489,
+              0.1999999999946489
+            ],
+            "median": 0.1999999999946489,
+            "median_ci": [
+              0.1999999999946489,
+              0.1999999999946489
+            ]
+          },
+          "chirp_span_stats": {
+            "mean": 0.9889730539300144,
+            "mean_ci": [
+              0.9889730539300144,
+              0.9889730539300144
+            ],
+            "median": 0.9889730539300144,
+            "median_ci": [
+              0.9889730539300144,
+              0.9889730539300144
+            ]
+          },
+          "chirp_amp_stats": {
+            "mean": 0.40288166441113016,
+            "mean_ci": [
+              0.40288166441113016,
+              0.40288166441113016
+            ],
+            "median": 0.40288166441113016,
+            "median_ci": [
+              0.40288166441113016,
+              0.40288166441113016
+            ]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,192 @@
+rank,channel_id,family,category_id,category_name,similitude_pct,s_wf,s_asym,s_coh,s_comb,mode_type,r_max,tau_star_ms,s_deriv,coherence,comb_snr,fs_khz,is_saturated,source_file
+1,MP1,MP,I,Cat. 1: Carrier-Modulated Magnetic,100.000,100.000,100.000,100.000,100.000,RidgeTrack,1.000,0.000,0.918,1.000,10.274,1000.000,False,tmp@88653.edf
+2,MP4,MP,I,Cat. 1: Carrier-Modulated Magnetic,99.665,99.276,100.000,99.935,100.000,RidgeTrack,0.993,0.000,0.959,0.999,16.161,1000.000,False,tmp@88653.edf
+3,MP3,MP,I,Cat. 1: Carrier-Modulated Magnetic,99.597,99.133,100.000,99.915,100.000,RidgeTrack,0.991,0.000,0.947,0.999,12.622,1000.000,False,tmp@88653.edf
+4,PMP3,PMP,I,Cat. 1: Carrier-Modulated Magnetic,98.648,97.476,99.359,99.631,100.000,RidgeTrack,0.975,0.000,0.912,0.996,14.538,1000.000,False,pmp@88653.edf
+5,PMP4,PMP,I,Cat. 1: Carrier-Modulated Magnetic,98.299,96.567,100.000,98.959,100.000,RidgeTrack,0.966,0.000,0.929,0.990,16.405,1000.000,False,pmp@88653.edf
+6,PMP2,PMP,I,Cat. 1: Carrier-Modulated Magnetic,98.143,96.922,98.412,99.499,100.000,RidgeTrack,0.969,0.000,0.903,0.995,14.098,1000.000,False,pmp@88653.edf
+7,PMP11,PMP,I,Cat. 1: Carrier-Modulated Magnetic,97.867,96.183,98.819,99.201,100.000,RidgeTrack,0.962,0.000,0.907,0.992,11.895,1000.000,False,pmp@88653.edf
+8,PMP12,PMP,I,Cat. 1: Carrier-Modulated Magnetic,97.454,96.539,96.144,99.836,100.000,RidgeTrack,0.965,-0.064,0.883,0.998,12.005,1000.000,False,pmp@88653.edf
+9,PMP10,PMP,I,Cat. 1: Carrier-Modulated Magnetic,96.856,96.712,93.735,99.346,100.000,RidgeTrack,0.967,0.000,0.860,0.993,20.203,1000.000,False,pmp@88653.edf
+10,PMP6,PMP,I,Cat. 1: Carrier-Modulated Magnetic,95.528,95.765,89.912,99.705,100.000,RidgeTrack,0.958,0.000,0.825,0.997,28.913,1000.000,False,pmp@88653.edf
+11,PMP1,PMP,I,Cat. 1: Carrier-Modulated Magnetic,94.710,95.970,86.659,99.060,100.000,RidgeTrack,0.960,0.000,0.795,0.991,13.471,1000.000,False,pmp@88653.edf
+12,PMP9,PMP,I,Cat. 1: Carrier-Modulated Magnetic,94.581,95.906,86.250,99.072,100.000,RidgeTrack,0.959,0.000,0.792,0.991,19.510,1000.000,False,pmp@88653.edf
+13,PMP5,PMP,I,Cat. 1: Carrier-Modulated Magnetic,94.361,96.206,85.027,98.744,100.000,RidgeTrack,0.962,0.000,0.780,0.987,16.551,1000.000,False,pmp@88653.edf
+14,PMP7,PMP,I,Cat. 1: Carrier-Modulated Magnetic,94.233,95.152,85.904,99.593,100.000,RidgeTrack,0.952,-0.064,0.789,0.996,33.794,1000.000,False,pmp@88653.edf
+15,PMP13,PMP,I,Cat. 1: Carrier-Modulated Magnetic,90.749,94.465,74.550,97.346,100.000,RidgeTrack,0.945,-0.064,0.684,0.973,25.840,1000.000,False,pmp@88653.edf
+16,Wp,Wp,IV,Cat. 4: Radiative & Bulk Density Response,64.011,38.961,78.613,78.832,100.000,Baseband,-0.390,1.088,-0.722,0.788,1326.437,100.000,False,Wp@88653.edf
+17,DivPro_38,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,60.513,37.271,78.700,60.443,100.000,Baseband,-0.373,0.192,-0.722,0.604,21.076,1000.000,False,DivProArr@88653.edf
+18,GASPUFF#2,GASPUFF,V,Cat. 5: Plasma Current & Heating Actuators,60.248,28.908,100.000,48.768,99.496,Baseband,-0.289,0.576,-2.853,0.488,10.154,5.000,False,GASPUFF#2@88653.edf
+19,DivPro_16,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,58.504,50.695,40.114,71.081,100.000,CarrierEnv,0.507,-0.896,0.368,0.711,13.998,1000.000,False,DivProArr@88653.edf
+20,ECE12FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,56.286,49.234,22.167,90.596,100.000,CarrierEnv,0.492,0.448,0.203,0.906,14.131,1000.000,False,ECE12FAST@88653.edf
+21,ECE16FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,55.982,48.894,20.536,92.303,100.000,CarrierEnv,0.489,0.448,0.189,0.923,34.046,1000.000,False,ECE16FAST@88653.edf
+22,DivPro_32,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,55.728,42.715,28.521,95.843,100.000,CarrierEnv,-0.427,1.280,-0.262,0.958,12.864,1000.000,False,DivProArr@88653.edf
+23,ECHRG500,ECHRG500,V,Cat. 5: Plasma Current & Heating Actuators,55.229,22.831,100.000,65.351,67.685,Baseband,-0.228,-0.256,-2.410,0.654,4.839,5.000,False,ECHRG500@88653.edf
+24,DivPro_09,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,55.056,54.178,12.603,83.498,100.000,Baseband,0.542,-0.704,-0.116,0.835,17.109,1000.000,False,DivProArr@88653.edf
+25,DivPro_28,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,54.727,50.290,22.492,76.490,100.000,Baseband,0.503,-0.704,-0.206,0.765,15.884,1000.000,False,DivProArr@88653.edf
+26,HAFAST3.5,HAFAST,III,Cat. 3: Divertor & Edge Boundary Sawtooth,54.465,55.278,14.065,73.821,100.000,RidgeTrack,0.553,-1.024,-0.129,0.738,349.693,1000.000,False,HAFAST3.5@88653.edf
+27,sx2d_chord_21,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,53.489,17.789,96.632,42.169,100.000,Baseband,0.178,-1.216,-0.887,0.422,67.566,100.000,False,sx2d@88653.edf
+28,ECE8FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,53.281,51.030,6.160,91.849,100.000,RidgeTrack,0.510,1.344,-0.057,0.918,14.590,1000.000,False,ECE8FAST@88653.edf
+29,NBIS4I,NBI,V,Cat. 5: Plasma Current & Heating Actuators,53.034,30.094,50.209,79.598,100.000,Baseband,-0.301,-1.472,-0.461,0.796,37.466,5.000,False,NBIS4I@88653.edf
+30,DivPro_02,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,52.828,43.518,36.712,60.448,100.000,CarrierEnv,-0.435,-1.280,0.337,0.604,15.728,1000.000,False,DivProArr@88653.edf
+31,ECE13FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,52.798,49.297,5.545,94.854,100.000,CarrierEnv,0.493,0.384,0.051,0.949,17.258,1000.000,False,ECE13FAST@88653.edf
+32,DivPro_14,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,52.407,54.527,10.077,69.001,100.000,RidgeTrack,-0.545,-0.576,0.092,0.690,22.480,1000.000,False,DivProArr@88653.edf
+33,DivPro_05,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,52.391,53.153,6.011,79.794,100.000,CarrierEnv,-0.532,-0.192,-0.055,0.798,14.559,1000.000,False,DivProArr@88653.edf
+34,DivPro_25,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,51.985,41.160,31.487,70.611,100.000,RidgeTrack,-0.412,-0.640,-0.289,0.706,36.081,1000.000,False,DivProArr@88653.edf
+35,DivPro_10,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,51.647,45.853,17.516,77.563,100.000,Baseband,-0.459,1.152,-0.161,0.776,18.827,1000.000,False,DivProArr@88653.edf
+36,DivPro_29,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,51.338,45.119,21.041,71.826,100.000,CarrierEnv,0.451,-0.448,0.193,0.718,27.689,1000.000,False,DivProArr@88653.edf
+37,DivPro_34,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,50.963,52.740,5.613,72.178,100.000,CarrierEnv,-0.527,-0.192,-0.052,0.722,48.823,1000.000,False,DivProArr@88653.edf
+38,PMP8,PMP,I,Cat. 1: Carrier-Modulated Magnetic,50.423,48.533,10.064,73.778,100.000,Baseband,-0.485,-0.384,0.092,0.738,130.037,1000.000,False,pmp@88653.edf
+39,ECE5FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,50.168,35.613,38.677,63.150,100.000,RidgeTrack,0.356,-0.768,0.355,0.632,35.343,1000.000,False,ECE5FAST@88653.edf
+40,DivPro_07,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,50.117,44.846,21.090,64.425,100.000,CarrierEnv,0.448,-0.960,0.194,0.644,12.660,1000.000,False,DivProArr@88653.edf
+41,DivPro_12,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,49.511,45.019,13.676,91.926,80.296,CarrierEnv,0.450,1.472,-0.126,0.919,6.492,1000.000,False,DivProArr@88653.edf
+42,nave,nave,IV,Cat. 4: Radiative & Bulk Density Response,49.370,32.832,56.696,36.147,100.000,RidgeTrack,-0.328,1.408,-0.520,0.361,30.290,1000.000,False,nave@88653.edf
+43,sx2d_chord_11,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,49.259,27.716,51.828,58.863,100.000,Baseband,-0.277,-1.216,0.476,0.589,23.323,100.000,False,sx2d@88653.edf
+44,HAARRAY31,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,48.939,33.688,27.138,79.964,100.000,Baseband,-0.337,-1.280,-0.249,0.800,21.887,100.000,False,haarr@88653.edf
+45,GASPUFF#9.5,GASPUFF,V,Cat. 5: Plasma Current & Heating Actuators,48.546,14.225,61.634,78.241,100.000,Baseband,0.142,0.064,0.566,0.782,285.960,5.000,False,GASPUFF#9.5@88653.edf
+46,DivPro_20,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,48.485,50.204,15.272,75.574,71.594,CarrierEnv,-0.502,-0.256,-0.140,0.756,5.301,1000.000,False,DivProArr@88653.edf
+47,sx2d_chord_35,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,48.198,27.362,46.891,61.081,100.000,Baseband,0.274,-0.704,0.430,0.611,10.974,100.000,False,sx2d@88653.edf
+48,DivPro_36,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,48.135,42.951,1.611,91.381,97.980,CarrierEnv,-0.430,0.064,0.015,0.914,9.802,1000.000,False,DivProArr@88653.edf
+49,DivPro_26,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,47.888,43.121,27.602,43.888,100.000,CarrierEnv,-0.431,-0.192,0.253,0.439,14.135,1000.000,False,DivProArr@88653.edf
+50,ECE7FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,47.847,36.707,25.013,67.170,100.000,RidgeTrack,0.367,-0.768,0.230,0.672,18.878,1000.000,False,ECE7FAST@88653.edf
+51,DivPro_24,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,47.824,40.898,23.123,68.499,89.096,Baseband,0.409,0.896,0.212,0.685,7.969,1000.000,False,DivProArr@88653.edf
+52,DivPro_33,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,47.610,46.515,17.479,58.766,89.960,Baseband,0.465,-1.472,-0.160,0.588,8.131,1000.000,False,DivProArr@88653.edf
+53,HAARRAY20,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,47.429,25.613,36.954,77.762,100.000,Baseband,0.256,-1.152,0.339,0.778,200.137,100.000,False,haarr@88653.edf
+54,sx2d_chord_18,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,47.248,23.899,58.183,46.318,100.000,Baseband,-0.239,-1.152,0.534,0.463,52.694,100.000,False,sx2d@88653.edf
+55,DivPro_37,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,46.759,41.521,5.731,77.610,100.000,CarrierEnv,-0.415,-1.472,0.053,0.776,20.285,1000.000,False,DivProArr@88653.edf
+56,DivPro_21,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,46.576,42.893,20.887,65.008,82.010,RidgeTrack,-0.429,0.768,0.192,0.650,6.757,1000.000,False,DivProArr@88653.edf
+57,NBIS10I,NBI,V,Cat. 5: Plasma Current & Heating Actuators,46.443,43.353,11.470,60.443,100.000,Baseband,-0.434,0.064,0.105,0.604,25.263,5.000,False,NBIS10I@88653.edf
+58,AXUV3,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,46.412,31.071,37.115,65.125,89.214,Baseband,0.311,0.960,-0.341,0.651,7.991,5.000,False,axuv@88653.edf
+59,HAARRAY26,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,46.079,27.229,25.950,82.255,100.000,Baseband,0.272,0.448,0.238,0.823,154.597,100.000,False,haarr@88653.edf
+60,DivPro_06,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,45.797,40.096,23.296,46.200,100.000,Baseband,0.401,-1.472,0.214,0.462,16.516,1000.000,False,DivProArr@88653.edf
+61,HAARRAY15,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,45.609,30.942,30.327,60.692,100.000,Baseband,0.309,-1.152,0.278,0.607,67.272,100.000,False,haarr@88653.edf
+62,DivPro_23,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,45.527,39.822,5.446,74.975,100.000,CarrierEnv,-0.398,-1.472,0.050,0.750,13.706,1000.000,False,DivProArr@88653.edf
+63,DivPro_30,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,45.289,36.435,24.463,60.664,91.189,RidgeTrack,-0.364,-1.024,-0.225,0.607,8.367,1000.000,False,DivProArr@88653.edf
+64,sx2d_chord_36,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,45.173,23.785,55.270,37.680,100.000,Baseband,-0.238,-0.192,-0.507,0.377,37.177,100.000,False,sx2d@88653.edf
+65,HAARRAY01,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,44.942,30.827,16.071,80.348,100.000,Baseband,0.308,-1.152,0.148,0.803,55.238,100.000,False,haarr@88653.edf
+66,HAARRAY23,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,44.823,24.024,23.638,87.355,100.000,Baseband,0.240,0.384,0.217,0.874,160.323,100.000,False,haarr@88653.edf
+67,DivPro_22,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,44.712,47.492,2.223,51.900,100.000,Baseband,0.475,-1.280,0.020,0.519,15.152,1000.000,False,DivProArr@88653.edf
+68,AXUV11,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,44.639,29.225,16.533,82.363,100.000,Baseband,0.292,-1.472,-0.152,0.824,111.009,5.000,False,axuv@88653.edf
+69,HAARRAY21,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,44.633,28.820,38.923,46.220,100.000,Baseband,0.288,-1.152,0.357,0.462,334.352,100.000,False,haarr@88653.edf
+70,FW2.45GHzlong,FW2.45GHz,V,Cat. 5: Plasma Current & Heating Actuators,44.574,27.784,27.698,67.645,100.000,Baseband,-0.278,-1.088,-0.254,0.676,187.214,100.000,False,FW2.45GHzlong@88653.edf
+71,AXUV16,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,44.536,33.962,7.272,82.903,100.000,Baseband,-0.340,0.128,-0.067,0.829,34.813,5.000,False,axuv@88653.edf
+72,DivPro_08,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,44.493,38.946,14.122,56.246,100.000,Baseband,0.389,1.024,-0.130,0.562,17.401,1000.000,False,DivProArr@88653.edf
+73,HAARRAY32,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,44.443,24.326,46.317,46.117,100.000,Baseband,-0.243,0.960,0.425,0.461,148.377,100.000,False,haarr@88653.edf
+74,sx2d_chord_23,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,44.379,24.114,39.801,57.184,100.000,Baseband,0.241,1.024,0.365,0.572,21.044,100.000,False,sx2d@88653.edf
+75,AXUV5,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,44.130,23.663,30.760,71.944,100.000,Baseband,-0.237,-1.088,-0.282,0.719,48.725,5.000,False,axuv@88653.edf
+76,HAARRAY14,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.974,28.625,24.874,65.826,100.000,Baseband,-0.286,-0.704,0.228,0.658,48.155,100.000,False,haarr@88653.edf
+77,HAARRAY11,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.816,33.931,13.487,67.832,100.000,Baseband,-0.339,-0.640,0.124,0.678,117.762,100.000,False,haarr@88653.edf
+78,DivPro_31,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.603,35.846,22.976,69.466,75.390,RidgeTrack,0.358,-0.256,0.211,0.695,5.791,1000.000,False,DivProArr@88653.edf
+79,DivPro_35,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.568,36.395,6.879,69.807,100.000,CarrierEnv,-0.364,-0.256,0.063,0.698,16.336,1000.000,False,DivProArr@88653.edf
+80,DivPro_03,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.306,38.909,15.995,89.384,55.941,Baseband,0.389,-0.896,0.147,0.894,3.681,1000.000,False,DivProArr@88653.edf
+81,HAARRAY06,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.264,37.308,15.640,50.431,100.000,Baseband,0.373,-1.216,-0.144,0.504,74.336,100.000,False,haarr@88653.edf
+82,AXUV1,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,43.258,28.272,10.900,85.401,100.000,Baseband,-0.283,0.192,-0.100,0.854,55.164,5.000,False,axuv@88653.edf
+83,HAARRAY28,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.209,24.148,28.518,68.087,100.000,Baseband,0.241,0.384,0.262,0.681,156.089,100.000,False,haarr@88653.edf
+84,ECE2FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,43.196,28.163,33.919,46.953,100.000,Baseband,0.282,-1.088,0.311,0.470,369.727,1000.000,False,ECE2FAST@88653.edf
+85,ECE3FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,43.080,33.066,19.856,54.906,100.000,RidgeTrack,-0.331,0.128,0.182,0.549,12.983,1000.000,False,ECE3FAST@88653.edf
+86,HAARRAY16,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,43.062,35.906,6.047,69.284,100.000,Baseband,-0.359,-0.768,0.056,0.693,35.454,100.000,False,haarr@88653.edf
+87,DivPro_04,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,42.977,46.894,0.251,45.411,100.000,CarrierEnv,-0.469,-1.472,0.002,0.454,13.710,1000.000,False,DivProArr@88653.edf
+88,DivPro_11,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,42.426,36.179,3.362,68.698,100.000,RidgeTrack,-0.362,-1.408,-0.031,0.687,16.260,1000.000,False,DivProArr@88653.edf
+89,AXUV8,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,42.355,34.676,8.969,63.390,100.000,Baseband,-0.347,-1.088,-0.082,0.634,15.640,5.000,False,axuv@88653.edf
+90,HAARRAY27,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,42.086,23.520,23.682,70.546,100.000,Baseband,0.235,0.384,0.217,0.705,142.481,100.000,False,haarr@88653.edf
+91,sx2d_chord_20,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,41.908,31.849,8.024,76.458,94.007,Baseband,-0.318,0.192,0.074,0.765,8.935,100.000,False,sx2d@88653.edf
+92,DivPro_01,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,41.840,35.190,0.605,72.354,100.000,CarrierEnv,-0.352,-1.472,-0.006,0.724,18.573,1000.000,False,DivProArr@88653.edf
+93,ECE1FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,41.719,27.999,13.957,70.869,100.000,Baseband,0.280,-1.152,0.128,0.709,455.167,1000.000,False,ECE1FAST@88653.edf
+94,ECE14FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,41.359,30.901,8.732,78.912,89.555,CarrierEnv,0.309,1.472,0.080,0.789,8.055,1000.000,False,ECE14FAST@88653.edf
+95,DivPro_18,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,41.150,32.260,5.225,68.846,100.000,RidgeTrack,-0.323,1.280,0.048,0.688,16.554,1000.000,False,DivProArr@88653.edf
+96,HAARRAY17,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,41.015,28.321,20.042,55.071,100.000,Baseband,0.283,-1.152,0.184,0.551,138.067,100.000,False,haarr@88653.edf
+97,DivPro_27,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,40.782,38.106,0.408,59.321,97.563,Baseband,0.381,-0.128,0.004,0.593,9.707,1000.000,False,DivProArr@88653.edf
+98,ECE9FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,40.749,28.591,19.806,55.944,96.935,RidgeTrack,0.286,-1.024,0.182,0.559,9.566,1000.000,False,ECE9FAST@88653.edf
+99,PMP14,PMP,I,Cat. 1: Carrier-Modulated Magnetic,40.741,29.835,10.821,64.064,100.000,RidgeTrack,0.298,-1.216,-0.099,0.641,43.711,1000.000,False,pmp@88653.edf
+100,HAARRAY08,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,40.728,25.726,20.113,60.821,100.000,Baseband,0.257,-1.152,0.185,0.608,80.045,100.000,False,haarr@88653.edf
+101,sx2d_chord_25,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,40.706,27.536,13.586,66.125,100.000,Baseband,-0.275,0.256,0.125,0.661,12.645,100.000,False,sx2d@88653.edf
+102,HAARRAY30,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,40.381,23.733,18.369,67.395,100.000,Baseband,-0.237,1.472,0.169,0.674,50.488,100.000,False,haarr@88653.edf
+103,GPI14.5,GPI14.5,V,Cat. 5: Plasma Current & Heating Actuators,40.333,25.762,28.809,43.585,100.000,Baseband,0.258,0.192,-0.264,0.436,69.390,25.000,False,GPI14.5@88653.edf
+104,HAFAST11.5,HAFAST,III,Cat. 3: Divertor & Edge Boundary Sawtooth,40.009,26.255,24.242,47.562,100.000,Baseband,0.263,-1.088,0.223,0.476,315.784,1000.000,False,HAFAST11.5@88653.edf
+105,HAARRAY10,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.991,34.794,0.688,61.080,100.000,Baseband,0.348,-1.216,-0.006,0.611,79.366,100.000,False,haarr@88653.edf
+106,HAFAST15.5,HAFAST,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.975,36.042,0.468,57.594,100.000,Baseband,-0.360,-1.280,-0.004,0.576,18.996,1000.000,False,HAFAST15.5@88653.edf
+107,HAARRAY22,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.816,26.583,24.931,44.141,100.000,Baseband,0.266,-1.152,0.229,0.441,146.780,100.000,False,haarr@88653.edf
+108,NBIS9I,NBI,V,Cat. 5: Plasma Current & Heating Actuators,39.781,26.042,30.046,64.970,72.032,Baseband,0.260,0.512,0.276,0.650,5.355,5.000,False,NBIS9I@88653.edf
+109,HAARRAY19,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.750,26.007,23.283,48.177,100.000,Baseband,0.260,-1.152,0.214,0.482,308.123,100.000,False,haarr@88653.edf
+110,DivPro_19,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.736,38.361,0.811,51.328,97.144,CarrierEnv,0.384,0.064,-0.007,0.513,9.612,1000.000,False,DivProArr@88653.edf
+111,HAARRAY05,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.735,33.003,5.495,56.731,100.000,Baseband,0.330,-1.216,0.050,0.567,86.086,100.000,False,haarr@88653.edf
+112,HAARRAY09,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.547,32.117,5.297,58.464,100.000,Baseband,0.321,-1.216,-0.049,0.585,42.927,100.000,False,haarr@88653.edf
+113,AXUV4,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,39.454,24.478,14.394,65.599,100.000,Baseband,0.245,0.896,-0.132,0.656,17.846,5.000,False,axuv@88653.edf
+114,GASPUFF#15.5,GASPUFF,V,Cat. 5: Plasma Current & Heating Actuators,39.438,22.127,8.087,83.063,100.000,Baseband,-0.221,-0.064,-0.074,0.831,46.513,5.000,False,GASPUFF#15.5@88653.edf
+115,DivPro_13,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,39.432,35.376,0.744,55.517,100.000,RidgeTrack,-0.354,1.152,-0.007,0.555,11.738,1000.000,False,DivProArr@88653.edf
+116,AXUV13,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,39.346,19.868,11.341,83.802,100.000,Baseband,-0.199,0.192,0.104,0.838,52.598,5.000,False,axuv@88653.edf
+117,GASPUFF#1,GASPUFF,V,Cat. 5: Plasma Current & Heating Actuators,39.196,28.760,2.921,70.161,100.000,Baseband,-0.288,-1.152,-0.027,0.702,42.085,5.000,False,GASPUFF#1@88653.edf
+118,ECE10FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,39.115,29.065,2.434,76.571,92.944,Baseband,0.291,0.768,0.022,0.766,8.717,1000.000,False,ECE10FAST@88653.edf
+119,HAARRAY18,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,38.895,24.797,25.751,41.991,100.000,Baseband,0.248,-1.152,0.236,0.420,277.715,100.000,False,haarr@88653.edf
+120,HAARRAY02,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,38.869,33.355,6.212,48.706,100.000,Baseband,0.334,-1.152,-0.057,0.487,51.823,100.000,False,haarr@88653.edf
+121,HAARRAY24,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,38.784,22.229,13.756,68.949,100.000,Baseband,0.222,-1.088,0.126,0.689,244.968,100.000,False,haarr@88653.edf
+122,HAARRAY25,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,38.730,25.049,23.442,43.981,100.000,Baseband,0.250,-1.088,0.215,0.440,154.892,100.000,False,haarr@88653.edf
+123,sx2d_chord_12,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,38.714,27.980,8.701,59.653,100.000,Baseband,0.280,1.024,0.080,0.597,18.231,100.000,False,sx2d@88653.edf
+124,sx2d_chord_41,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,38.711,27.128,4.142,79.304,90.484,Baseband,-0.271,1.472,-0.038,0.793,8.231,100.000,False,sx2d@88653.edf
+125,AXUV14,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,38.691,21.924,4.720,84.300,100.000,Baseband,-0.219,0.192,-0.043,0.843,233.419,5.000,False,axuv@88653.edf
+126,sx2d_chord_24,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,38.310,28.133,27.028,48.406,77.546,Baseband,-0.281,-1.472,-0.248,0.484,6.089,100.000,False,sx2d@88653.edf
+127,sx2d_chord_10,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,38.086,25.286,5.080,69.583,100.000,Baseband,-0.253,0.256,0.047,0.696,11.488,100.000,False,sx2d@88653.edf
+128,HAFAST7.5,HAFAST,III,Cat. 3: Divertor & Edge Boundary Sawtooth,37.742,30.341,10.005,47.548,96.369,RidgeTrack,-0.303,-0.512,-0.092,0.475,9.441,1000.000,False,HAFAST7.5@88653.edf
+129,sx2d_chord_17,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,37.698,23.535,0.352,80.130,100.000,Baseband,-0.235,-1.472,0.003,0.801,10.559,100.000,False,sx2d@88653.edf
+130,AXUV10,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,37.652,28.489,4.878,57.417,100.000,Baseband,-0.285,-1.088,0.045,0.574,21.050,5.000,False,axuv@88653.edf
+131,Ip15,Ip,V,Cat. 5: Plasma Current & Heating Actuators,37.609,26.332,4.142,64.825,100.000,Baseband,-0.263,1.152,0.038,0.648,50.314,100.000,False,Ip15@88653.edf
+132,ECE4FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,37.578,31.909,0.650,53.709,100.000,CarrierEnv,0.319,-1.216,0.006,0.537,26.416,1000.000,False,ECE4FAST@88653.edf
+133,sx2d_chord_08,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,37.470,37.932,1.788,61.752,71.273,Baseband,-0.379,-1.216,0.016,0.618,5.261,100.000,False,sx2d@88653.edf
+134,DivPro_17,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,37.360,36.062,9.353,42.702,82.592,Baseband,0.361,-1.216,0.086,0.427,6.849,1000.000,False,DivProArr@88653.edf
+135,sx2d_chord_22,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,37.341,27.551,7.825,60.472,92.776,Baseband,0.276,0.960,0.072,0.605,8.683,100.000,False,sx2d@88653.edf
+136,sx2d_chord_43,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,36.883,28.664,4.765,61.693,90.261,Baseband,-0.287,1.408,-0.044,0.617,8.189,100.000,False,sx2d@88653.edf
+137,HAARRAY03,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,36.800,29.335,1.648,54.581,100.000,Baseband,0.293,-1.152,0.015,0.546,57.930,100.000,False,haarr@88653.edf
+138,HAARRAY07,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,36.349,28.704,0.265,55.774,100.000,Baseband,0.287,-1.216,-0.002,0.558,79.308,100.000,False,haarr@88653.edf
+139,AXUV9,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,36.194,30.297,8.326,36.528,100.000,Baseband,-0.303,0.128,0.076,0.365,37.759,5.000,False,axuv@88653.edf
+140,sx2d_chord_19,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,36.170,32.080,0.333,82.205,62.133,Baseband,0.321,-0.704,-0.003,0.822,4.252,100.000,False,sx2d@88653.edf
+141,sx2d_chord_44,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,35.935,25.003,9.576,64.178,84.423,Baseband,-0.250,1.408,-0.088,0.642,7.147,100.000,False,sx2d@88653.edf
+142,ECE11FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,35.681,27.816,0.921,52.893,100.000,Baseband,0.278,-1.152,0.008,0.529,360.830,1000.000,False,ECE11FAST@88653.edf
+143,sx2d_chord_33,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,35.578,26.503,0.050,68.207,89.388,Baseband,-0.265,0.256,-0.000,0.682,8.024,100.000,False,sx2d@88653.edf
+144,sx2d_chord_32,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,35.445,25.377,4.399,63.573,89.267,Baseband,-0.254,0.256,0.040,0.636,8.001,100.000,False,sx2d@88653.edf
+145,MP2,MP,I,Cat. 1: Carrier-Modulated Magnetic,35.349,27.085,1.119,52.543,100.000,RidgeTrack,0.271,-1.216,0.010,0.525,27.835,1000.000,False,tmp@88653.edf
+146,HAARRAY04,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,35.287,25.830,1.697,54.930,100.000,Baseband,0.258,-1.216,0.016,0.549,63.807,100.000,False,haarr@88653.edf
+147,sx2d_chord_48,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,35.163,22.178,6.677,56.758,100.000,Baseband,-0.222,1.280,0.061,0.568,18.560,100.000,False,sx2d@88653.edf
+148,HAARRAY12,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,34.940,18.293,11.199,59.387,100.000,Baseband,-0.183,0.960,0.103,0.594,20.528,100.000,False,haarr@88653.edf
+149,DivPro_15,DivProArr,III,Cat. 3: Divertor & Edge Boundary Sawtooth,34.800,44.181,2.032,66.756,29.312,CarrierEnv,0.442,-0.896,-0.019,0.668,1.980,1000.000,False,DivProArr@88653.edf
+150,sx2d_chord_03,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,34.376,28.087,0.254,74.565,69.921,Baseband,-0.281,-1.472,-0.002,0.746,5.098,100.000,False,sx2d@88653.edf
+151,sx2d_chord_02,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,34.367,25.743,1.942,69.476,79.173,Baseband,-0.257,-1.472,0.018,0.695,6.324,100.000,False,sx2d@88653.edf
+152,HAARRAY13,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,34.322,19.874,9.180,53.895,100.000,Baseband,0.199,-1.152,0.084,0.539,66.971,100.000,False,haarr@88653.edf
+153,sx2d_chord_42,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,34.282,24.715,0.932,52.851,100.000,Baseband,-0.247,1.216,-0.009,0.529,74.519,100.000,False,sx2d@88653.edf
+154,sx2d_chord_05,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,34.053,28.706,10.135,56.533,67.475,Baseband,-0.287,-1.472,-0.093,0.565,4.816,100.000,False,sx2d@88653.edf
+155,sx2d_chord_28,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,34.038,26.318,13.243,52.174,73.720,Baseband,-0.263,-1.472,-0.122,0.522,5.570,100.000,False,sx2d@88653.edf
+156,AXUV2,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,34.006,22.872,7.360,45.824,100.000,Baseband,-0.229,0.192,-0.068,0.458,90.868,5.000,False,axuv@88653.edf
+157,sx2d_chord_01,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,33.954,25.398,3.677,64.260,79.780,Baseband,-0.254,0.256,0.034,0.643,6.414,100.000,False,sx2d@88653.edf
+158,sx2d_chord_06,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,33.751,25.512,13.786,53.533,71.962,Baseband,-0.255,-1.472,-0.127,0.535,5.346,100.000,False,sx2d@88653.edf
+159,sx2d_chord_40,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,33.428,23.965,4.783,63.156,79.833,Baseband,-0.240,0.256,-0.044,0.632,6.422,100.000,False,sx2d@88653.edf
+160,sx2d_chord_29,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,33.370,27.152,10.359,53.577,70.168,Baseband,-0.272,-1.472,-0.095,0.536,5.128,100.000,False,sx2d@88653.edf
+161,sx2d_chord_37,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,33.076,27.152,10.805,52.867,68.179,Baseband,-0.272,-1.472,-0.099,0.529,4.895,100.000,False,sx2d@88653.edf
+162,ECE15FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,32.956,34.437,1.384,23.805,90.285,CarrierEnv,0.344,0.448,0.013,0.238,8.193,1000.000,False,ECE15FAST@88653.edf
+163,sx2d_chord_27,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,32.856,26.559,9.508,55.550,67.965,Baseband,-0.266,-1.472,-0.087,0.555,4.871,100.000,False,sx2d@88653.edf
+164,AXUV15,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,32.804,26.158,3.511,34.368,100.000,Baseband,-0.262,0.128,-0.032,0.344,54.526,5.000,False,axuv@88653.edf
+165,ECE6FAST,ECE,II,Cat. 2: Core Thermal & SXR Sawtooth,32.632,28.500,0.979,83.204,47.210,CarrierEnv,0.285,0.384,0.009,0.832,3.004,1000.000,False,ECE6FAST@88653.edf
+166,sx2d_chord_30,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,32.550,26.506,7.757,49.860,74.696,Baseband,-0.265,-1.472,-0.071,0.499,5.698,100.000,False,sx2d@88653.edf
+167,sx2d_chord_04,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,32.374,26.718,6.301,57.809,67.363,Baseband,-0.267,-1.472,-0.058,0.578,4.803,100.000,False,sx2d@88653.edf
+168,sx2d_chord_34,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,32.304,25.549,2.471,68.434,66.163,Baseband,-0.255,0.256,-0.023,0.684,4.671,100.000,False,sx2d@88653.edf
+169,sx2d_chord_15,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,32.280,25.126,11.666,42.043,78.338,Baseband,-0.251,-1.472,-0.107,0.420,6.203,100.000,False,sx2d@88653.edf
+170,AXUV6,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,32.170,16.355,2.431,61.351,100.000,Baseband,-0.164,-1.024,0.022,0.614,53.590,5.000,False,axuv@88653.edf
+171,AXUV12,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,32.087,21.862,7.577,57.520,78.178,Baseband,-0.219,-1.024,0.070,0.575,6.179,5.000,False,axuv@88653.edf
+172,sx2d_chord_46,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,31.776,28.707,1.750,26.850,95.954,Baseband,-0.287,-1.152,-0.016,0.268,9.350,100.000,False,sx2d@88653.edf
+173,sx2d_chord_47,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,31.346,30.882,7.384,19.914,84.108,Baseband,-0.309,-1.216,-0.068,0.199,7.095,100.000,False,sx2d@88653.edf
+174,sx2d_chord_14,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,31.334,24.558,8.879,43.079,77.342,Baseband,-0.246,-1.472,-0.082,0.431,6.060,100.000,False,sx2d@88653.edf
+175,sx2d_chord_13,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,31.314,24.086,4.680,55.937,72.763,Baseband,-0.241,-1.472,-0.043,0.559,5.447,100.000,False,sx2d@88653.edf
+176,sx2d_chord_07,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,31.078,24.457,7.831,52.470,68.296,Baseband,-0.245,-1.472,-0.072,0.525,4.909,100.000,False,sx2d@88653.edf
+177,sx2d_chord_26,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,31.031,25.219,1.248,67.977,61.157,Baseband,-0.252,-1.472,-0.011,0.680,4.157,100.000,False,sx2d@88653.edf
+178,sx2d_chord_38,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,30.996,24.707,1.321,64.948,65.368,Baseband,-0.247,-1.472,-0.012,0.649,4.585,100.000,False,sx2d@88653.edf
+179,sx2d_chord_09,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,30.693,25.551,2.221,63.406,60.860,Baseband,-0.256,0.256,0.020,0.634,4.128,100.000,False,sx2d@88653.edf
+180,sx2d_chord_39,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,30.626,24.253,8.356,47.442,70.046,Baseband,-0.243,-1.472,-0.077,0.474,5.113,100.000,False,sx2d@88653.edf
+181,HAARRAY29,HAARRAY,III,Cat. 3: Divertor & Edge Boundary Sawtooth,30.483,18.664,36.090,35.438,51.640,Baseband,0.187,-0.896,0.331,0.354,3.330,100.000,False,haarr@88653.edf
+182,sx2d_chord_45,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,30.397,18.136,8.368,34.291,100.000,Baseband,-0.181,-1.216,-0.077,0.343,16.481,100.000,False,sx2d@88653.edf
+183,AXUV7,AXUV,IV,Cat. 4: Radiative & Bulk Density Response,30.331,14.320,4.436,51.850,100.000,Baseband,-0.143,1.472,0.041,0.519,66.704,5.000,False,axuv@88653.edf
+184,sx2d_chord_31,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,29.836,24.698,3.425,53.414,65.693,Baseband,-0.247,-1.472,-0.031,0.534,4.620,100.000,False,sx2d@88653.edf
+185,sx2d_chord_16,sx2d,II,Cat. 2: Core Thermal & SXR Sawtooth,28.276,23.746,3.233,50.331,61.549,Baseband,-0.237,-1.472,-0.030,0.503,4.195,100.000,False,sx2d@88653.edf
+186,NBIS3I,NBI,V,Cat. 5: Plasma Current & Heating Actuators,28.051,12.339,1.231,47.941,100.000,Baseband,-0.123,0.128,0.011,0.479,65.011,5.000,False,NBIS3I@88653.edf
+187,Ip135,Ip,VI,Cat. 6: Non-Responsive / Low-fs / Saturated,0.000,0.000,0.000,0.000,0.000,None,0.000,0.000,0.000,0.000,1.000,100.000,True,Ip135@88653.edf
+188,bfield,bfield,VI,Cat. 6: Non-Responsive / Low-fs / Saturated,0.000,0.000,0.000,0.000,0.000,None,0.000,0.000,0.000,0.000,1.000,2.498,True,bfield@88653.edf
+189,VISIBLE3,Emission,VI,Cat. 6: Non-Responsive / Low-fs / Saturated,0.000,0.000,0.000,0.000,0.000,None,0.000,0.000,0.000,0.000,1.000,2.000,False,VISIBLE3@88653.edf
+190,VISIBLE4,Emission,VI,Cat. 6: Non-Responsive / Low-fs / Saturated,0.000,0.000,0.000,0.000,0.000,None,0.000,0.000,0.000,0.000,1.000,2.000,False,VISIBLE4@88653.edf
+191,NIRMON,Emission,VI,Cat. 6: Non-Responsive / Low-fs / Saturated,0.000,0.000,0.000,0.000,0.000,None,0.000,0.000,0.000,0.000,1.000,2.000,False,NIRMON@88653.edf

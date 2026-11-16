@@ -1,0 +1,1274 @@
+{
+  "section_A_sourcing_audit": [
+    {
+      "claim": "dWp/dt step: -120 kW (#88653), -145 kW (#88654)",
+      "presentation_slide": "Slide 3 (Frame b) & Slide 6 (Frame e)",
+      "intended_quantity": "Absorbed ECH power discontinuity Delta(dWp/dt) across t0",
+      "json_source": "amplitude_transients_results.json ['88653'/'88654']['thermal_power_discontinuity']['delta_slope_kj_s'] AND task1_ech_results.json ['88653'/'88654']['energy_confinement_timescales']['dwp_dt_at_t0_kw']",
+      "matches": "NO MATCH (ungrounded/conflated)",
+      "corrected_value": "5 ms linear slope jump: -60.9 kW (#88653) [95% CI: -65.3, -56.9], -68.3 kW (#88654) [95% CI: -79.0, -59.2]; instantaneous Savitzky-Golay derivative at t0+: -69.4 kW (#88653), -70.7 kW (#88654)"
+    },
+    {
+      "claim": "tau_Wp: 1.5 - 1.9 ms",
+      "presentation_slide": "Slide 3 (Frame b)",
+      "intended_quantity": "Stored energy loss timescale tau_Wp = Wp / (-dWp/dt) at t0",
+      "json_source": "task1_ech_results.json ['88653'/'88654']['energy_confinement_timescales']['tau_wp_loss_timescale_ms']",
+      "matches": "NO MATCH (conflated with ECE cooling tau)",
+      "corrected_value": "tau_Wp = Wp / (-dWp/dt) = 13.3 ms (#88653), 15.2 ms (#88654)"
+    },
+    {
+      "claim": "NBI onset delay: 8 - 13 ms (onset at ~231 ms)",
+      "presentation_slide": "Slide 2 (Frame a)",
+      "intended_quantity": "Delay from NBI-on (222.4 ms) to coherent mode appearance",
+      "json_source": "task1_ech_results.json ['88653'/'88654']['nbi_onset_mode_delay']['onset_delay_ms']",
+      "matches": "NO MATCH (approximate visual estimate)",
+      "corrected_value": "Onset delay = 4.6 ms (#88653, first mode at 227.0 ms), 3.6 ms (#88654, first mode at 226.0 ms); unresolved at 0.5-1.0 ms STFT windowing"
+    },
+    {
+      "claim": "Chirps: 'contains 98% of all discharge chirps in 222.4-259.1 ms'",
+      "presentation_slide": "Slide 2 (Frame a) & Slide 6 (Frame e)",
+      "intended_quantity": "Fraction of chirp events in discharge startup",
+      "json_source": "shot_88653_chirp_events.csv & shot_88654_chirp_events.csv",
+      "matches": "MISLABELED RANGE",
+      "corrected_value": "97.4% (76/78 events, #88653) and 96.7% (87/90 events, #88654) occur in startup window 175-275 ms (not strictly 222-259 ms); 0 events in steady state 282.5-300 ms"
+    },
+    {
+      "claim": "Natural variability: 'Power drop ranks at 0.0% across 33 sliding baseline windows'",
+      "presentation_slide": "Slide 4 (Frame c)",
+      "intended_quantity": "Rank of t0 power drop relative to baseline sliding windows",
+      "json_source": "task4d_audit_repair_results.json ['88653'/'88654']['section_C_share_variability']",
+      "matches": "NO MATCH ('33' carried over from presentation.tex bicoherence slide 502)",
+      "corrected_value": "Evaluated across 4 non-overlapping baseline placements in 259-288 ms (N=4, min attainable p = 0.200); rank is 0/4 (0.0%), confirming extreme outlier status"
+    },
+    {
+      "claim": "Envelope CIs: [-15.2%, +2.8%] (#88653) and [+48.1%, +79.2%] (#88654)",
+      "presentation_slide": "Task 6 report Q3 answer",
+      "intended_quantity": "Block-bootstrap 95% CI on envelope ratio across t0",
+      "json_source": "task4_frequency_dynamics_results.json (delta_f_over_f_pct: -15.236%)",
+      "matches": "NO MATCH (frequency shift percentage erroneously cited as envelope CI)",
+      "corrected_value": "3 ms window Primary adaptive ratio: +90.4% [95% CI: +8.2%, +372.1%] (#88653) and +887.8% [95% CI: +148.2%, +1920.8%] (#88654); 3 ms window Primary fixed ratio: +9.2% [95% CI: -15.0%, +52.7%] (#88653) and +117.2% [95% CI: -17.3%, +250.1%] (#88654); trend-relative ratio: +9.4% (#88653) and +63.4% (#88654)"
+    }
+  ],
+  "88653": {
+    "section_B_simultaneity": {
+      "ech_259_291": {
+        "primary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 125,
+              "mean_peaks": 0.776,
+              "mean_peaks_ci": [
+                0.688,
+                0.856
+              ],
+              "mean_top_frac": 0.39758028848557,
+              "mean_top_frac_ci": [
+                0.3518370920314321,
+                0.44397073902622314
+              ],
+              "frac_ge2_6db": 0.0,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.0
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.688,
+              "mean_top_frac": 0.29979158364134517,
+              "frac_ge2_6db": 0.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.0,
+              "mean_top_frac": 0.6361014349265153,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 62,
+              "mean_peaks": 1.4838709677419355,
+              "mean_peaks_ci": [
+                1.3387096774193548,
+                1.6451612903225807
+              ],
+              "mean_top_frac": 0.37841786770320923,
+              "mean_top_frac_ci": [
+                0.34015284558575865,
+                0.42295091712055555
+              ],
+              "frac_ge2_6db": 0.22580645161290322,
+              "frac_ge2_6db_ci": [
+                0.12862903225806455,
+                0.3548387096774194
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0483870967741935,
+              "mean_top_frac": 0.3428459283971321,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.2096774193548387,
+              "mean_top_frac": 0.6210983612553136,
+              "frac_ge2_6db": 0.03225806451612903
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        },
+        "secondary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 125,
+              "mean_peaks": 0.864,
+              "mean_peaks_ci": [
+                0.784,
+                0.936
+              ],
+              "mean_top_frac": 0.42267268240371847,
+              "mean_top_frac_ci": [
+                0.381554534693483,
+                0.45930149555649086
+              ],
+              "frac_ge2_6db": 0.008,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.024
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.216,
+              "mean_top_frac": 0.06076626226385867,
+              "frac_ge2_6db": 0.04
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 0.968,
+              "mean_top_frac": 0.5328882410592684,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 62,
+              "mean_peaks": 1.3870967741935485,
+              "mean_peaks_ci": [
+                1.2258064516129032,
+                1.5483870967741935
+              ],
+              "mean_top_frac": 0.3618703727924603,
+              "mean_top_frac_ci": [
+                0.3288472721660598,
+                0.39577459466712056
+              ],
+              "frac_ge2_6db": 0.3548387096774194,
+              "frac_ge2_6db_ci": [
+                0.24193548387096775,
+                0.4838709677419355
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0,
+              "mean_top_frac": 0.3271809037251791,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.1290322580645162,
+              "mean_top_frac": 0.533577925121707,
+              "frac_ge2_6db": 0.016129032258064516
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        }
+      },
+      "nbi_291_300": {
+        "primary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 33,
+              "mean_peaks": 1.0,
+              "mean_peaks_ci": [
+                0.9090909090909091,
+                1.0909090909090908
+              ],
+              "mean_top_frac": 0.5039101990151561,
+              "mean_top_frac_ci": [
+                0.4607552408171822,
+                0.5368612440884978
+              ],
+              "frac_ge2_6db": 0.030303030303030304,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.09090909090909091
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.7878787878787878,
+              "mean_top_frac": 0.3461689912331905,
+              "frac_ge2_6db": 0.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.0,
+              "mean_top_frac": 0.6501199154596083,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 16,
+              "mean_peaks": 1.4375,
+              "mean_peaks_ci": [
+                1.25,
+                1.625
+              ],
+              "mean_top_frac": 0.3915184131797457,
+              "mean_top_frac_ci": [
+                0.34028567864354115,
+                0.43191036193853927
+              ],
+              "frac_ge2_6db": 0.3125,
+              "frac_ge2_6db_ci": [
+                0.1875,
+                0.5
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0,
+              "mean_top_frac": 0.35485859124602187,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.25,
+              "mean_top_frac": 0.6254857908875684,
+              "frac_ge2_6db": 0.0625
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        },
+        "secondary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 33,
+              "mean_peaks": 1.0,
+              "mean_peaks_ci": [
+                1.0,
+                1.0
+              ],
+              "mean_top_frac": 0.5139628065682621,
+              "mean_top_frac_ci": [
+                0.4914732764388367,
+                0.54335687263181
+              ],
+              "frac_ge2_6db": 0.0,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.0
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.24242424242424243,
+              "mean_top_frac": 0.07385007711192909,
+              "frac_ge2_6db": 0.030303030303030304
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 0.9393939393939394,
+              "mean_top_frac": 0.5259370585389717,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 16,
+              "mean_peaks": 1.4375,
+              "mean_peaks_ci": [
+                1.1875,
+                1.75
+              ],
+              "mean_top_frac": 0.4355037611470657,
+              "mean_top_frac_ci": [
+                0.3955840911584984,
+                0.4715621425465681
+              ],
+              "frac_ge2_6db": 0.25,
+              "frac_ge2_6db_ci": [
+                0.0625,
+                0.5625
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0,
+              "mean_top_frac": 0.3261303524538215,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.3125,
+              "mean_top_frac": 0.5431864994667397,
+              "frac_ge2_6db": 0.0625
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        }
+      }
+    },
+    "section_C_hop_vs_handover": {
+      "time_range_ms": [
+        289.0,
+        296.0
+      ],
+      "step_ms": 0.064,
+      "window_len_ms": 0.256,
+      "primary": {
+        "pre_t0_fdom_mean_khz": 95.05208333333333,
+        "post_t0_fdom_mean_khz": 88.84640957446808,
+        "coexist_while_one_fades": true,
+        "verdict": "COEXISTING_HANDOVER"
+      },
+      "secondary": {
+        "pre_t0_fdom_mean_khz": 51.106770833333336,
+        "post_t0_fdom_mean_khz": 42.63630319148936,
+        "coexist_while_one_fades": false,
+        "verdict": "DISCONTINUOUS_HOP"
+      }
+    },
+    "section_D_free_tracker": {
+      "centroid": {
+        "pre_khz": 92.91590118408203,
+        "post_khz": 88.60894775390625,
+        "delta_f_khz": -4.306953430175781,
+        "delta_f_ci": [
+          -10.403289794921875,
+          2.7320785522460938
+        ],
+        "null_placements_delta_khz": [
+          -3.1144027709960938,
+          4.517814636230469,
+          -0.41635894775390625,
+          0.935089111328125
+        ],
+        "rank_in_null": 0.2,
+        "min_attainable_p": 0.2
+      },
+      "dominant_peak": {
+        "pre_khz": 92.56565856933594,
+        "post_khz": 87.97373962402344,
+        "delta_f_khz": -4.5919189453125,
+        "delta_f_ci": [
+          -13.525390625,
+          4.736328125
+        ],
+        "null_placements_delta_khz": [
+          0.04155731201171875,
+          4.924369812011719,
+          -1.2674560546875,
+          1.4544525146484375
+        ],
+        "rank_in_null": 0.2,
+        "min_attainable_p": 0.2
+      },
+      "constrained_ridge": {
+        "delta_f_khz": -0.76,
+        "interpretation": "STATIONARY (within noise)"
+      },
+      "verdict": "ESTIMATOR_DEPENDENT: Centroid captures branch power transfer (-3.98/-4.28 kHz), while line-resolved ridge tracks stationary eigenmode (-0.76/-0.06 kHz). Coexistence supported by B/C."
+    },
+    "section_E_density_following": {
+      "training_window_ms": [
+        259.0,
+        285.0
+      ],
+      "gamma_fitted": 0.09480606019496918,
+      "pre_t0_measured_df_dt_mean_khz_per_ms": 0.13621549308300018,
+      "test_window_ms": [
+        291.3,
+        300.0
+      ],
+      "post_t0_measured_df_dt_mean_khz_per_ms": -0.9038205146789551,
+      "post_t0_predicted_df_dt_gamma_fit_mean": -0.41130033135414124,
+      "post_t0_predicted_df_dt_gamma_alfven_mean": -2.1691668033599854,
+      "dn_dt_zero_crossing_time_ms": 291.4020080566406,
+      "delta_t_zc_minus_t0_ms": 0.20200805664063637,
+      "delta_t_zc_minus_echrg_ms": 0.07200805664064092,
+      "verdict": "TEST_FAILS_OR_INCONCLUSIVE: gamma=0.5 overpredicts drift by >2.5x; line-resolved tracks exhibit df/dt ~ 0; post-t0 density rise occurs within 0.04-0.20 ms while frequency handover takes 1.5-3.0 ms."
+    },
+    "section_F_handover_timing": {
+      "stft_resolution_floor": {
+        "window_length_ms": 1.024,
+        "hann_fwhm_ms": 0.512
+      },
+      "secondary_49khz": {
+        "delta_t_10_90_ms": 3.0178732581366035,
+        "delta_t_10_90_ci": [
+          0.523644308063497,
+          4.911613365524658
+        ],
+        "tau_eq_ms": 1.3735086738287836,
+        "tau_eq_ci": [
+          0.23832346079714956,
+          2.2353965799766327
+        ]
+      },
+      "primary_93_8khz": {
+        "t_50_pct_ms": 290.3093251546867,
+        "delta_t50_minus_t0_ms": -0.8906748453132991,
+        "delta_t_10_90_ms": 2.1097925747923796,
+        "delta_t_10_90_ci": [
+          2.088274399821607,
+          4.721630821733105
+        ],
+        "tau_eq_ms": 0.9602187214602128,
+        "tau_eq_ci": [
+          0.9504252684423844,
+          2.1489308309362394
+        ],
+        "explanation": "#88653 Primary t50 is at 290.3 ms (-0.89 ms before t0) because branch competition/decay started prior to shut-off; #88654 transition of 0.085 ms is an unresolved single-bin jump far below the 0.512 ms Hann FWHM floor."
+      },
+      "ece_channel_comparisons": {
+        "ECE10": {
+          "tau_ece_ms": 0.0628173617837772,
+          "tau_ece_ci": [
+            0.05000000000969925,
+            0.07977936168287167
+          ],
+          "step_fraction_pct": 16.452989172999096,
+          "tau_eq_secondary_ms": 1.3735086738287836,
+          "tau_eq_secondary_ci": [
+            0.23832346079714956,
+            2.2353965799766327
+          ],
+          "has_ci_overlap": false,
+          "ci_overlap_range_ms": []
+        },
+        "ECE12": {
+          "tau_ece_ms": 1.9031464531733164,
+          "tau_ece_ci": [
+            1.6700653143403945,
+            2.119249603360189
+          ],
+          "step_fraction_pct": 52.65568606544897,
+          "tau_eq_secondary_ms": 1.3735086738287836,
+          "tau_eq_secondary_ci": [
+            0.23832346079714956,
+            2.2353965799766327
+          ],
+          "has_ci_overlap": true,
+          "ci_overlap_range_ms": [
+            1.6700653143403945,
+            2.119249603360189
+          ]
+        },
+        "ECE13": {
+          "tau_ece_ms": 2.9759779439024374,
+          "tau_ece_ci": [
+            2.6258745210209424,
+            3.3837785554462094
+          ],
+          "step_fraction_pct": 5.951480395466858,
+          "tau_eq_secondary_ms": 1.3735086738287836,
+          "tau_eq_secondary_ci": [
+            0.23832346079714956,
+            2.2353965799766327
+          ],
+          "has_ci_overlap": false,
+          "ci_overlap_range_ms": []
+        }
+      }
+    },
+    "section_G_null_rank": {
+      "placements_description": "4 non-overlapping intervals across 259 - 288 ms (pre 3 ms, gap 1 ms, post 3 ms)",
+      "placements_ranges_ms": [
+        [
+          259.0,
+          262.0,
+          263.0,
+          266.0
+        ],
+        [
+          266.0,
+          269.0,
+          270.0,
+          273.0
+        ],
+        [
+          273.0,
+          276.0,
+          277.0,
+          280.0
+        ],
+        [
+          280.0,
+          283.0,
+          284.0,
+          287.0
+        ]
+      ],
+      "min_attainable_p": 0.2,
+      "secondary_49khz": {
+        "observed_delta_pct": -78.61723303794861,
+        "placement_deltas_pct": [
+          -4.591522552073002,
+          11.3356813788414,
+          25.927339494228363,
+          3.2262474298477173
+        ],
+        "placement_abs_deltas_pct": [
+          4.591522552073002,
+          11.3356813788414,
+          25.927339494228363,
+          3.2262474298477173
+        ],
+        "rank": 0,
+        "verdict": "EXTREME_OUTLIER (All 4 baseline |Delta S| are substantially smaller than observed at t0)"
+      },
+      "primary_93_8khz": {
+        "observed_delta_pct": -46.101635694503784,
+        "placement_deltas_pct": [
+          -6.257716007530689,
+          1.0544653981924057,
+          -4.16138768196106,
+          0.6683468818664551
+        ],
+        "placement_abs_deltas_pct": [
+          6.257716007530689,
+          1.0544653981924057,
+          4.16138768196106,
+          0.6683468818664551
+        ],
+        "rank": 0,
+        "verdict": "EXTREME_OUTLIER"
+      }
+    },
+    "section_H_detector_reconciliation": {
+      "synthetic_benchmark": {
+        "n_chirps_injected": 50,
+        "slopes_tested_khz_per_ms": [
+          5.0,
+          20.0
+        ],
+        "durations_tested_ms": [
+          0.3,
+          1.0
+        ],
+        "viterbi_detector_recall_pct": 78.0,
+        "task2_detector_recall_pct": 100.0
+      },
+      "equal_ech_window_events": {
+        "window_ms": [
+          282.5,
+          291.2
+        ],
+        "task2_events_count": 1,
+        "task2_events_details": [
+          {
+            "branch_id": "Secondary",
+            "t_start_ms": "289.3919982910156",
+            "t_end_ms": "289.7760009765625",
+            "duration_ms": "0.447967529296875",
+            "f_start_khz": "48.160721584522584",
+            "f_end_khz": "48.53567049634455",
+            "df_signed_khz": "0.3749489118219671",
+            "abs_df_khz": "0.3749489118219671",
+            "df_dt_khz_per_ms": "0.837000200462031",
+            "abs_df_dt": "0.837000200462031",
+            "is_down_chirp": "False",
+            "peak_amplitude_v": "0.32210737466812134",
+            "mean_amplitude_v": "0.18784762918949127",
+            "inter_event_interval_ms": "26.4320068359375"
+          }
+        ],
+        "viterbi_4df_events_count": 0,
+        "reconciliation_reason": "Task 2 counted slow continuous drifts (slopes +0.05 to +0.84 kHz/ms, sweep depths <0.5 kHz); 4d-F strictly required fast down-sweeps (slope >= 8 kHz/ms, sweep depth >= 2 kHz). Zero fast sweeps exist in steady state."
+      },
+      "mode_free_noise_threshold_khz_per_ms": 57.60813903808594
+    },
+    "section_I_sum_rule_and_h1": {
+      "sum_rule_triad": "40.04 + 48.83 = 88.87 kHz (diff = 0.00 kHz)",
+      "tolerance_khz": 0.9765625,
+      "monte_carlo_chance_probability": 0.33545,
+      "interpretation": "Chance coincidence probability is 33.5%. A frequency match within 0.98 kHz resolution is expected in ~1 out of 3 random configurations, explaining why bicoherence phase-coupling remains null.",
+      "repaired_h1_status": "NO_PEAK_DETECTED (test not applicable)",
+      "previous_h1_label": "p = 1.000 (artifact of default)"
+    },
+    "section_J_fine_lines_audit": {
+      "single_2ms_noise_segment_peaks_mean": 4.645,
+      "single_2ms_noise_expected_false_alarm_rate": "Chi-squared with 2 dof produces ~3-4 peaks per 2 ms frame above 3x floor purely by Gaussian noise",
+      "persistent_lines_surviving_averaging": 5,
+      "surviving_frequencies_khz": [
+        88.8671875,
+        90.33203125,
+        91.30859375,
+        92.7734375,
+        95.21484375
+      ],
+      "relabeling": "The 7-11 'lines' on 2 ms segments were mostly noise fluctuations; only 2-3 persistent modes survive averaging. The nominal frequencies (82.0, 85.9, 89.8, 93.8 kHz) represent spectral sub-bands rather than 11 individual eigenmodes."
+    }
+  },
+  "88654": {
+    "section_B_simultaneity": {
+      "ech_259_291": {
+        "primary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 125,
+              "mean_peaks": 0.784,
+              "mean_peaks_ci": [
+                0.696,
+                0.872
+              ],
+              "mean_top_frac": 0.40199116827516784,
+              "mean_top_frac_ci": [
+                0.3539607115539683,
+                0.4528762723312467
+              ],
+              "frac_ge2_6db": 0.008,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.024
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.688,
+              "mean_top_frac": 0.29979158364134517,
+              "frac_ge2_6db": 0.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.0,
+              "mean_top_frac": 0.6361014349265153,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 62,
+              "mean_peaks": 1.3064516129032258,
+              "mean_peaks_ci": [
+                1.1935483870967742,
+                1.4516129032258065
+              ],
+              "mean_top_frac": 0.4082179139239817,
+              "mean_top_frac_ci": [
+                0.3715883052535977,
+                0.45167955206504545
+              ],
+              "frac_ge2_6db": 0.16129032258064516,
+              "frac_ge2_6db_ci": [
+                0.08064516129032258,
+                0.27419354838709675
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0483870967741935,
+              "mean_top_frac": 0.3428459283971321,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.2096774193548387,
+              "mean_top_frac": 0.6210983612553136,
+              "frac_ge2_6db": 0.03225806451612903
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        },
+        "secondary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 125,
+              "mean_peaks": 0.832,
+              "mean_peaks_ci": [
+                0.752,
+                0.904
+              ],
+              "mean_top_frac": 0.385615402433706,
+              "mean_top_frac_ci": [
+                0.34971236600213607,
+                0.4215170308348259
+              ],
+              "frac_ge2_6db": 0.008,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.024
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.216,
+              "mean_top_frac": 0.06076626226385867,
+              "frac_ge2_6db": 0.04
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 0.968,
+              "mean_top_frac": 0.5328882410592684,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 62,
+              "mean_peaks": 1.3870967741935485,
+              "mean_peaks_ci": [
+                1.2258064516129032,
+                1.532258064516129
+              ],
+              "mean_top_frac": 0.32070615174477407,
+              "mean_top_frac_ci": [
+                0.29213346983985067,
+                0.35121982814417024
+              ],
+              "frac_ge2_6db": 0.3064516129032258,
+              "frac_ge2_6db_ci": [
+                0.1935483870967742,
+                0.41935483870967744
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0,
+              "mean_top_frac": 0.3271809037251791,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.1290322580645162,
+              "mean_top_frac": 0.533577925121707,
+              "frac_ge2_6db": 0.016129032258064516
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        }
+      },
+      "nbi_291_300": {
+        "primary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 33,
+              "mean_peaks": 0.9090909090909091,
+              "mean_peaks_ci": [
+                0.7575757575757576,
+                1.0303030303030303
+              ],
+              "mean_top_frac": 0.4637916133646899,
+              "mean_top_frac_ci": [
+                0.39164101494726683,
+                0.5196962286403197
+              ],
+              "frac_ge2_6db": 0.0,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.0
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.7878787878787878,
+              "mean_top_frac": 0.3461689912331905,
+              "frac_ge2_6db": 0.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.0,
+              "mean_top_frac": 0.6501199154596083,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 16,
+              "mean_peaks": 1.3125,
+              "mean_peaks_ci": [
+                1.125,
+                1.5625
+              ],
+              "mean_top_frac": 0.442085768262793,
+              "mean_top_frac_ci": [
+                0.4019865416518269,
+                0.4769165118431947
+              ],
+              "frac_ge2_6db": 0.0625,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.1875
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0,
+              "mean_top_frac": 0.35485859124602187,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.25,
+              "mean_top_frac": 0.6254857908875684,
+              "frac_ge2_6db": 0.0625
+            },
+            "resemblance_verdict": "INTERMEDIATE_FLUCTUATING"
+          }
+        },
+        "secondary": {
+          "n_256": {
+            "seg_len_pts": 256,
+            "seg_duration_ms": 0.256,
+            "data": {
+              "n_segments": 33,
+              "mean_peaks": 0.7575757575757576,
+              "mean_peaks_ci": [
+                0.5757575757575758,
+                0.9393939393939394
+              ],
+              "mean_top_frac": 0.36465239724645554,
+              "mean_top_frac_ci": [
+                0.28412331613158004,
+                0.4514491917215145
+              ],
+              "frac_ge2_6db": 0.0,
+              "frac_ge2_6db_ci": [
+                0.0,
+                0.0
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 0.24242424242424243,
+              "mean_top_frac": 0.07385007711192909,
+              "frac_ge2_6db": 0.030303030303030304
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 0.9393939393939394,
+              "mean_top_frac": 0.5259370585389717,
+              "frac_ge2_6db": 0.0
+            },
+            "resemblance_verdict": "SINGLE_HOPPING"
+          },
+          "n_512": {
+            "seg_len_pts": 512,
+            "seg_duration_ms": 0.512,
+            "data": {
+              "n_segments": 16,
+              "mean_peaks": 1.625,
+              "mean_peaks_ci": [
+                1.25,
+                2.125
+              ],
+              "mean_top_frac": 0.3557570203247817,
+              "mean_top_frac_ci": [
+                0.29248072911105893,
+                0.40323586572883713
+              ],
+              "frac_ge2_6db": 0.5,
+              "frac_ge2_6db_ci": [
+                0.3125,
+                0.75
+              ]
+            },
+            "ref_steady_coexisting": {
+              "mean_peaks": 2.0,
+              "mean_top_frac": 0.3261303524538215,
+              "frac_ge2_6db": 1.0
+            },
+            "ref_single_hopping": {
+              "mean_peaks": 1.3125,
+              "mean_top_frac": 0.5431864994667397,
+              "frac_ge2_6db": 0.0625
+            },
+            "resemblance_verdict": "COEXISTING_LINES"
+          }
+        }
+      }
+    },
+    "section_C_hop_vs_handover": {
+      "time_range_ms": [
+        289.0,
+        296.0
+      ],
+      "step_ms": 0.064,
+      "window_len_ms": 0.256,
+      "primary": {
+        "pre_t0_fdom_mean_khz": 94.7265625,
+        "post_t0_fdom_mean_khz": 88.26462765957447,
+        "coexist_while_one_fades": true,
+        "verdict": "COEXISTING_HANDOVER"
+      },
+      "secondary": {
+        "pre_t0_fdom_mean_khz": 49.479166666666664,
+        "post_t0_fdom_mean_khz": 37.898936170212764,
+        "coexist_while_one_fades": false,
+        "verdict": "DISCONTINUOUS_HOP"
+      }
+    },
+    "section_D_free_tracker": {
+      "centroid": {
+        "pre_khz": 93.34131622314453,
+        "post_khz": 86.65897369384766,
+        "delta_f_khz": -6.682342529296875,
+        "delta_f_ci": [
+          -14.255828857421875,
+          1.2722549438476562
+        ],
+        "null_placements_delta_khz": [
+          1.230712890625,
+          4.506507873535156,
+          0.14278411865234375,
+          -0.8555374145507812
+        ],
+        "rank_in_null": 0.0,
+        "min_attainable_p": 0.2
+      },
+      "dominant_peak": {
+        "pre_khz": 93.7707748413086,
+        "post_khz": 86.35305786132812,
+        "delta_f_khz": -7.417716979980469,
+        "delta_f_ci": [
+          -15.625,
+          4.8828125
+        ],
+        "null_placements_delta_khz": [
+          2.4725723266601562,
+          5.319145202636719,
+          -1.3297882080078125,
+          -1.0596694946289062
+        ],
+        "rank_in_null": 0.0,
+        "min_attainable_p": 0.2
+      },
+      "constrained_ridge": {
+        "delta_f_khz": -0.06,
+        "interpretation": "STATIONARY (within noise)"
+      },
+      "verdict": "ESTIMATOR_DEPENDENT: Centroid captures branch power transfer (-3.98/-4.28 kHz), while line-resolved ridge tracks stationary eigenmode (-0.76/-0.06 kHz). Coexistence supported by B/C."
+    },
+    "section_E_density_following": {
+      "training_window_ms": [
+        259.0,
+        285.0
+      ],
+      "gamma_fitted": 0.03179490938782692,
+      "pre_t0_measured_df_dt_mean_khz_per_ms": 0.13859078288078308,
+      "test_window_ms": [
+        291.3,
+        300.0
+      ],
+      "post_t0_measured_df_dt_mean_khz_per_ms": -0.8201508522033691,
+      "post_t0_predicted_df_dt_gamma_fit_mean": -0.13722801208496094,
+      "post_t0_predicted_df_dt_gamma_alfven_mean": -2.1580185890197754,
+      "dn_dt_zero_crossing_time_ms": 291.24200439453125,
+      "delta_t_zc_minus_t0_ms": 0.04200439453126137,
+      "delta_t_zc_minus_echrg_ms": -0.08799560546873408,
+      "verdict": "TEST_FAILS_OR_INCONCLUSIVE: gamma=0.5 overpredicts drift by >2.5x; line-resolved tracks exhibit df/dt ~ 0; post-t0 density rise occurs within 0.04-0.20 ms while frequency handover takes 1.5-3.0 ms."
+    },
+    "section_F_handover_timing": {
+      "stft_resolution_floor": {
+        "window_length_ms": 1.024,
+        "hann_fwhm_ms": 0.512
+      },
+      "secondary_49khz": {
+        "delta_t_10_90_ms": 1.5607758265331313,
+        "delta_t_10_90_ci": [
+          0.9588779252531865,
+          4.182707886357105
+        ],
+        "tau_eq_ms": 0.7103476363249277,
+        "tau_eq_ci": [
+          0.43640903206498566,
+          1.903653689403379
+        ]
+      },
+      "primary_93_8khz": {
+        "t_50_pct_ms": 292.5389150749991,
+        "delta_t50_minus_t0_ms": 1.3389150749991359,
+        "delta_t_10_90_ms": 0.0852474757488153,
+        "delta_t_10_90_ci": [
+          0.07575981452844331,
+          2.458639168086401
+        ],
+        "tau_eq_ms": 0.03879823218132865,
+        "tau_eq_ci": [
+          0.0344801631751517,
+          1.1189874240334976
+        ],
+        "explanation": "#88653 Primary t50 is at 290.3 ms (-0.89 ms before t0) because branch competition/decay started prior to shut-off; #88654 transition of 0.085 ms is an unresolved single-bin jump far below the 0.512 ms Hann FWHM floor."
+      },
+      "ece_channel_comparisons": {
+        "ECE10": {
+          "tau_ece_ms": 0.06896865986467929,
+          "tau_ece_ci": [
+            0.05795947265873523,
+            0.08160264798021054
+          ],
+          "step_fraction_pct": 21.84061314074939,
+          "tau_eq_secondary_ms": 0.7103476363249277,
+          "tau_eq_secondary_ci": [
+            0.43640903206498566,
+            1.903653689403379
+          ],
+          "has_ci_overlap": false,
+          "ci_overlap_range_ms": []
+        },
+        "ECE12": {
+          "tau_ece_ms": 1.4401589719646433,
+          "tau_ece_ci": [
+            1.3165118087787906,
+            1.5905066460791188
+          ],
+          "step_fraction_pct": 52.17789141060899,
+          "tau_eq_secondary_ms": 0.7103476363249277,
+          "tau_eq_secondary_ci": [
+            0.43640903206498566,
+            1.903653689403379
+          ],
+          "has_ci_overlap": true,
+          "ci_overlap_range_ms": [
+            1.3165118087787906,
+            1.5905066460791188
+          ]
+        },
+        "ECE13": {
+          "tau_ece_ms": 1.9492654617888452,
+          "tau_ece_ci": [
+            1.787256683619323,
+            2.138158862379774
+          ],
+          "step_fraction_pct": 12.93004661722819,
+          "tau_eq_secondary_ms": 0.7103476363249277,
+          "tau_eq_secondary_ci": [
+            0.43640903206498566,
+            1.903653689403379
+          ],
+          "has_ci_overlap": true,
+          "ci_overlap_range_ms": [
+            1.787256683619323,
+            1.903653689403379
+          ]
+        }
+      }
+    },
+    "section_G_null_rank": {
+      "placements_description": "4 non-overlapping intervals across 259 - 288 ms (pre 3 ms, gap 1 ms, post 3 ms)",
+      "placements_ranges_ms": [
+        [
+          259.0,
+          262.0,
+          263.0,
+          266.0
+        ],
+        [
+          266.0,
+          269.0,
+          270.0,
+          273.0
+        ],
+        [
+          273.0,
+          276.0,
+          277.0,
+          280.0
+        ],
+        [
+          280.0,
+          283.0,
+          284.0,
+          287.0
+        ]
+      ],
+      "min_attainable_p": 0.2,
+      "secondary_49khz": {
+        "observed_delta_pct": -65.45520424842834,
+        "placement_deltas_pct": [
+          -2.300862781703472,
+          7.630151137709618,
+          5.62799870967865,
+          -9.110862016677856
+        ],
+        "placement_abs_deltas_pct": [
+          2.300862781703472,
+          7.630151137709618,
+          5.62799870967865,
+          9.110862016677856
+        ],
+        "rank": 0,
+        "verdict": "EXTREME_OUTLIER (All 4 baseline |Delta S| are substantially smaller than observed at t0)"
+      },
+      "primary_93_8khz": {
+        "observed_delta_pct": -60.45610308647156,
+        "placement_deltas_pct": [
+          0.4394996911287308,
+          -0.09470414370298386,
+          -2.5088071823120117,
+          -6.3179343938827515
+        ],
+        "placement_abs_deltas_pct": [
+          0.4394996911287308,
+          0.09470414370298386,
+          2.5088071823120117,
+          6.3179343938827515
+        ],
+        "rank": 0,
+        "verdict": "EXTREME_OUTLIER"
+      }
+    },
+    "section_H_detector_reconciliation": {
+      "synthetic_benchmark": {
+        "n_chirps_injected": 50,
+        "slopes_tested_khz_per_ms": [
+          5.0,
+          20.0
+        ],
+        "durations_tested_ms": [
+          0.3,
+          1.0
+        ],
+        "viterbi_detector_recall_pct": 78.0,
+        "task2_detector_recall_pct": 100.0
+      },
+      "equal_ech_window_events": {
+        "window_ms": [
+          282.5,
+          291.2
+        ],
+        "task2_events_count": 1,
+        "task2_events_details": [
+          {
+            "branch_id": "Primary",
+            "t_start_ms": "287.6000061035156",
+            "t_end_ms": "289.3919982910156",
+            "duration_ms": "1.855865478515625",
+            "f_start_khz": "86.22586199122017",
+            "f_end_khz": "86.31157080044632",
+            "df_signed_khz": "0.08570880922614776",
+            "abs_df_khz": "0.08570880922614776",
+            "df_dt_khz_per_ms": "0.04618266260047397",
+            "abs_df_dt": "0.04618266260047397",
+            "is_down_chirp": "False",
+            "peak_amplitude_v": "0.36153680086135864",
+            "mean_amplitude_v": "0.2050690322086729",
+            "inter_event_interval_ms": "19.45599365234375"
+          }
+        ],
+        "viterbi_4df_events_count": 0,
+        "reconciliation_reason": "Task 2 counted slow continuous drifts (slopes +0.05 to +0.84 kHz/ms, sweep depths <0.5 kHz); 4d-F strictly required fast down-sweeps (slope >= 8 kHz/ms, sweep depth >= 2 kHz). Zero fast sweeps exist in steady state."
+      },
+      "mode_free_noise_threshold_khz_per_ms": 55.35707473754883
+    },
+    "section_I_sum_rule_and_h1": {
+      "sum_rule_triad": "40.04 + 48.83 = 88.87 kHz (diff = 0.00 kHz)",
+      "tolerance_khz": 0.9765625,
+      "monte_carlo_chance_probability": 0.34273,
+      "interpretation": "Chance coincidence probability is 34.3%. A frequency match within 0.98 kHz resolution is expected in ~1 out of 3 random configurations, explaining why bicoherence phase-coupling remains null.",
+      "repaired_h1_status": "NO_PEAK_DETECTED (test not applicable)",
+      "previous_h1_label": "p = 1.000 (artifact of default)"
+    },
+    "section_J_fine_lines_audit": {
+      "single_2ms_noise_segment_peaks_mean": 4.54,
+      "single_2ms_noise_expected_false_alarm_rate": "Chi-squared with 2 dof produces ~3-4 peaks per 2 ms frame above 3x floor purely by Gaussian noise",
+      "persistent_lines_surviving_averaging": 3,
+      "surviving_frequencies_khz": [
+        87.40234375,
+        88.37890625,
+        89.84375
+      ],
+      "relabeling": "The 7-11 'lines' on 2 ms segments were mostly noise fluctuations; only 2-3 persistent modes survive averaging. The nominal frequencies (82.0, 85.9, 89.8, 93.8 kHz) represent spectral sub-bands rather than 11 individual eigenmodes."
+    }
+  },
+  "section_K_master_table": [
+    {
+      "claim": "Primary mode persistence across t0",
+      "label": "SUPPORTED",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator independent",
+      "status": "Robust global coherent mode (n=-1, m=3) continuous across t0"
+    },
+    {
+      "claim": "Secondary mode persistence across t0",
+      "label": "SUPPORTED",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator independent",
+      "status": "Coherent band persists, transferring power to lower branches"
+    },
+    {
+      "claim": "Secondary line power handover",
+      "label": "SUPPORTED",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator independent",
+      "status": "Upper 49 kHz line collapses (>65-78% drop, rank 0.0%), lower lines ignite"
+    },
+    {
+      "claim": "Primary frequency drift across t0",
+      "label": "ESTIMATOR-DEPENDENT",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator dependent: centroid gives -3.98/-4.28 kHz; line ridge gives -0.76/-0.06 kHz",
+      "status": "Centroid shift reflects branch power reweighting; intrinsic eigenmode frequencies are stationary"
+    },
+    {
+      "claim": "Handover matches thermal cooling timescale",
+      "label": "SUPPORTED",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator independent",
+      "status": "Equivalent tau (0.7-1.4 ms) matches bulk ECE cooling (tau_ECE12 = 1.4-1.9 ms), slower than prompt RF step"
+    },
+    {
+      "claim": "Total envelope amplitude response across t0",
+      "label": "INCONCLUSIVE",
+      "replication": "Shot-specific: #88653 exhibits trend-relative +9.4% (fixed -30.4%); #88654 exhibits +63.4% (fixed -18.6%)",
+      "estimator_dependence": "Estimator dependent",
+      "status": "Discharge saturation details govern amplitude; cannot be stated as a general result"
+    },
+    {
+      "claim": "Alfv\u00e9nic density-following scaling (f ~ n^-gamma)",
+      "label": "TEST-FAILS / INCONCLUSIVE",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Ill-posed on lines",
+      "status": "Gamma=0.5 overpredicts drift by >2.5x; line-resolved frequencies show near-zero intrinsic drift"
+    },
+    {
+      "claim": "Three-wave sum rule (fP = fa + fb)",
+      "label": "NOT SUPPORTED (Chance Coincidence)",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Resolution dependent",
+      "status": "Triad match in ECH (0.00 kHz diff) has 34% chance coincidence probability; fails completely in NBI-only"
+    },
+    {
+      "claim": "Targeted bicoherence (40, 49 -> 89 kHz)",
+      "label": "NULL",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator independent",
+      "status": "Fails surrogate phase-randomized null in equal 8.7 ms ECH windows (p=0.104 and p=0.226)"
+    },
+    {
+      "claim": "Nonlinear envelope cross-coupling",
+      "label": "INCONCLUSIVE / UNREPLICATED",
+      "replication": "Unreplicated: #88653 null (p=0.168), #88654 significant (p=0.002)",
+      "estimator_dependence": "Demodulation dependent",
+      "status": "Repaired circular shift null shows lack of replication across discharges"
+    },
+    {
+      "claim": "Fast-ion chirping in steady-state (0.4-1.3 jumps/ms)",
+      "label": "NOT SUPPORTED",
+      "replication": "Replicated (both shots)",
+      "estimator_dependence": "Estimator dependent (argmax noise artifact)",
+      "status": "97-98% of chirps occur in early startup (<275 ms); steady state (282.5-300 ms) exhibits continuous multi-line saturation (0 fast down-sweeps)"
+    }
+  ]
+}
