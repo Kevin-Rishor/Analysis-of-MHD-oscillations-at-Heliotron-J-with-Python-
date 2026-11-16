@@ -311,7 +311,7 @@ def generate_figures(results_88653, results_88654):
 
     # Shaded direction zones
     ax.axvspan(-6.0, 0.0, color="#eaf2f8", alpha=0.6, label=r"INWARD Phase Propagation ($12 \to 13$, $\Delta\tau < 0$)")
-    ax.axvspan(0.0, 6.0, color="#fdf2e9", alpha=0.6, label=r"OUTWARD Energy Flow ($13 \to 12$, $\Delta\tau > 0$, $W_p$ Loss Risk)")
+    ax.axvspan(0.0, 6.0, color="#fdf2e9", alpha=0.6, label=r"OUTWARD Energy Flow ($13 \to 12$, $\Delta\tau > 0$)")
 
     # Plot the 3 key curves
     ax.plot(l_sub, xc_sec[m], color="darkorange", lw=2.2, label=r"Secondary Carrier (40–80 kHz): $\Delta\tau = -0.51\,\mu$s ($\Delta\phi = -10.8^\circ$, $r = +0.84$) $\to$ Inward")
@@ -322,25 +322,25 @@ def generate_figures(results_88653, results_88654):
     ax.axvline(0.0, color="black", ls="-", lw=1.1)
     ax.axhline(0.0, color="gray", ls=":", lw=0.8)
 
-    # Pin markers and text annotations for the 3 peaks
+    # Pin markers and text annotations for the 3 peaks (placed without crossing arrows)
     ax.axvline(-0.514, color="darkorange", ls=":", lw=1.2)
     ax.scatter([-0.514], [0.841], color="darkorange", s=60, zorder=5)
     ax.annotate(r"Sec: -0.51 $\mu$s" + "\n" + r"($v_{\mathrm{ph}} \approx -57\,$km/s)",
-                xy=(-0.514, 0.841), xytext=(+0.15, 1.25),
+                xy=(-0.514, 0.841), xytext=(+0.15, 1.24),
                 fontsize=7.8, fontweight="bold", color="darkorange", ha="left",
                 arrowprops=dict(arrowstyle="->", color="darkorange", lw=1.2))
 
     ax.axvline(-0.389, color="crimson", ls=":", lw=1.2)
     ax.scatter([-0.389], [0.863], color="crimson", s=60, zorder=5)
     ax.annotate(r"Pri: -0.39 $\mu$s" + "\n" + r"($v_{\mathrm{ph}} \approx -75\,$km/s)",
-                xy=(-0.389, 0.863), xytext=(+0.15, 1.11),
+                xy=(-0.389, 0.863), xytext=(+1.35, 1.07),
                 fontsize=7.8, fontweight="bold", color="crimson", ha="left",
                 arrowprops=dict(arrowstyle="->", color="crimson", lw=1.2))
 
     ax.axvline(+0.82, color="navy", ls=":", lw=1.2)
     ax.scatter([+0.82], [0.768], color="navy", s=60, zorder=5)
     ax.annotate(r"Env: +0.82 $\mu$s" + "\n" + r"($v_g \approx +36\,$km/s)",
-                xy=(+0.82, 0.768), xytext=(+1.30, 0.96),
+                xy=(+0.82, 0.768), xytext=(+2.05, 0.89),
                 fontsize=7.8, fontweight="bold", color="navy", ha="left",
                 arrowprops=dict(arrowstyle="->", color="navy", lw=1.2))
 
@@ -353,16 +353,16 @@ def generate_figures(results_88653, results_88654):
         r"• OUTWARD Energy & Heat Flow (13 $\to$ 12, $\rho$: 0.29 $\to$ 0.47):" + "\n"
         r"   - Wavepacket Envelope: $\Delta\tau_{\mathrm{env}} = +0.82\,\mu\mathrm{s}\ (v_{g,r} \approx +36\ \mathrm{km/s})$" + "\n"
         r"   - Sawtooth Modulation: $\Delta\tau_{\mathrm{saw}} = +8.0\,\mu\mathrm{s}\ (\mathrm{Pri}),\ +40.0\,\mu\mathrm{s}\ (\mathrm{Sec})$" + "\n"
-        r"   - Post-ECH Heat Pulse: $\Delta\tau = +46.6\,\mu\mathrm{s}\ \to\ \mathrm{Drives}\ \Delta(\mathrm{d}W_p/\mathrm{d}t) = -60.9\ \mathrm{kW\ Loss!}$"
+        r"   - Post-ECH Thermal Pulse: $\Delta\tau = +46.6\,\mu\mathrm{s}\ (+15.9^\circ,\ r = +0.78)$"
     )
     ax.text(0.02, 0.97, summary_box, transform=ax.transAxes, fontsize=7.2, va="top", ha="left",
             bbox=dict(boxstyle="round,pad=0.35", facecolor="#ffffff", edgecolor="#333333", alpha=0.95, lw=1.1))
 
     ax.set_xlim(-5.5, 5.5)
     ax.set_ylim(-0.95, 1.38)
-    ax.set_xlabel(r"Radial Time Lag $\Delta\tau = t_{12} - t_{13}$ ($\mu$s): $[\Delta\tau < 0 \to \mathrm{Inward}\ (12 \to 13);\ \Delta\tau > 0 \to \mathrm{Outward}\ (13 \to 12)]$",
+    ax.set_xlabel(r"Radial Time Lag $\Delta\tau = t_{12} - t_{13}$ [$\mu$s]: $[\Delta\tau < 0 \to \mathrm{Inward}\ (12 \to 13);\ \Delta\tau > 0 \to \mathrm{Outward}\ (13 \to 12)]$",
                   fontsize=10.0, fontweight="bold")
-    ax.set_ylabel(r"Cross-Correlation Coefficient $r(\Delta\tau)$", fontsize=10.0, fontweight="bold")
+    ax.set_ylabel(r"Cross-Correlation Coefficient $r(\Delta\tau)$ [-]", fontsize=10.0, fontweight="bold")
     ax.set_title(r"Radial Phase Delay & Inward/Outward Flow: $\mathrm{ECE13FAST}\ (\rho=0.29)\ \longleftrightarrow\ \mathrm{ECE12FAST}\ (\rho=0.47)$",
                  fontweight="bold", fontsize=11.5, pad=8)
     ax.grid(True, ls=":", alpha=0.45)

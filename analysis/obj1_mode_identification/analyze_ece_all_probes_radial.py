@@ -280,14 +280,16 @@ def run_analysis():
         "figure.titlesize": 15.0,
     })
     
-    fig, axs = plt.subplots(2, 2, figsize=(13.4, 9.5), facecolor="white")
+    fig = plt.figure(figsize=(14.2, 9.6), facecolor="white")
     fig.suptitle(f"Heliotron J #{shot}", fontweight="bold", y=0.985, fontsize=15.0)
+    gs_top = fig.add_gridspec(1, 2, top=0.840, bottom=0.555, left=0.072, right=0.835, wspace=0.60)
+    gs_bot = fig.add_gridspec(1, 2, top=0.430, bottom=0.115, left=0.190, right=0.925, wspace=1.08)
     
     w_ech = plot_data["ECH_NBI"]
     ghz = w_ech["bands"]["Primary"]["ece_ghz"]
     
     # --- PANEL (a): Radial Fluctuation Amplitude Profile ---
-    ax_a = axs[0, 0]
+    ax_a = fig.add_subplot(gs_top[0, 0])
     ax_a.axvspan(64.0, 67.0, color="#fff2cc", alpha=0.7, label="Resonant Zone", zorder=1)
     
     # Plot Secondary and Primary RMS in ECH+NBI
@@ -318,14 +320,14 @@ def run_analysis():
         f"Sec: {rms_sec_ech[idx_12]:.2f} V (18×)\n" +
         f"Pri: {rms_pri_ech[idx_12]:.2f} V (21×)"
     )
-    ax_a.text(73.9, 0.90, summary_badge, fontsize=11.7, va="top", ha="right",
+    ax_a.text(73.9, 1.06, summary_badge, fontsize=9.6, va="top", ha="right",
               bbox=dict(boxstyle="round,pad=0.24", facecolor="#fff9f9", edgecolor="crimson", alpha=0.95),
               zorder=10)
     
     # Vertical drop pins pointing down to the peaks, with labels placed clearly away from badge
-    ax_a.annotate("", xy=(66.5, rms_sec_ech[idx_13] + 0.02), xytext=(66.2, rms_sec_ech[idx_13] + 0.18),
+    ax_a.annotate("", xy=(66.5, rms_sec_ech[idx_13] + 0.02), xytext=(66.2, rms_sec_ech[idx_13] + 0.14),
                   arrowprops=dict(arrowstyle="->", color="darkred", lw=1.4), zorder=5)
-    ax_a.text(66.2, rms_sec_ech[idx_13] + 0.20, "ECE13\n(66.5 GHz)", fontsize=10.2, fontweight="bold",
+    ax_a.text(66.2, rms_sec_ech[idx_13] + 0.16, "ECE13\n(66.5 GHz)", fontsize=10.2, fontweight="bold",
               color="darkred", ha="center", va="bottom", zorder=10)
     
     ax_a.annotate("", xy=(64.5, rms_sec_ech[idx_12] + 0.02), xytext=(62.3, rms_sec_ech[idx_12] + 0.22),
@@ -337,7 +339,7 @@ def run_analysis():
     ax_a.set_ylabel(r"Fluctuation RMS $\tilde{T}_e$ [V]", fontsize=13.0)
     ax_a.set_title(r"(a) Radial Profile $\tilde{T}_e(r)$ ($\rho \sim 0.29$–$0.47$, centroid $\approx 0.38$)", fontweight="bold", fontsize=12.6, pad=8)
     ax_a.set_xlim(56.8, 74.2)
-    ax_a.set_ylim(-0.02, 1.62)
+    ax_a.set_ylim(-0.02, 1.12)
     ax_a.grid(True, ls=":", alpha=0.5)
     
     secax_a = ax_a.secondary_xaxis('top', functions=(freq_to_rho, rho_to_freq))
@@ -346,14 +348,15 @@ def run_analysis():
     secax_a.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     secax_a.tick_params(labelsize=11.0)
     
-    ax_a.legend(loc="upper left", bbox_to_anchor=(0.015, 0.985), ncol=2, columnspacing=0.8, fontsize=9.8, framealpha=0.92, edgecolor="#cccccc")
+    ax_a.legend(loc="upper left", bbox_to_anchor=(1.03, 1.0), ncol=1, fontsize=9.4,
+                handlelength=1.4, borderpad=0.35, labelspacing=0.35, framealpha=0.95, edgecolor="#cccccc")
     
     # --- PANEL (b): Radial Cross-Coherence & Cross-Correlation ---
-    ax_b = axs[0, 1]
-    ax_b.axvspan(64.0, 67.0, color="#fff2cc", alpha=0.7, label=r"Resonant ($\rho \sim 0.29$–$0.47$)", zorder=1)
+    ax_b = fig.add_subplot(gs_top[0, 1])
+    ax_b.axvspan(64.0, 67.0, color="#fff2cc", alpha=0.7, label="Resonant\n" + r"($\rho \sim 0.29$–$0.47$)", zorder=1)
     
     floor_ech = w_ech["floor95"]
-    ax_b.axhline(0.70, color="forestgreen", ls="--", lw=1.4, label=r"Mode Gate ($\gamma^2 > 0.70$)", zorder=2)
+    ax_b.axhline(0.70, color="forestgreen", ls="--", lw=1.4, label="Mode Gate\n" + r"($\gamma^2 > 0.70$, ECE12–13)", zorder=2)
     ax_b.axhline(floor_ech, color="gray", ls=":", lw=1.2, label=f"95% Floor ({floor_ech:.3f})", zorder=2)
     
     pri_best_coh = w_ech["bands"]["Primary"]["max_coh"]
@@ -372,9 +375,9 @@ def run_analysis():
         + r"Sec: $\bar{\gamma}^2=" + f"{w_ech['bands']['Secondary']['ece12_13_mutual_coh_mean']:.2f}$ (pk {w_ech['bands']['Secondary']['ece12_13_mutual_coh_max']:.2f})\n"
         + r"Pri: $\bar{\gamma}^2=" + f"{w_ech['bands']['Primary']['ece12_13_mutual_coh_mean']:.2f}$ (pk {w_ech['bands']['Primary']['ece12_13_mutual_coh_max']:.2f})"
     )
-    ax_b.text(0.012, 0.982, mutual_box, transform=ax_b.transAxes, va="top", ha="left",
-              fontsize=7.8, color="navy",
-              bbox=dict(boxstyle="round,pad=0.16", facecolor="#f0f4f8", edgecolor="steelblue", alpha=0.94),
+    ax_b.text(0.015, 0.975, mutual_box, transform=ax_b.transAxes, va="top", ha="left",
+              fontsize=8.4, color="navy",
+              bbox=dict(boxstyle="round,pad=0.18", facecolor="#f0f4f8", edgecolor="steelblue", alpha=0.94),
               zorder=10)
     
     # Multi-coil gain callout placed in upper-right headroom
@@ -385,16 +388,16 @@ def run_analysis():
         + f"ECE12 ({top_p_s12}): {sec_best_coh[idx_12]:.2f} vs {sec_mp1_coh[idx_12]:.2f}\n"
         + f"ECE13 ({top_p_p13}): {pri_best_coh[idx_13]:.2f} vs {pri_mp1_coh[idx_13]:.2f}"
     )
-    ax_b.text(0.988, 0.982, gain_box, transform=ax_b.transAxes, va="top", ha="right",
-              fontsize=7.8, color="#8a3b00",
-              bbox=dict(boxstyle="round,pad=0.16", facecolor="#fff9f0", edgecolor="darkorange", alpha=0.94),
+    ax_b.text(0.985, 0.975, gain_box, transform=ax_b.transAxes, va="top", ha="right",
+              fontsize=8.4, color="#8a3b00",
+              bbox=dict(boxstyle="round,pad=0.18", facecolor="#fff9f0", edgecolor="darkorange", alpha=0.94),
               zorder=10)
     
     ax_b.set_xlabel(r"ECE Frequency $f_{\mathrm{ECE}}$ [GHz]", fontsize=13.0)
     ax_b.set_ylabel(r"Cross-Coherence $\gamma^2$ [-]", fontsize=13.0)
-    ax_b.set_title(r"(b) Coherence Gain: 18 Coils vs. MP1 Baseline", fontweight="bold", fontsize=12.6, pad=8)
+    ax_b.set_title(r"(b) ECE–Mirnov Gain (ECH+NBI): 18 Coils vs. MP1", fontweight="bold", fontsize=12.0, pad=8)
     ax_b.set_xlim(56.8, 73.8)
-    ax_b.set_ylim(0.0, 1.56)
+    ax_b.set_ylim(0.0, 1.16)
     ax_b.set_yticks([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     ax_b.grid(True, ls=":", alpha=0.5)
     
@@ -404,19 +407,19 @@ def run_analysis():
     secax_b.xaxis.set_major_formatter(FormatStrFormatter('%.1f'))
     secax_b.tick_params(labelsize=11.0)
     
-    ax_b.legend(loc="upper left", bbox_to_anchor=(0.015, 0.72), ncol=2, columnspacing=0.65,
-                fontsize=8.8, handlelength=1.4, borderpad=0.22, labelspacing=0.20,
+    ax_b.legend(loc="upper left", bbox_to_anchor=(1.03, 1.0), ncol=1,
+                fontsize=9.4, handlelength=1.4, borderpad=0.35, labelspacing=0.35,
                 framealpha=0.95, edgecolor="#cccccc")
     
     # --- PANEL (c): Heatmap Matrix: Secondary Band (40-80 kHz) ---
-    ax_c = axs[1, 0]
+    ax_c = fig.add_subplot(gs_bot[0, 0])
     mat_sec = w_ech["bands"]["Secondary"]["matrix_coh_max"]
     im_c = ax_c.imshow(mat_sec, cmap="YlOrRd", vmin=0.0, vmax=0.45, aspect="auto", origin="lower")
     ax_c.set_xticks(range(len(mag_probes)))
     ax_c.set_xticklabels(mag_probes, rotation=45, ha="right", fontsize=10.5)
     ax_c.set_yticks(range(16))
     ax_c.set_yticklabels([f"{ch.replace('FAST','')} ({ghz[k]:.1f}G, $\\rho$={freq_to_rho(ghz[k]):.2f})" for k, ch in enumerate(w_ech["bands"]["Secondary"]["ece_ch_names"])], fontsize=13.1)
-    ax_c.set_title(r"(c) Secondary (40–80 kHz): $\gamma^2_{\max}$ (16 ECEs $\times$ 18 Coils)", fontweight="bold", fontsize=12.6)
+    ax_c.set_title(r"(c) Secondary (40–80 kHz, ECH+NBI): $\gamma^2_{\max}$", fontweight="bold", fontsize=12.2, pad=12)
     ax_c.set_xlabel(r"Magnetic Coil Index $j$ (MP1–4, PMP1–14) [-]", fontsize=13.0)
     ax_c.set_ylabel(r"ECE Channel Index $i$ [-]", fontsize=13.0)
     ax_c.axhspan(idx_12 - 0.5, idx_13 + 0.5, color="cyan", fill=False, lw=1.8, ls="--")
@@ -427,14 +430,14 @@ def run_analysis():
     cbar_c.ax.tick_params(labelsize=11.5)
     
     # --- PANEL (d): Heatmap Matrix: Primary Band (80-100 kHz) ---
-    ax_d = axs[1, 1]
+    ax_d = fig.add_subplot(gs_bot[0, 1])
     mat_pri = w_ech["bands"]["Primary"]["matrix_coh_max"]
     im_d = ax_d.imshow(mat_pri, cmap="YlOrRd", vmin=0.0, vmax=0.45, aspect="auto", origin="lower")
     ax_d.set_xticks(range(len(mag_probes)))
     ax_d.set_xticklabels(mag_probes, rotation=45, ha="right", fontsize=10.5)
     ax_d.set_yticks(range(16))
     ax_d.set_yticklabels([f"{ch.replace('FAST','')} ({ghz[k]:.1f}G, $\\rho$={freq_to_rho(ghz[k]):.2f})" for k, ch in enumerate(w_ech["bands"]["Primary"]["ece_ch_names"])], fontsize=13.1)
-    ax_d.set_title(r"(d) Primary (80–100 kHz): $\gamma^2_{\max}$ (16 ECEs $\times$ 18 Coils)", fontweight="bold", fontsize=12.6)
+    ax_d.set_title(r"(d) Primary (80–100 kHz, ECH+NBI): $\gamma^2_{\max}$", fontweight="bold", fontsize=12.2, pad=12)
     ax_d.set_xlabel(r"Magnetic Coil Index $j$ (MP1–4, PMP1–14) [-]", fontsize=13.0)
     ax_d.set_ylabel(r"ECE Channel Index $i$ [-]", fontsize=13.0)
     ax_d.axhspan(idx_12 - 0.5, idx_13 + 0.5, color="cyan", fill=False, lw=1.8, ls="--")
@@ -443,17 +446,26 @@ def run_analysis():
     cbar_d.set_label(r"Max Cross-Coherence $\gamma^2_{\max}$ [-]", fontsize=12.5)
     cbar_d.ax.tick_params(labelsize=11.5)
     
-    plt.tight_layout(rect=[0, 0, 1, 0.96], w_pad=2.6, h_pad=1.8)
-    
     out_fig_path = out_dir / "mhd_ece_all_probes_radial_localization_88653.png"
     safe_savefig(fig, out_fig_path, dpi=300)
     print(f"Saved synthesis figure to '{out_fig_path}'")
     
     # Also save standalone panels for Beamer presentations
+    import matplotlib.transforms as mtransforms
+    def _extract_panel_with_cbar(fig_obj, ax_obj, cbar_obj, out_file, dpi=200, pad=0.08):
+        fig_obj.canvas.draw()
+        renderer = fig_obj.canvas.get_renderer()
+        bbox = mtransforms.Bbox.union([
+            ax_obj.get_tightbbox(renderer),
+            cbar_obj.ax.get_tightbbox(renderer),
+        ]).transformed(fig_obj.dpi_scale_trans.inverted())
+        bbox_pad = mtransforms.Bbox.from_extents(bbox.x0 - pad, bbox.y0 - pad, bbox.x1 + pad, bbox.y1 + pad)
+        fig_obj.savefig(str(out_file), dpi=dpi, bbox_inches=bbox_pad, facecolor=fig_obj.get_facecolor(), edgecolor="none", pad_inches=0)
+
     extract_panel_axes(fig, ax_a, panels_dir / "panel_a_radial_fluctuation_profile.png", dpi=200)
     extract_panel_axes(fig, ax_b, panels_dir / "panel_b_coherence_gain_all_probes.png", dpi=200)
-    extract_panel_axes(fig, ax_c, panels_dir / "panel_c_secondary_matrix_heatmap.png", dpi=200)
-    extract_panel_axes(fig, ax_d, panels_dir / "panel_d_primary_matrix_heatmap.png", dpi=200)
+    _extract_panel_with_cbar(fig, ax_c, cbar_c, panels_dir / "panel_c_secondary_matrix_heatmap.png", dpi=200)
+    _extract_panel_with_cbar(fig, ax_d, cbar_d, panels_dir / "panel_d_primary_matrix_heatmap.png", dpi=200)
     plt.close(fig)
     print("Saved individual panels to 'panels/'")
 

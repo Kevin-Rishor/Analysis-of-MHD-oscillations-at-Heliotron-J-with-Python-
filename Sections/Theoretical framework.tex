@@ -152,21 +152,21 @@ f_{\mathrm{ECE}} = 2 f_{ce} = \frac{e |B(\rho)|}{\pi m_e},
 \end{equation}
 \noindent where $f_{ce}$ is the fundamental electron cyclotron frequency ($\mathrm{Hz}$), $e$ is the elementary charge ($\mathrm{C}$), $m_e$ is the electron mass ($\mathrm{kg}$), $\rho = r/a$ is the normalized minor radius, $r$ is the local minor radius ($\mathrm{m}$), and $a = 0.170\,\mathrm{m}$ is the average plasma minor radius. Although the $L=1, M=4$ helical geometry is non-axisymmetric, the ECE antenna at corner-section port \#11.5 (toroidal angle $\phi = \pm 45^\circ$, where toroidal coil A produces a tokamak-like vertical $\mathrm{mod}\text{-}B$ profile) views an equatorial chord along which $|B|$ decreases monotonically from the inboard high-field side to the outboard low-field edge \cite{luo2020measurement, Weir2019}.
 
-Three-dimensional microwave ray-tracing with the Tracing Visualization (\textsc{TRAVIS}) code for the standard configuration (helical-to-vertical coil current ratio $H + V = +89\,\%$, setting the standard vacuum rotational transform $\iota(0)/2\pi \approx 0.56$ at $B_0 \approx 1.25~\mathrm{T}$) parameterizes the equilibrium frequency-to-radius calibration for Heliotron~J port \#11.5 \cite{luo2020measurement, Weir2019} via a first-order exponential decay ($\mathrm{ExpDec1}$, $R^2 = 0.99971$) in Eq.~(\ref{eqn:ece_travis_fit}) and its inverse in Eq.~(\ref{eqn:ece_freq_from_rho}):
+Three-dimensional microwave ray-tracing with the Tracing Visualization (\textsc{TRAVIS}) code for the standard configuration (helical-to-vertical coil current ratio $H + V = +89\,\%$, setting the standard vacuum rotational transform $\iota(0)/2\pi \approx 0.56$ at $B_0 \approx 1.25~\mathrm{T}$) parameterizes the equilibrium frequency-to-radius calibration for Heliotron~J port \#11.5 \cite{luo2020measurement, Weir2019} via a first-order exponential decay ($\mathrm{ExpDec1}$, $R^2 = 0.999\ 71$) in Eq.~(\ref{eqn:ece_travis_fit}) and its inverse in Eq.~(\ref{eqn:ece_freq_from_rho}):
 \begin{equation}
 \label{eqn:ece_travis_fit}
-\rho(f) = A_1 \exp\left(-\frac{f}{t_1}\right) + y_0 = 22.29009 \exp\left(-\frac{f}{30.62389}\right) - 2.24743,
+\rho(f) = A_1 \exp\left(-\frac{f}{t_1}\right) + y_0 = 22.290\ 09 \exp\left(-\frac{f}{30.623\ 89}\right) - 2.247\ 43,
 \end{equation}
 \begin{equation}
 \label{eqn:ece_freq_from_rho}
-f(\rho) = -t_1 \ln\left(\frac{\rho - y_0}{A_1}\right) = -30.62389 \ln\left(\frac{\rho + 2.24743}{22.29009}\right),
+f(\rho) = -t_1 \ln\left(\frac{\rho - y_0}{A_1}\right) = -30.623\ 89 \ln\left(\frac{\rho + 2.247\ 43}{22.290\ 09}\right),
 \end{equation}
-\noindent where $f$ is the ECE channel frequency ($\mathrm{GHz}$), $y_0 = -2.24743 \pm 0.02414$, $A_1 = 22.29009 \pm 0.31497$, and $t_1 = 30.62389 \pm 0.33198\,\mathrm{GHz}$, placing the outboard edge ($\rho = 1.00$) at $58.99\,\mathrm{GHz}$, the magnetic axis ($\rho = 0.00$) at $70.26\,\mathrm{GHz}$, and the inboard edge ($\rho = -1.00$) at $88.29\,\mathrm{GHz}$. Because each heterodyne channel integrates over a finite intermediate-frequency (IF) bandwidth $\Delta f_{\mathrm{IF}} \approx 1.0\,\mathrm{GHz}$, each measurement samples a radial shell of width $\Delta \rho$ given by Eq.~(\ref{eqn:ece_radial_res}):
+\noindent where $f$ is the ECE channel frequency ($\mathrm{GHz}$), $y_0 = -2.247\ 43 \pm 0.024\ 14$, $A_1 = 22.290\ 09 \pm 0.314\ 97$, and $t_1 = (30.623\ 89 \pm 0.331\ 98)\,\mathrm{GHz}$, placing the outboard edge ($\rho = 1.00$) at $58.99\,\mathrm{GHz}$, the magnetic axis ($\rho = 0.00$) at $70.26\,\mathrm{GHz}$, and the inboard edge ($\rho = -1.00$) at $88.29\,\mathrm{GHz}$. Because each heterodyne channel integrates over a finite intermediate-frequency (IF) bandwidth $\Delta f_{\mathrm{IF}} \approx 1.0\,\mathrm{GHz}$, each measurement samples a radial shell of width $\Delta \rho$ given by Eq.~(\ref{eqn:ece_radial_res}):
 \begin{equation}
 \label{eqn:ece_radial_res}
 \Delta \rho \approx \left| \frac{\mathrm{d}\rho}{\mathrm{d}f} \right| \Delta f_{\mathrm{IF}} = \frac{A_1}{t_1} \exp\left(-\frac{f}{t_1}\right) \Delta f_{\mathrm{IF}} \approx 0.08\text{--}0.09,
 \end{equation}
-\noindent corresponding to a physical radial resolution $\Delta r \approx a \Delta \rho \approx 1.4\text{--}1.5\,\mathrm{cm}$ for $a = 0.170\,\mathrm{m}$, where valid local temperature interpretation requires optically thick core emission ($\tau_{\mathrm{opt}} \gg 1$, $\rho < 0.60$) \cite{luo2020measurement}.
+\noindent corresponding to a physical radial resolution $\Delta r \approx a \Delta \rho \approx (1.4\text{--}1.5)\,\mathrm{cm}$ for $a = 0.170\,\mathrm{m}$, where valid local temperature interpretation requires optically thick core emission ($\tau_{\mathrm{opt}} \gg 1$, $\rho < 0.60$) \cite{luo2020measurement}.
 
 To verify that internal ECE fluctuations couple to the global boundary mode across all 18 Mirnov coils (MP1--MP4 and PMP1--PMP14), the normalized carrier cross-correlation $R_{\mathrm{car}}(\tau)$ evaluates fast phase-coherent coupling within $|\tau| \le 25\,\mu\mathrm{s}$ in Eq.~(\ref{eqn:xcorr_carrier}) \cite{Smith1971, bendat2010random}, while the Hilbert envelope cross-correlation $R_{\mathrm{env}}(\tau)$ captures wave-packet modulation across $|\tau| \le 100\,\mu\mathrm{s}$ in Eq.~(\ref{eqn:xcorr_envelope}) \cite{Fabus2021, boashash2015time}:
 \begin{equation}
