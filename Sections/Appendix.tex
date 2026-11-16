@@ -1,0 +1,38 @@
+\input{Sections/Glossary.tex}
+\clearpage
+\phantomsection
+\setcounter{section}{0}
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\theHsection}{appendix.\thesection} % <--- Unique internal link ID
+\renewcommand{\theHsubsection}{appendix.\thesection.\arabic{subsection}}
+\myappendix{Python Pipeline and GitHub Repository}
+\label{appendix:github}
+
+All signal-processing scripts, statistical auditing routines, and figure-generation tools developed in the framework of this thesis are publicly hosted in an open-source GitHub repository:\par\smallskip\noindent
+{\footnotesize\url{https://github.com/Kevin-Rishor/Analysis-of-MHD-oscillations-at-Heliotron-J-with-Python-}}
+
+The repository preserves the reproducible modular workflow built upon the \texttt{jpack} data-access layer and standard scientific Python libraries.
+
+\subsection{General Pipeline Architecture}
+\begin{sloppypar}
+The codebase is organized under \texttt{analysis/} into an objective-driven modular hierarchy that transforms raw Heliotron~J \texttt{.edf} records into validated spectral, spatial, correlation, and higher-order spectral diagnostics without manual shot-by-shot tuning. Shared signal conditioning, coordinate mappings, and statistical utilities reside in \texttt{analysis/\allowbreak common/} (\texttt{mhd\_\allowbreak common.py} and \texttt{abicoh2\_\allowbreak corrected.py}) and \texttt{analysis/\allowbreak utils/} (\texttt{heliotron\_\allowbreak j\_\allowbreak ece.py}). Dedicated execution directories implement each specific objective: \texttt{analysis/\allowbreak obj1\_\allowbreak mode\_\allowbreak identification/} executes time--frequency spectrograms, poloidal/toroidal mode extraction, and multi-channel ECE radial localization; \texttt{analysis/\allowbreak obj2\_\allowbreak dynamics\_\allowbreak and\_\allowbreak structure/} executes Hilbert envelope demodulation, adaptive MAD burst gating, autocorrelation-adjusted correlation analyses, and $T_e$-proxy validation; \texttt{analysis/\allowbreak obj3\_\allowbreak nonlinear\_\allowbreak coupling/} executes auto-bicoherence mapping, split-sample $1/K$ asymptotic regression, and Fourier phase-randomized surrogate testing; and \texttt{analysis/\allowbreak obj\_\allowbreak ech/} executes automated ECH switch-off transition synthesis across discharge windows.
+\end{sloppypar}
+
+\subsection{Core Modules and Signal Processing Routines}
+\begin{sloppypar}
+Within this architecture, the main orchestration scripts execute end-to-end diagnostics for each research objective. Specifically, \texttt{mhd\_\allowbreak analysis\_\allowbreak obj1.py}, \texttt{mhd\_\allowbreak primary\_\allowbreak mode\_\allowbreak id.py}, and \texttt{analyze\_\allowbreak ece\_\allowbreak all\_\allowbreak probes\_\allowbreak radial.py} compute Hann-windowed STFT and complex Morlet CWT spectrograms paired with $3\sigma$ noise-floor gating and $16$-channel ECE--Mirnov cross-coherence profiles. Envelope dynamics and dual-harmonic mode identification are implemented in \texttt{mhd\_\allowbreak analysis\_\allowbreak obj2.py}, \texttt{mhd\_\allowbreak two\_\allowbreak mode\_\allowbreak combination\_\allowbreak search.py}, and \texttt{verify\_\allowbreak ece\_\allowbreak lpf\_\allowbreak temperature.py}, combining Bessel bandpass filtering, Savitzky--Golay phase differentiation, $N_{\mathrm{eff}}$-adjusted and partial correlations, and $30~\mathrm{Hz}$ low-pass ECE electron-temperature proxy verification against diamagnetic measurements. Nonlinear three-wave coupling routines reside in \texttt{abicoh2\_\allowbreak corrected.py}, \texttt{mhd\_\allowbreak analysis\_\allowbreak obj3.py}, and \texttt{mhd\_\allowbreak plot\_\allowbreak asymptotic\_\allowbreak bias\_\allowbreak scaling.py}, providing the index-corrected auto-bicoherence estimator and $500$-surrogate asymptotic convergence validation, while \texttt{run\_\allowbreak ech\_\allowbreak synthesis.py} and \texttt{compute\_\allowbreak bicoherence\_\allowbreak maps\_\allowbreak and\_\allowbreak controls.py} compile transition-window tables and cross-discharge reproducibility checks.
+\end{sloppypar}
+
+\myappendix{Adapted Poloidal Mode Number Extraction Script}
+\label{appendix:poloidalm}
+Listing~\ref{lst:poloidal} presents the author's adapted Python poloidal mode-extraction script (\texttt{Code/\allowbreak hjmag\_\allowbreak poloidal.py}), built upon the \texttt{turnelib} data-ingestion layer from the \texttt{jpack} toolkit (Annex~\ref{annex:library}) originally created by Prof.\ Shigeru Inagaki, Ph.D. Compared with the distributed baseline utilities, this script implements hardware-calibrated voltage-to-$\mathrm{T}/\mathrm{s}$ conversion ($N A = 4.5 \times 10^{-3}~\mathrm{m^2}$, $G = 2.0$), software polarity inversion on poloidal coils PMP1--PMP4 to correct reversed cabling, a non-uniform discrete Fourier transform (NUDFT) over the irregular angular positions of PMP1--PMP14, an exhaustive two-mode coexisting grid search across all $\binom{41}{2} = 820$ candidate harmonic pairs $(m_1, m_2) \in [-20, +20]^2$, and directional phase validation via the Mardia--Jupp circular concentration coefficient ($r_{\mathrm{circ}} \ge 0.70$) and mean absolute phase residual ($\le 45^\circ$).
+
+\lstinputlisting[
+    style=pythonstyle,
+    basicstyle=\ttfamily\scriptsize,
+    lineskip=-0.6pt,
+    aboveskip=4pt,
+    belowskip=2pt,
+    caption={Adapted Heliotron~J poloidal mode number extraction script implementing polarity inversion, calibration, NUDFT, dual-harmonic grid search, and circular concentration validation.},
+    label={lst:poloidal}
+]{Code/hjmag_poloidal.py}

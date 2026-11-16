@@ -1,0 +1,460 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage[scale=1]{sourcecodepro}
+\usepackage{tabularx}
+\usepackage{parskip}  % mejora la separación entre párrafos
+\usepackage{cite}          % Para que las citas se ordenen bien (por ejemplo [1], [2], [3] => [1]–[3])
+\usepackage{xurl}          % Para incluir URLs largas con saltos de línea en cualquier carácter
+\usepackage{hyperref}      % Enlaces clicables (opcional pero útil)
+\usepackage{float}
+\usepackage{multirow}
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{pdfpages}
+\usepackage{siunitx}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{amsmath}
+\usepackage{caption}
+\captionsetup{font=small, width=0.94\textwidth, labelfont=bf, labelsep=period}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,fit,backgrounds,calc}
+
+% --- Definición de colores para Python ---
+\definecolor{codegreen}{rgb}{0.15,0.55,0.15}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.60,0.15,0.70}
+\definecolor{codeblue}{rgb}{0.13,0.35,0.70}
+\definecolor{backcolor}{rgb}{0.98,0.98,0.98}
+\definecolor{framecolor}{rgb}{0.85,0.85,0.85}
+
+% --- Estilo general de Python ---
+\lstdefinestyle{pythonstyle}{
+    language=Python,
+    backgroundcolor=\color{backcolor},
+    commentstyle=\color{codegreen}\itshape,
+    keywordstyle=\color{codeblue}\bfseries,
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,   % Tamaño adecuado para evitar saltos de línea innecesarios
+    breakatwhitespace=false,
+    breaklines=true,                    % Parte líneas largas automáticamente
+    postbreak=\mbox{\textcolor{codegray}{$\hookrightarrow$}\space}, % Flecha indicadora de salto de línea
+    captionpos=t,                       % Posición del título (arriba)
+    keepspaces=true,
+    numbers=left,                       % Números de línea a la izquierda
+    numbersep=8pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    tabsize=4,
+    frame=lines,                        % Línea arriba y abajo del bloque (limpio y elegante)
+    rulecolor=\color{framecolor},
+    % Soporte para tildes y caracteres en español dentro de los comentarios:
+    literate=
+        {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+        {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+        {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1 {¡}{{!`}}1
+}
+
+\makeatletter
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand{\thesubsubsubsection}{\thesubsubsection.\arabic{subsubsubsection}}
+\def\toclevel@subsubsubsection{4}
+\makeatother
+
+\titleclass{\subsubsubsection}{straight}[\subsubsection]
+\titleformat{\subsubsubsection}{\normalfont\normalsize\bfseries}{\thesubsubsubsection}{1em}{}
+\titlespacing*{\subsubsubsection}{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+% Compatibility alias so unnumbered \chapter* and ToC chapter entries work cleanly in article class
+\makeatletter
+\def\toclevel@chapter{1}
+\let\l@chapter\l@section
+\providecommand{\chapter}{\@ifstar{\@schapter}{\@chapter}}
+\def\@schapter#1{\section*{#1}}
+\def\@chapter#1{\section{#1}}
+\makeatother
+
+\newcounter{appcount}
+\renewcommand{\theappcount}{\Alph{appcount}}
+\renewcommand{\theHappcount}{appendix.\theappcount}
+
+\newcommand{\myappendix}[1]{%
+    \clearpage
+    \phantomsection
+    \refstepcounter{appcount}%
+    \setcounter{section}{\value{appcount}}%
+    \setcounter{subsection}{0}%
+    \setcounter{subsubsection}{0}%
+    \section*{Appendix \theappcount: #1}%
+    \addcontentsline{toc}{section}{Appendix \theappcount: #1}%
+    % Opcional: Reinicia y numera figuras, tablas y ecuaciones como A.1, A.2...
+    \setcounter{figure}{0}%
+    \renewcommand{\thefigure}{\theappcount.\arabic{figure}}%
+    \setcounter{table}{0}%
+    \renewcommand{\thetable}{\theappcount.\arabic{table}}%
+    \setcounter{equation}{0}%
+    \renewcommand{\theequation}{\theappcount.\arabic{equation}}%
+}
+
+\newcounter{annexcount}
+\renewcommand{\theannexcount}{\Alph{annexcount}}
+\renewcommand{\theHannexcount}{annex.\theannexcount}
+
+\newcommand{\myannex}[1]{%
+    \clearpage
+    \phantomsection
+    \refstepcounter{annexcount}%
+    \setcounter{section}{\value{annexcount}}%
+    \setcounter{subsection}{0}%
+    \setcounter{subsubsection}{0}%
+    \section*{\raggedright Annex \theannexcount: #1}%
+    \addcontentsline{toc}{section}{Annex \theannexcount: #1}%
+    % Opcional: Reinicia y numera figuras y tablas como A.1, A.2...
+    \setcounter{figure}{0}%
+    \renewcommand{\thefigure}{\theannexcount.\arabic{figure}}%
+    \setcounter{table}{0}%
+    \renewcommand{\thetable}{\theannexcount.\arabic{table}}%
+}
+
+% --- Licencia Creative Commons ---
+\usepackage[
+    type={CC},
+    modifier={by-nc-nd},
+    version={4.0}
+]{doclicense}
+
+
+\hypersetup{
+    unicode=false,          
+    colorlinks=true,       
+    linkcolor=blue!70,        
+    citecolor=cyan!88!black,        
+    filecolor=cyan,         
+    urlcolor=blue       
+}
+\geometry{margin=2.5cm}
+
+\begin{document}
+%--------------------------%
+% Portada
+%--------------------------%
+\pagenumbering{roman}
+\thispagestyle{empty}
+\begin{center}
+
+
+\includegraphics[width=0.55\textwidth]{Images/Tec.png} \\[0.35cm]
+{\large\textbf{Costa Rica Institute of Technology (Tecnol\'ogico de Costa Rica)}} \\
+
+\vfill
+
+{\large School of Physics} \\
+{\large Academic Unit of Engineering Physics} \\
+{\large Final Graduation Project} \\
+{\large Thesis submitted in partial fulfillment of the requirements for the Engineering Physics Licentiate Degree} \\[0.7cm]
+
+{\LARGE \textbf{
+Analysis of magnetohydrodynamic oscillations at Heliotron J with Python
+}}
+
+\vfill
+\textbf{Student:} \\
+Kevin Enrique Rishor Villalobos \\
+2022093578 \\
+krishor@estudiantec.cr\\
+(+506) 8658-8959
+
+
+\vfill
+
+
+Thesis Advisor: Ph.D. Iván Vargas Blanco\\
+Reader: M.Sc. Ricardo Solano Piedra\\  [0.7cm]
+
+\textbf{Involved Institutions:} \\
+Heliotron J Project, Institute of Advanced Energy, \\ Kyoto University, Uji Campus, Kyoto, Japan \\
+\includegraphics[width=0.15\textwidth]{"Images/Heliotron logo.jpg"} \hspace{0.3cm}\includegraphics[width=0.175\textwidth]{Images/IAE.jpg}  \\[0.2cm]
+
+Plasma Laboratory for Fusion Energy and Applications (PlasmaTEC), \\ Costa Rica Institute of Technology \\ [0.2cm]
+\includegraphics[width=0.48\textwidth]{Images/plasmas cuadro.jpg}\\[0.5cm]
+
+November, 2026\\
+Cartago, Costa Rica\\
+
+
+
+
+
+
+\vfill
+
+\end{center} % Cierre de la portada
+
+% --- Indices & List of Symbols and Abbreviations ---
+\clearpage
+\phantomsection
+\tableofcontents
+\thispagestyle{plain}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{List of Figures}
+\listoffigures
+\thispagestyle{plain}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{List of Tables}
+\listoftables
+\thispagestyle{plain}
+
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{List of Symbols and Abbreviations}
+\section*{List of Symbols and Abbreviations}
+\thispagestyle{plain}
+
+\noindent\textbf{Main Physical and Mathematical Symbols}
+\par\vspace{0.25em}
+\noindent{\footnotesize\setlength{\tabcolsep}{3.5pt}%
+\renewcommand{\arraystretch}{0.96}%
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X l >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Symbol} & \textbf{Description} & \textbf{Symbol} & \textbf{Description} \\
+\midrule
+$\alpha, \alpha_{\mathrm{adj}}$ & Nominal and Bonferroni levels & $I_{\mathrm{ECE}}$ & Uncalibrated ECE intensity ($\mathrm{a.u.}$) \\
+$\beta$ & Kinetic-to-magnetic pressure ratio & $I_p$ & Toroidal plasma current ($\mathrm{A}$) \\
+$\gamma, \gamma^2, \gamma_{95}^2$ & Exponent ($\gamma$); coherence and $95\,\%$ floor & $k_B$ & Boltzmann constant ($\mathrm{J/K}$) \\
+$\Delta f, \Delta f_{\mathrm{IF}}$ & STFT bin width ($\mathrm{Hz}$); IF width ($\mathrm{GHz}$) & $k_\parallel$ & Parallel wavenumber ($\mathrm{m^{-1}}$) \\
+$\Delta\Phi_{\mathrm{dia}}$ & Excluded diamagnetic flux ($\mathrm{Wb}$) & $K, K_{\mathrm{min}}, K_{\mathrm{eff}}$ & Sub-ensemble, min., and effective counts \\
+$\varepsilon_0$ & Vacuum permittivity ($\mathrm{F/m}$) & $L, L_{\mathrm{sys}}$ & Helical pole ($L = 1$); system size ($\mathrm{m}$) \\
+$\zeta$ & Toroidal flux-surface angle ($\mathrm{rad}$) & $m, m_1, m_2$ & Poloidal mode numbers (single/dual) \\
+$\theta, \theta_j$ & Poloidal and sensor angles ($\mathrm{rad}$) & $m_e, m_i, m_p$ & Electron, ion, and proton masses ($\mathrm{kg}$) \\
+$\iota$ & Rotational transform ($\mathrm{rad}$, $\iota/2\pi = 1/q$) & $m_{\mathrm{eff}}$ & Effective ion mass ($\mathrm{kg}$, rel.\ to $m_p$) \\
+$\lambda_D$ & Debye shielding length ($\mathrm{m}$) & $M$ & Toroidal field period count ($M = 4$) \\
+$\mu_0$ & Vacuum permeability ($\mathrm{H/m}$) & $n$ & Toroidal mode no.; bulk density ($\mathrm{m^{-3}}$) \\
+$\rho, \Delta\rho$ & Normalized radius ($r/a$); ECE width & $n_e, n_i$ & Electron and ion densities ($\mathrm{m^{-3}}$) \\
+$\rho_x(k)$ & Sample autocorrelation at lag $k$ & $N, N_{\mathrm{fft}}, N_{\mathrm{seg}}$ & Sample, transform, and segment counts \\
+$\sigma, \hat{\sigma}_{\mathrm{MAD}}$ & Standard deviation and MAD ($\mathrm{V}$) & $N_{\mathrm{eff}}, N_{\mathrm{est}}$ & Effective and estimation segment counts \\
+$\tau, \Delta\tau$ & Time lag or radial delay ($\mathrm{s}$) & $N_{\mathrm{null}}, N_{\mathrm{pairs}}$ & Surrogate and toroidal-pair counts \\
+$\tau_E, \tau_{\mathrm{opt}}$ & Confinement time ($\mathrm{s}$); optical depth & $N_{\mathrm{probes}}, N_{\mathrm{sub}}$ & Coil count and sub-ensemble realizations \\
+$\phi, \Delta\phi$ & Signal phase ($\phi_j$); phase lag ($\mathrm{rad}$) & $N A$ & Mirnov coil effective area-turns ($\mathrm{m^2}$) \\
+$\varphi, \Delta\varphi$ & Coil angle and optical phase ($\mathrm{rad}$) & $p, p_{\mathrm{adj}}, p_{\mathrm{surr}}$ & Raw, adj., surr.\ $p$; pressure ($\mathrm{Pa}$) \\
+$\psi(t)$ & Complex Morlet analyzing wavelet & $p_{\mathrm{emp}}, p_{\mathrm{sliding}}$ & Empirical and sliding-window $p$-values \\
+$\omega, \omega_0$ & Angular ($\mathrm{rad/s}$); Morlet central freq. & $P(f, t)$ & Power spectral density ($\mathrm{V^2/Hz}$) \\
+$\omega_{\mathrm{BAE}}, \omega_{pe}$ & BAE and electron plasma freq. ($\mathrm{rad/s}$) & $P_{\mathrm{NBI}}$ & NBI heating power ($\mathrm{W}$) \\
+$a$ & Average plasma minor radius ($\mathrm{m}$) & $q$ & Safety factor ($2\pi/\iota$, dimensionless) \\
+$A(t)$ & Analytic amplitude envelope ($\mathrm{V}$) & $q_{2.5}, q_{97.5}$ & Empirical $2.5\text{th}$ and $97.5\text{th}$ percentiles \\
+$b^2, b_0$ & Squared bicoherence and $b^2_\infty$ intercept & $r$ & Pearson $r$ ($r_{\mathrm{car}}, r_{\mathrm{env}}, r_{\mathrm{partial}}$); radius ($\mathrm{m}$) \\
+$B, B_0$ & Magnetic and equilibrium fields ($\mathrm{T}$) & $r_{\mathrm{circ}}$ & Circular concentration ($\in [0, 1]$) \\
+$\tilde{B}_\theta, \dot{B}$ & Poloidal field ($\mathrm{T}$) and $\mathrm{d}\tilde{B}_\theta/\mathrm{d}t$ ($\mathrm{T/s}$) & $R_0, R^2$ & Major radius ($\mathrm{m}$); coeff.\ of determination \\
+$B(f_1, f_2)$ & Auto-bispectrum ($\mathrm{V^3/Hz^3}$) & $R_{xy}(\tau)$ & Lagged cross-correlation function \\
+$c, c_s$ & Light and ion sound speeds ($\mathrm{m/s}$) & $t, t_0$ & Time and ECH-off reference ($\mathrm{s}$) \\
+$C$ & Finite-sample $1/K$ bias slope & $T$ & STFT window ($\mathrm{s}$); thermal $k_B T$ ($\mathrm{keV}$) \\
+$e$ & Elementary charge ($\mathrm{C}$) & $T_e, T_i$ & Electron and ion temperatures ($\mathrm{K}, \mathrm{keV}$) \\
+$f, f_0, f_c$ & Mode, peak, and filter cutoff freq. ($\mathrm{Hz}$) & $T_{e,\mathrm{dia}}, \tilde{T}_e$ & Diamagnetic proxy and fluctuating $T_e$ \\
+$f_1, f_2, f_3$ & Triad frequencies ($f_3 = f_1 \pm f_2$, $\mathrm{Hz}$) & $v_A$ & Shear-Alfv\'en wave speed ($\mathrm{m/s}$) \\
+$f_{\mathrm{BAE}}, f_{\mathrm{EPM}}$ & BAE and EPM frequencies ($\mathrm{Hz}$) & $v_{\mathrm{ph},r}, v_{\mathrm{g},r}$ & Radial phase and group speeds ($\mathrm{m/s}$) \\
+$f_{\min}, f_{\max}$ & Spectral centroid band limits ($\mathrm{Hz}$) & $W_p, \mathrm{d}W_p/\mathrm{d}t$ & Stored energy ($\mathrm{J}$) and rate ($\mathrm{W}$) \\
+$f_s, f_{\mathrm{TAE}}$ & Sampling and nominal TAE freq. ($\mathrm{Hz}$) & $x(t), X(f)$ & Real signal ($\mathrm{V}$) and spectrum ($\mathrm{V/Hz}$) \\
+$G, H_0, \mathcal{H}[\cdot]$ & Gain; null hypothesis; Hilbert transform & $z(t)$ & Complex analytic signal ($\mathrm{V}$) \\
+\bottomrule
+\end{tabularx}}
+
+\clearpage
+\noindent\textbf{Abbreviations} \emph{(List of Symbols and Abbreviations, continued)}
+\par\vspace{0.3em}
+\noindent{\footnotesize
+\renewcommand{\arraystretch}{1.02}%
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X l >{\raggedright\arraybackslash}X@{}}
+\toprule
+\textbf{Abbr.} & \textbf{Term} & \textbf{Abbr.} & \textbf{Term} \\
+\midrule
+ACF & Autocorrelation Function & IIR & Infinite Impulse Response \\
+ADC & Analog-to-Digital Converter & ITCR & Costa Rica Institute of Technology \\
+AE & Alfv\'en Eigenmode & JSON & JavaScript Object Notation \\
+AI & Artificial Intelligence & LCFS & Last Closed Flux Surface \\
+ARM64 & 64-bit Advanced Reduced Instruction Set Computer (RISC) Machine Architecture & LO & Local Oscillator \\
+a.u. & Arbitrary Units & LPF & Low-Pass Filter \\
+BAE & Beta-induced Alfv\'en Eigenmode & MAD & Median Absolute Deviation \\
+BL1 / BL2 & Neutral Beam Injection Beam Lines 1 and 2 & MHD & Magnetohydrodynamics \\
+CAMAC & Computer Automated Measurement and Control & MP & Toroidal Mirnov Probe \\
+CI & Confidence Interval & NBI & Neutral Beam Injection \\
+CSD & Cross-Spectral Density & NUDFT & Non-Uniform Discrete Fourier Transform \\
+CWT & Continuous Wavelet Transform & PCI & Peripheral Component Interconnect \\
+CXRS & Charge-Exchange Recombination Spectroscopy & PlasmaTEC & Plasma Laboratory for Fusion Energy and Applications \\
+ECCD & Electron Cyclotron Current Drive & PMP & Poloidal Mirnov Probe \\
+ECE & Electron Cyclotron Emission & PSD & Power Spectral Density \\
+ECH & Electron Cyclotron Heating & PXI & PCI eXtensions for Instrumentation \\
+EDF & Experimental Data Format & RF & Radio Frequency \\
+ELM & Edge-Localized Mode & RMS & Root Mean Square \\
+EP & Energetic Particle & RMSE & Root-Mean-Square Error \\
+EPM & Energetic Particle Mode & SCR-1 & Stellarator of Costa Rica 1 \\
+FAR3d & Finite Aspect Ratio 3D Gyrofluid Code & SI & International System of Units \\
+FDR-BH & Benjamini--Hochberg False Discovery Rate & SOS & Second-Order Sections \\
+GAE & Global Alfv\'en Eigenmode & STFT & Short-Time Fourier Transform \\
+GAM & Geodesic Acoustic Mode & TAE & Toroidal Alfv\'en Eigenmode \\
+H-mode & High-Confinement Mode & TRAVIS & Tracing Visualization Ray-Tracing Code \\
+IAE & Institute of Advanced Energy & VMEC & Variational Moments Equilibrium Code \\
+IF & Intermediate Frequency & X2 & Second-Harmonic Extraordinary Mode \\
+\bottomrule
+\end{tabularx}}
+
+% --- Approval Page (with Creative Commons License Notice) ---
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Approval Page}
+\thispagestyle{plain}
+
+\vspace*{1.0cm}
+
+\noindent
+In accordance with the regulations of the Engineering Physics Licentiate Degree program of the Costa Rica Institute of Technology, this document was reviewed and approved by the committee formed by the following members:
+
+\vspace{2.2cm}
+
+\begin{center}
+    \rule{8cm}{0.4pt}\\[0.25cm]
+    Ph.D. Iván Vargas Blanco\\[0.15cm]
+    Thesis Advisor
+
+    \vspace{2.2cm}
+
+    \rule{8cm}{0.4pt}\\[0.25cm]
+    M.Sc. Ricardo Solano Piedra\\[0.15cm]
+    Reader
+\end{center}
+
+\vfill
+
+\noindent\rule{\textwidth}{0.4pt}\par\vspace{0.6em}
+\begin{center}
+    \doclicenseImage\par\vspace{0.6em}
+    \begin{minipage}{0.82\linewidth}
+        \centering\footnotesize
+        \doclicenseLongText
+    \end{minipage}
+\end{center}
+
+% --- AI Usage Declaration ---
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{AI Usage Declaration}
+\thispagestyle{plain}
+
+\vspace*{\fill}
+
+\begin{center}
+    {\Large\bfseries AI Usage Declaration}
+\end{center}
+\vspace{1.5em}
+
+\noindent
+During the execution of this Final Graduation Project, between the months of July and November 2026, the artificial intelligence (AI) tools Claude (Anthropic, models Claude Opus 4.6 \& 5.5 and Claude Sonnet 5 \& 5.5) and Gemini (Google, models Gemini 3.1 Pro, Gemini 3.7 \& 3.8 Flash, Gemini 4 Argon, and Gemini 4 Hydrogen Extra) were utilized to assist in reviewing spelling, grammar, syntax, and English translation phrasing to improve the readability and flow of the manuscript, as well as for debugging and optimizing the computational performance of the Python scripts. All scientific analyses, mathematical formulations, computational implementations, and physical conclusions represent the original work of the author. Every AI-generated suggestion was thoroughly verified and validated by the author, who assumes full responsibility for the final contents of this document.
+
+\vspace{2.5cm}
+
+\begin{center}
+    \rule{7.5cm}{0.4pt}\\[0.3cm]
+    Kevin Enrique Rishor Villalobos\\[0.2cm]
+    Author of the document
+\end{center}
+
+\vspace*{\fill}
+
+% --- Dedication ---
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Dedication}
+\chapter*{Dedication}
+\thispagestyle{plain}
+
+\vspace*{\fill}
+\begin{flushright}
+    \begin{minipage}{0.65\linewidth}
+        \itshape
+        \raggedleft
+        To my parents and family, whose unwavering love, patience, and quiet sacrifices supported every step of this academic journey between Costa Rica and Japan; and to the mentors and friends whose encouragement sustained me through every challenge.
+    \end{minipage}
+\end{flushright}
+\vspace*{\fill}
+
+% --- Acknowledgments ---
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Acknowledgments}
+\chapter*{Acknowledgments}
+\thispagestyle{plain}
+
+\vspace{1.5em}
+
+\noindent
+The author wishes to express deep gratitude to Prof.~Shigeru Inagaki and the Heliotron~J Group at the Institute of Advanced Energy (IAE), Kyoto University, for hosting the research exchange at the Uji Campus, granting access to the experimental discharge database and analysis infrastructure, and providing invaluable technical guidance throughout this investigation.
+
+\vspace{1em}
+
+\noindent
+Sincere appreciation is also extended to the thesis advisor, Ph.D.~Iván Vargas Blanco, and the thesis reader, M.Sc.~Ricardo Solano Piedra, as well as to colleagues at the Plasma Laboratory for Fusion Energy and Applications (PlasmaTEC) and the School of Physics at the Costa Rica Institute of Technology (ITCR), for their mentorship, constructive criticism, and steadfast academic support. Finally, the author warmly thanks family and friends for their constant encouragement throughout this Final Graduation Project.
+
+% --- Resumen ---
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Resumen}
+\thispagestyle{plain}
+
+\section*{Resumen}
+En dispositivos de fusión, las inestabilidades magnetohidrodinámicas impulsadas por partículas energéticas degradaron el rendimiento del plasma, y su identificación manual en espectrogramas introdujo sesgos subjetivos. Este Proyecto Final de Graduación investigó cómo estas inestabilidades afectaron el confinamiento en Heliotron~J mediante análisis en Python, para determinar sus mecanismos de excitación e impacto energético. Se desarrolló un flujo automatizado de código abierto en descargas con inyección de haces neutros y calentamiento ciclotrónico electrónico, integrando espectrogramas de tiempo--frecuencia con umbralización robusta, coherencia magnética, descomposición armónica espacial no uniforme, radiometría de emisión ciclotrónica electrónica de 16 canales, correlaciones ajustadas por autocorrelación y convergencia del acoplamiento no lineal de tres ondas (bicoherencia) con señales sustitutas. La detección dual aisló un modo primario entre 86 y 90 kilohertz (número poloidal $+3$) y un modo secundario entre 40 y 50 kilohertz (armónicos $+1$ y $+12$), ambos compatibles con número toroidal $-1$ bajo simetría helicoidal de cuatro períodos y localizados entre radios menores normalizados de 0,29 y 0,47. Los retardos mostraron propagación de fase entrante y energía grupal saliente; al cesar el calentamiento electrónico, el modo secundario descendió 9,7 kilohertz y la derivada de energía almacenada cayó entre 54 y 81 kilowatts principalmente por pérdida de potencia de calentamiento. En conclusión, la metodología eliminó el sesgo manual y confirmó acoplamiento no lineal de tres ondas, mientras la atribución causal del confinamiento y los escalamientos candidatos de dispersión Alfvén--acústica permanecieron estadísticamente inconcluyentes por limitados grados de libertad efectivos.
+
+\noindent\textbf{Palabras clave:} magnetohidrodinámica, heliotrón, plasma, espectrograma, bicoherencia.
+
+% --- Abstract ---
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{Abstract}
+\thispagestyle{plain}
+
+\section*{Abstract}
+In magnetic-confinement fusion devices, energetic-particle-driven magnetohydrodynamic instabilities historically threatened plasma stability and performance, while their manual identification from spectrograms introduced subjective bias. This Final Graduation Project investigated how these instabilities affected plasma confinement in Heliotron~J using Python-based signal processing, aiming to identify their excitation mechanisms and confinement impact. An automated open-source workflow processed discharges heated by neutral beam injection and electron cyclotron heating. The pipeline combined time-frequency spectrograms with robust noise thresholding, multi-probe coherence gating, non-uniform spatial harmonic decomposition, 16-channel electron cyclotron emission radiometry correlation, autocorrelation-adjusted hypothesis testing, and surrogate-calibrated three-wave phase-coupling (bicoherence) convergence. Dual-criterion detection isolated a primary mode between 86 and 90 kilohertz with poloidal mode number $+3$ and a secondary mode between 40 and 50 kilohertz exhibiting coexisting poloidal harmonics of $+1$ and $+12$, both consistent with toroidal mode number $-1$ under four-period helical symmetry and localized between normalized minor radii of 0.29 and 0.47. Phase-delay tracking revealed inward carrier phase progression and outward wavepacket energy propagation, whereas electron cyclotron heating termination coincided with a 9.7 kilohertz downward shift in the secondary mode and a 54 to 81 kilowatt stored-energy derivative drop primarily reflecting heating power loss. In conclusion, the framework eliminated manual inspection bias and confirmed nonlinear three-wave coupling, whereas causal confinement attribution and candidate Alfv\'en--acoustic dispersion scalings remained statistically inconclusive due to limited effective degrees of freedom.
+
+\noindent\textbf{Keywords:} magnetohydrodynamics, heliotron, plasma, spectrogram, bicoherence.
+
+\clearpage
+
+% --- Secciones ---
+\pagenumbering{arabic} % Reinicia la cuenta a 1, 2, 3... para el documento principal
+
+\input{Sections/Introduction}
+\input{Sections/Theoretical framework}
+\input{Sections/Methodology}
+\input{Sections/Results}
+\clearpage
+\input{Sections/Conclusions}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{section}{References}
+{\setlength{\parskip}{2pt}%
+\bibliographystyle{IEEEtran}
+\bibliography{ref}}
+
+
+\input{Sections/Appendix}
+
+
+
+\input{Sections/Annex}
+
+
+\end{document}
+

@@ -1,0 +1,89 @@
+\clearpage
+\phantomsection
+\section*{Glossary}
+\addcontentsline{toc}{section}{Glossary}
+
+\begin{description}
+\raggedright
+\sloppy
+\setlength{\itemsep}{0.2pt}
+\setlength{\parsep}{0pt}
+\setlength{\parskip}{0pt}
+\item[Alfv\'{e}n Eigenmode (AE)] Discrete electromagnetic oscillation excited within shear-Alfv\'{e}n continuum spectral gaps created by periodic toroidal or helical variations in the confining magnetic field strength.
+
+\item[Analytic Signal] Complex-valued time-series representation $z(t) = x(t) + \mathrm{i}\,\mathcal{H}[x(t)]$ formed from a real fluctuation signal $x(t)$ and its Hilbert transform $\mathcal{H}[x(t)]$, from which the instantaneous amplitude envelope $A(t)$ ($\mathrm{V}$) and unwrapped phase $\phi(t)$ ($\mathrm{rad}$) are extracted.
+
+\item[Auto-bicoherence ($b^2$)] Dimensionless normalized magnitude-squared bispectrum bounded on $[0, 1]$ that quantifies the fraction of spectral power at a coupled frequency $f_3 = f_1 \pm f_2$ ($\mathrm{Hz}$) attributable to quadratic phase locking rather than independent random fluctuations.
+
+\item[Bessel Filter] Analog or digital linear filter designed for maximally flat group delay in the passband, preserving pulse waveforms and instantaneous phase trajectories without ringing distortion across the $40\text{--}80$ and $80\text{--}120~\mathrm{kHz}$ mode bands.
+
+\item[Beta-induced Alfv\'{e}n Eigenmode (BAE)] Low-frequency compressional shear-Alfv\'{e}n mode located below the geodesic acoustic mode (GAM) continuum gap whose frequency scales with the plasma ion-acoustic velocity ($\propto \sqrt{\tfrac{7}{4}T_i + T_e}$, with $T_e, T_i$ in $\mathrm{K}$ or $\mathrm{keV}$) and finite thermal pressure $\beta$.
+
+\item[Bispectrum ($B$)] Third-order spectral moment $B(f_1, f_2) = \langle X(f_1) X(f_2) X^*(f_1 \pm f_2) \rangle$ ($\mathrm{V^3/Hz^3}$) probing coherent three-wave quadratic phase coupling across resonant sum or difference frequency triads $f_3 = f_1 \pm f_2$ ($\mathrm{Hz}$).
+
+\item[Circular Concentration Coefficient ($r_{\mathrm{circ}}$)] Directional statistics metric bounded on $[0, 1]$ measuring angular clustering of spatial phase residuals across a magnetic probe array for candidate poloidal mode number $m$, where $r_{\mathrm{circ}} = 1$ indicates zero phase dispersion.
+
+\item[Continuous Wavelet Transform (CWT)] Multiresolution time--frequency decomposition convolving a fluctuation signal against dilated copies of an analyzing wavelet (complex Morlet $\psi(t)$ in this thesis) to resolve rapid frequency chirps without fixed-window resolution trade-offs.
+
+\item[Continuum Gap] Spectral frequency window in the continuous shear-Alfv\'{e}n spectrum opened by periodic toroidal ($R_0$) or helical ($L=1, M=4$) magnetic field variations, allowing discrete eigenmodes (such as AEs, BAEs, and TAEs) to persist with reduced continuum damping.
+
+\item[Diamagnetic Loop] Inductive flux coil encircling the plasma cross-section to measure the excluded toroidal magnetic flux $\Delta\Phi_{\mathrm{dia}}$ ($\mathrm{Wb}$) proportional to perpendicular kinetic pressure, yielding the macroscopic diamagnetic stored energy $W_p$ ($\mathrm{J}$).
+
+\item[Effective Sample Size ($N_{\mathrm{eff}}$)] Autocorrelation-adjusted count of statistically independent observations derived via Bartlett's variance inflation factor, preventing inflated significance in smoothed or serially correlated plasma profiles.
+
+\item[Electron Cyclotron Emission (ECE)] Microwave radiation emitted by gyrating electrons at harmonics of the electron cyclotron frequency, measured at the second extraordinary (X2) harmonic ($57.5\text{--}72.5~\mathrm{GHz}$) to localize core electron-temperature fluctuations ($T_e$, $\mathrm{K}$, $\mathrm{keV}$, or uncalibrated relative intensity).
+
+\item[Electron Cyclotron Heating (ECH)] Auxiliary radio-frequency plasma heating scheme using a $70~\mathrm{GHz}$ gyrotron resonant at the fundamental or second-harmonic electron cyclotron layer to heat electrons selectively.
+
+\item[Energetic Particle Mode (EPM)] Kinetic magnetohydrodynamic instability driven directly by wave--particle resonances with super-Alfv\'{e}nic fast ions when kinetic drive exceeds continuum damping, often exhibiting rapid frequency chirping tied to fast-ion phase-space evolution.
+
+\item[False Discovery Rate (FDR-BH)] Benjamini--Hochberg multiple-hypothesis adjustment controlling the expected fraction of false-positive correlations or triad detections across simultaneous statistical tests.
+
+\item[Fast Fourier Transform] Computational algorithm for evaluating the discrete Fourier transform of $N_{\mathrm{fft}}$-sample time-series segments to obtain complex frequency spectra $X(f)$ ($\mathrm{V/Hz}$) for STFT spectrograms, Welch coherence, and bispectral estimation.
+
+\item[Geodesic Acoustic Mode (GAM)] Axisymmetric electrostatic and compressible fluid oscillation driven by geodesic magnetic curvature whose frequency scales with the plasma ion-acoustic speed ($\propto \sqrt{T_e}$) and defines the lower accumulation boundary for BAE gaps.
+
+\item[Global Alfv\'{e}n Eigenmode (GAE)] Discrete shear-Alfv\'{e}n oscillation localized near an extremum of the Alfv\'{e}n continuum in low-shear helical or tokamak configurations without requiring toroidicity-induced gap coupling.
+
+\item[Heliotron] Non-axisymmetric toroidal stellarator-type magnetic confinement device using continuous helical coils alongside toroidal and vertical field coils to generate rotational transform ($\iota$) without requiring a large net ohmic plasma current ($I_p$, $\mathrm{A}$, typically in the $\mathrm{kA}$ range).
+
+\item[High-Confinement Mode (H-mode)] Improved toroidal plasma confinement regime featuring reduced edge radial transport, steep pedestal pressure gradients, and enhanced stored energy $W_p$ ($\mathrm{J}$) above a heating power threshold.
+
+\item[Hilbert Transform ($\mathcal{H}$)] Linear integral operator shifting all positive-frequency Fourier components by $-\pi/2~\mathrm{rad}$ to construct the quadrature component $\mathcal{H}[x(t)]$ of the complex analytic signal $z(t)$ for instantaneous envelope $A(t)$ and phase $\phi(t)$ extraction.
+
+\item[Last Closed Flux Surface (LCFS)] Outermost nested toroidal magnetic surface bounding the confined plasma column ($\rho = r/a = 1.0$, $a = 0.170~\mathrm{m}$ in Heliotron~J) before field lines intersect the vacuum vessel or divertor.
+
+\item[Lawson Criterion] Ignition condition for self-sustained fusion requiring the triple product of bulk density, energy confinement time, and thermal temperature to satisfy $n \tau_E T \ge 3 \times 10^{21}\,\mathrm{m^{-3}\cdot s\cdot keV}$.
+
+\item[Magnetohydrodynamics (MHD)] Single-fluid macroscopic plasma framework combining Maxwell's equations with continuum fluid mechanics to describe magnetic equilibrium force balance and collective electromagnetic plasma waves.
+
+\item[Magnitude-Squared Coherence ($\gamma^2$)] Dimensionless normalized cross-spectral correlation bounded on $[0, 1]$ measuring linear phase consistency between two probe signals (or between ECE and Mirnov channels) as a function of frequency $f$ ($\mathrm{Hz}$).
+
+\item[Median Absolute Deviation ($\hat{\sigma}_{\mathrm{MAD}}$)] Outlier-resistant dispersion estimator given by $1.4826 \times \mathrm{median}(|x_i - \tilde{x}|)$ ($\mathrm{V}$, where $\tilde{x} = \mathrm{median}(x)$), providing a calibrated Gaussian-equivalent noise-floor estimate for adaptive burst detection.
+
+\item[Mirnov Coil] Inductive pickup probe outside the last closed flux surface (LCFS, area-turns $N A$, $\mathrm{m^2}$) measuring $\mathrm{d}\tilde{B}_\theta/\mathrm{d}t$ ($\dot{B}$) fluctuations ($\mathrm{T}/\mathrm{s}$, amplified in $\mathrm{V}$) to resolve spectra and mode numbers ($m, n$).
+
+\item[Neutral Beam Injection (NBI)] Auxiliary heating injecting $\sim 30~\mathrm{keV}$ neutral hydrogen beams that ionize to sustain super-Alfv\'{e}nic fast ions capable of destabilizing Alfv\'{e}nic modes.
+
+\item[Non-Uniform Discrete Fourier Transform (NUDFT)] Spatial spectral transform evaluated over irregularly spaced coordinates (such as poloidal coil angles $\theta_j$, $\mathrm{rad}$, for PMP1--PMP14) to extract mode numbers $m$ without interpolation errors.
+
+\item[Normalized Minor Radius ($\rho$)] Dimensionless flux-surface radial coordinate defined as $\rho = r/a$ relative to average minor radius $a$ ($\mathrm{m}$), spanning magnetic axis ($\rho = 0$) to the LCFS ($\rho = 1$).
+
+\item[Optical Thickness ($\tau_{\mathrm{opt}}$)] Line-integrated absorption metric along an ECE chord; optically thick layers ($\tau_{\mathrm{opt}} \gg 1$) emit blackbody radiation proportional to electron temperature (uncalibrated intensity $I_{\mathrm{ECE}} \propto T_e$).
+
+\item[Phase-Randomized Surrogate] Null-hypothesis series retaining the exact experimental Fourier amplitudes while drawing uniform random phases on $[0, 2\pi)$, destroying three-wave phase locking while preserving power spectra and $O(1/K)$ bias.
+
+\item[Rotational Transform ($\iota$)] Magnetic field-line winding angle ($\mathrm{rad}$ per toroidal transit, normalized as $\iota/2\pi = 1/q$) quantifying helical twist around the torus and governing shear-Alfv\'{e}n continuum gap frequencies.
+
+\item[Safety Factor ($q$)] Dimensionless inverse measure of rotational transform defined as $q = 2\pi/\iota$, representing the average number of toroidal field-line transits per single poloidal transit around the magnetic axis.
+
+\item[Savitzky--Golay Filter] Polynomial local least-squares smoothing and differentiation filter ($525$-sample, $0.525~\mathrm{ms}$ window in this thesis) applied to unwrapped analytic phases $\phi(t)$ to extract instantaneous mode frequencies $f(t)$ while suppressing high-frequency phase-derivative noise.
+
+\item[Sawtooth Oscillation] Quasi-periodic core relaxation instability producing rapid repetitive collapses and gradual recoveries in central electron temperature $T_e$ and density profiles via magnetic reconnection near low-order rational surfaces.
+
+\item[Short-Time Fourier Transform (STFT)] Spectrogram method evaluating windowed discrete Fourier transforms over sliding time segments of duration $T$ ($\mathrm{s}$) with uniform frequency resolution $\Delta f = 1/T$ ($\mathrm{Hz}$).
+
+\item[Three-Wave Coupling] Nonlinear quadratic interaction among wave modes satisfying frequency matching $f_3 = f_1 \pm f_2$ ($\mathrm{Hz}$) and coherent phase locking, enabling cross-band energy exchange and harmonic steepening quantified by bispectral bicoherence.
+
+\item[Toroidal Alfv\'{e}n Eigenmode (TAE)] Shear-Alfv\'{e}n discrete mode residing within the spectral gap formed by toroidal coupling of adjacent poloidal harmonics ($m$ and $m+1$) centered near $f_{\mathrm{TAE}} = (\iota/2\pi)v_A/(4\pi R_0)$ ($\mathrm{Hz}$).
+\end{description}

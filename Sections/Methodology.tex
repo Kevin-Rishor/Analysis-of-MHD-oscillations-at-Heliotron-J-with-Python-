@@ -1,0 +1,233 @@
+\newpage
+
+\section{Methodology}
+
+Within Heliotron~J's flexible $L=1, M=4$ helical configuration, coil currents, heating schedules, and diagnostic availability varied across campaigns, altering energetic-particle confinement and MHD stability. Screening matched configurations for complete 18-coil Mirnov and 16-channel ECE coverage, sustained $\mathrm{NBI}+\mathrm{ECH}$ heating ($>30~\mathrm{ms}$), zero analog-to-digital converter (ADC) rail saturation or switching spikes, and clean spectrograms yielded primary shot \#88653 and unpooled replicate \#88654 (Annex~\ref{annex:data}). Operationally, Objective~1 mapped Mirnov decomposition, radial ECE localization (Section~\ref{subsubsec:method_ece_radial}), and ECH switch-off tracking (Section~\ref{subsubsec:method_ech_off}) to mode structure and transition dynamics; Objective~2 tested heating synchronization and dispersion scalings via autocorrelation-adjusted partial correlations and LPF ECE $T_e$ proxies (Section~\ref{subsubsec:method_scaling}); and Objective~3 isolated nonlinear coupling via surrogate-calibrated auto-bicoherence (Figure~\ref{fig:methodology_pipeline}, Appendix~\ref{appendix:github}).
+
+Workflows ran in 64-bit Python~3.12.4 by the Python Software Foundation on the 64-bit ARM (ARM64) architecture using \texttt{NumPy} 1.26.4, \texttt{SciPy} 1.13.1---via \texttt{scipy.\allowbreak signal} and \texttt{scipy.\allowbreak stats} for spectral estimation, Bessel and Butterworth second-order section (SOS) infinite impulse response (IIR) filters, Savitzky--Golay differentiation, Hilbert transforms, and significance testing---and \texttt{Matplotlib}~3.9.2, exporting peak catalogs in JavaScript Object Notation (JSON) format. Raw Experimental Data Format (EDF, \texttt{.edf}) records were parsed with \texttt{turnelib} and \texttt{PyEDFlib} 0.1.38 atop \texttt{jpack}~2025 v1.0 (\texttt{libana\_\allowbreak signal}, \texttt{hjlib}, \texttt{matplotlibutil}; IAE, Kyoto University), with ECE radial mapping via the \textsc{TRAVIS} 3D ray-tracing code (Max Planck Institute for Plasma Physics, Greifswald; Table~\ref{tab:work_schedule}).
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    font=\sffamily,
+    >=Stealth,
+    node distance=0.35cm and 0.34cm,
+    pbox/.style={
+      rectangle, rounded corners=3.5pt, draw=#1, fill=white, line width=0.8pt,
+      align=center, inner xsep=4pt, inner ysep=3.5pt, font=\footnotesize,
+      minimum height=1.06cm
+    },
+    rbox/.style={
+      rectangle, rounded corners=3.5pt, draw=red!70!black, fill=red!6!white, line width=0.9pt,
+      align=center, inner xsep=4pt, inner ysep=3.5pt, font=\footnotesize,
+      minimum height=1.06cm
+    },
+    panel/.style={
+      rounded corners=5pt, draw=#1!65!black, fill=#1!5!white, line width=0.7pt,
+      inner xsep=6pt, inner ysep=4.5pt
+    },
+    arr/.style={->, line width=0.85pt, draw=#1, rounded corners=3pt}
+  ]
+  % --- Objective 1: 2 rows x 3 cols (aligned identically with Obj 2 & 3 right edge) ---
+  \node[pbox=blue!65!black, text width=4.48cm] (o1_1) at (0,0)
+    {\textbf{\small Mirnov Signals}\\[2pt] Coils \texttt{MP1}, \texttt{MP3}, \texttt{MP4}};
+  \node[pbox=blue!65!black, text width=4.48cm, right=0.50cm of o1_1] (o1_2)
+    {\textbf{\small Time--Frequency Maps}\\[2pt] STFT \& CWT decompositions};
+  \node[rbox, text width=4.48cm, right=0.50cm of o1_2] (o1_3)
+    {\textbf{\small Dual-Criterion Gate}\\[2pt] $P \ge \mu + 3\sigma$ and $\gamma^2 > 0.7$};
+
+  \node[pbox=blue!65!black, text width=4.48cm, below=0.40cm of o1_1] (o1_4)
+    {\textbf{\small Peak Selection}\\[2pt] Mode tracking \& JSON export};
+  \node[pbox=blue!65!black, text width=4.48cm, right=0.50cm of o1_4] (o1_5)
+    {\textbf{\small Modal Extraction}\\[2pt] NUDFT spatial mode extraction};
+  \node[pbox=blue!65!black, text width=4.48cm, right=0.50cm of o1_5] (o1_6)
+    {\textbf{\small ECE Localization}\\[2pt] 16-channel radial \& ECH-off};
+
+  \node[anchor=south west, font=\footnotesize\bfseries\sffamily, text=blue!65!black] (o1_lbl)
+    at ([yshift=2pt]o1_1.north west) {Objective 1: Spectral \& Spatial Characterization};
+
+  % --- Root node centered cleanly above Objective 1 ---
+  \node[pbox=gray!55!black, fill=gray!6!white, text width=7.6cm, minimum height=0.84cm,
+        above=0.50cm of o1_2] (root)
+    {\textbf{\small Shot Selection}\\[1pt] Diagnostic availability \& flat-top screening (\#88653, \#88654)};
+
+  % --- Objective 2: 5 cols ---
+  \node[pbox=teal!75!black, text width=2.55cm, below=0.70cm of o1_4.south west, anchor=north west] (o2_1)
+    {\textbf{\small Diagnostic}\\\textbf{\small Data}\\[2pt] Heating, ECE \&\\[-1pt]$n_e$ profiles};
+  \node[pbox=teal!75!black, text width=2.55cm, right=0.28cm of o2_1] (o2_2)
+    {\textbf{\small Signal}\\\textbf{\small Envelope}\\[2pt] Bessel filter\\[-1pt]+ Hilbert};
+  \node[rbox, text width=2.55cm, right=0.28cm of o2_2] (o2_3)
+    {\textbf{\small Burst}\\\textbf{\small Detection}\\[2pt] MAD threshold\\[-1pt]+ close};
+  \node[pbox=teal!75!black, text width=2.55cm, right=0.28cm of o2_3] (o2_4)
+    {\textbf{\small Correlation}\\\textbf{\small Suite}\\[2pt] Lagged, $N_{\mathrm{eff}}$\\[-1pt]\& partial};
+  \node[pbox=teal!75!black, text width=2.55cm, right=0.28cm of o2_4] (o2_5)
+    {\textbf{\small Scaling}\\\textbf{\small Models}\\[2pt] LPF ECE $T_e$\\[-1pt]\& BAE};
+
+  \node[anchor=south west, font=\footnotesize\bfseries\sffamily, text=teal!75!black] (o2_lbl)
+    at ([yshift=2pt]o2_1.north west) {Objective 2: Heating Correlation};
+
+  % --- Objective 3: 5 cols ---
+  \node[pbox=orange!70!black, text width=2.55cm, below=0.70cm of o2_1] (o3_1)
+    {\textbf{\small Stored}\\\textbf{\small Energy}\\[2pt] Diamagnetic\\[-1pt]signal $W_p$};
+  \node[pbox=orange!70!black, text width=2.55cm, right=0.28cm of o3_1] (o3_2)
+    {\textbf{\small Burst}\\\textbf{\small Window}\\[2pt] Hysteresis\\[-1pt]detection};
+  \node[pbox=orange!70!black, text width=2.55cm, right=0.28cm of o3_2] (o3_3)
+    {\textbf{\small Bispectrum}\\[2pt] Bicoherence\\[-1pt]coupling matrix};
+  \node[rbox, text width=2.55cm, right=0.28cm of o3_3] (o3_4)
+    {\textbf{\small Dual}\\\textbf{\small Validation}\\[2pt] Reproducibility\\[-1pt]+ cross-diag.};
+  \node[pbox=orange!70!black, text width=2.55cm, right=0.28cm of o3_4] (o3_5)
+    {\textbf{\small Asymptotic}\\\textbf{\small Validation}\\[2pt] $1/K$ conv.\ \&\\[-1pt]500 surrogates};
+
+  \node[anchor=south west, font=\footnotesize\bfseries\sffamily, text=orange!70!black] (o3_lbl)
+    at ([yshift=2pt]o3_1.north west) {Objective 3: Nonlinear Coupling};
+
+  % --- Background panels ---
+  \begin{scope}[on background layer]
+    \node[panel=blue, fit=(o1_1)(o1_3)(o1_4)(o1_6)(o1_lbl)] (p1) {};
+    \node[panel=teal, fit=(o2_1)(o2_5)(o2_lbl)] (p2) {};
+    \node[panel=orange, fit=(o3_1)(o3_5)(o3_lbl)] (p3) {};
+  \end{scope}
+
+  % --- Spine from Shot Selection to each Objective panel ---
+  \coordinate (trunk) at ([xshift=-0.42cm]p1.west);
+  \draw[arr=blue!65!black] (root.west) -| (trunk |- p1.west) -- (p1.west);
+  \draw[arr=teal!75!black] (trunk |- p1.west) -- (trunk |- p2.west) -- (p2.west);
+  \draw[arr=orange!70!black] (trunk |- p2.west) -- (trunk |- p3.west) -- (p3.west);
+
+  % --- Intra-panel arrows ---
+  \draw[arr=blue!65!black] (o1_1) -- (o1_2);
+  \draw[arr=blue!65!black] (o1_2) -- (o1_3);
+  \draw[arr=blue!65!black] (o1_3.south) -- ++(0,-0.26) -| (o1_4.north);
+  \draw[arr=blue!65!black] (o1_4) -- (o1_5);
+  \draw[arr=blue!65!black] (o1_5) -- (o1_6);
+
+  \draw[arr=teal!75!black] (o2_1) -- (o2_2);
+  \draw[arr=teal!75!black] (o2_2) -- (o2_3);
+  \draw[arr=teal!75!black] (o2_3) -- (o2_4);
+  \draw[arr=teal!75!black] (o2_4) -- (o2_5);
+
+  \draw[arr=orange!70!black] (o3_1) -- (o3_2);
+  \draw[arr=orange!70!black] (o3_2) -- (o3_3);
+  \draw[arr=orange!70!black] (o3_3) -- (o3_4);
+  \draw[arr=orange!70!black] (o3_4) -- (o3_5);
+  \end{tikzpicture}
+  \caption[Methodology pipeline]{Methodology pipeline. Source: Own elaboration.}
+  \label{fig:methodology_pipeline}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.82}
+\caption[Execution schedule of the Final Graduation Project activities]{Execution schedule of the Final Graduation Project activities. Source: Own elaboration.}
+\label{tab:work_schedule}
+\begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.0cm} c c@{}}
+\toprule
+Stage & Activity Description & Deliverable & Objective & Period \\
+\midrule
+1 & Literature review, shot screening, and \texttt{jpack} setup & Curated shot list and software stack & General & Jul--Aug 2026 \\
+2 & STFT/CWT, $3\sigma$/$\gamma^2$ gate, NUDFT ($m,n$), and 16-ECE $\times$ 18-Mirnov localization & Mode catalog and spatial maps & Objective~1 & Aug--Oct 2026 \\
+3 & Bessel/Hilbert, MAD bursts, partial $r$ ($N_{\mathrm{eff}}$), and LPF ECE $T_e$/BAE scalings & Heating correlation and scaling tables & Objective~2 & Sep--Oct 2026 \\
+4 & Corrected auto-bicoherence, 33 reference windows, and $1/K$ convergence surrogates & Asymptotic triad validation figures & Objective~3 & Oct--Nov 2026 \\
+5 & Cross-objective synthesis, literature benchmarking, statistical audit, and thesis writing & Final thesis and open-source code & All & Oct--Nov 2026 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{First Specific Objective}
+Objective~1 characterized MHD spectral evolution, spatial mode structure, radial position, and ECH switch-off response in Heliotron~J \cite{nagasaki2020heliotron, Yamamoto_2020} using an automated dual-criterion coherence gate.
+
+\subsubsection{Data Acquisition and Preprocessing}
+Discharges used a deuterium bulk plasma ($\mathrm{D}_2$, $m_i = 2m_p$) heated by hydrogen ($\mathrm{H}^0$) neutral beams, yielding mixed $\mathrm{D}^+/\mathrm{H}^+$ populations with $m_{\mathrm{eff}} \in [1.0, 2.0]\,m_p$ \cite{Yamamoto_2020, nagasaki2020heliotron}. Diagnostics were retrieved from \texttt{.edf} archives via \texttt{turnelib} (\texttt{jpack}, Annex~\ref{annex:library}) on custom IAE, Kyoto University Computer Automated Measurement and Control (CAMAC) and Peripheral Component Interconnect (PCI) eXtensions for Instrumentation (PXI) transient digitizers ($\pm 5.0~\mathrm{V}$ bipolar range) \cite{nagasaki2020heliotron, zang2019observation}. Custom IAE Mirnov coils (\texttt{MP1}--\texttt{MP4}, gain $G = 200$, $NA = 30 \times 15 \times 10^{-6}~\mathrm{m^2}$; \texttt{PMP1}--\texttt{PMP14}, $G = 2.0$, $NA = 4.5 \times 10^{-3}~\mathrm{m^2}$) used 12-bit \texttt{530-1} modules at $f_s = 1.0~\mathrm{MHz}$ ($262\,144$ samples), alongside 16-bit \texttt{E500-2} $\mathrm{H}_\alpha$ monitors (\texttt{HAFAST3.5}--\texttt{15.5}) and 16-bit \texttt{E501-3} radiometry at $1.0~\mathrm{MHz}$ \cite{nagasaki2020heliotron, zang2019observation}.
+
+Equilibrium signals used an IAE 16-bit \texttt{40088-1} digitizer at $100~\mathrm{kHz}$ ($131\,072$ samples) for custom diamagnetic loops (\texttt{DIA135-DEF1/2}, $W_p$, $G = 50.0$) and Rogowski coil (\texttt{ROG15}, $I_p$, $G = 500.0$), a 14-bit \texttt{E700-1} module at $10.0~\mathrm{MHz}$ ($4 \times 10^6$ samples) for the IAE $2~\mathrm{mm}$ ($140~\mathrm{GHz}$) interferometer (\texttt{MICRO-1/2}, $n_e$, $G = 1.0$), and 12-bit \texttt{5909-2} channels at $5.0~\mathrm{kHz}$ for the Toshiba $70~\mathrm{GHz}$, $0.4~\mathrm{MW}$ X2 gyrotron (\texttt{ECHRG500}, $-1000~\mathrm{kW/V}$) and IAE $30~\mathrm{keV}$, $0.7~\mathrm{MW}$ NBI monitors (Beam Lines~1 and~2 [\texttt{BL1}/\texttt{BL2}]; \texttt{NBIS9I}/\texttt{NBIS10I} [plotted as \texttt{NBIS9}/\texttt{NBIS10}], $100~\mathrm{A/V}$) \cite{Yamamoto_2020, nagasaki2020heliotron}. Internal $T_e$ oscillations were measured at port \#11.5 by the IAE 16-channel X2 ECE radiometer ($57.5\text{--}72.5~\mathrm{GHz}$, $56$/$64~\mathrm{GHz}$ local oscillators (LOs), $1.0~\mathrm{GHz}$ IF stages) \cite{luo2020measurement, Weir2019}. Following International System of Units (SI) conventions, plots reported quantities in standard decimal prefixes ($\mathrm{ms}$, $\mathrm{kHz}$, $\mathrm{GHz}$, $\mathrm{kA}$, $\mathrm{kJ}$, $\mathrm{kW}$) with volts ($\mathrm{V}$) or arbitrary units ($\mathrm{a.u.}$). Coplanar probes \texttt{MP1}, \texttt{MP3}, and \texttt{MP4} provided 1D toroidal phases, excluding off-midplane \texttt{MP2} ($\theta \neq 0^\circ$) to avoid poloidal mixing \cite{Seo2019TheEO, schittenhelm1997analysis}, whereas all 18 coils entered radial ECE cross-correlation.
+
+\subsubsection{Time-Frequency Analysis}
+Stationary and transient \texttt{MP1} dynamics used an STFT PSD spectrogram (\texttt{libana\_signal}, Hann window, Eq.~(\ref{eqn:freq_res})) \cite{proakis2021digital} at $N_{\mathrm{fft}} = 2000$ ($500~\mathrm{Hz}$ resolution) for tracking, $256/1024$ samples ($3.9/0.977~\mathrm{kHz}$) across ECH off, and $512$ samples ($1.953~\mathrm{kHz}$) for bicoherence, paired with a complex Morlet CWT ($\omega_0 = 6$, Eq.~(\ref{eqn:morlet}), $\pm 5\sigma$ support, $150$ bins over $10\text{--}150~\mathrm{kHz}$) \cite{boashash2015time, addison2016illustrated}. Secondary and primary modes used $40\text{--}80$ and $80\text{--}120~\mathrm{kHz}$ passbands ($80\text{--}100~\mathrm{kHz}$ for steady ECE localization; $30\text{--}55$ and $75\text{--}105~\mathrm{kHz}$ across ECH switch-off).
+
+\subsubsection{Dual-Criterion Mode Identification}
+Physical modes within $15\text{--}100~\mathrm{kHz}$ required both $4~\mathrm{ms}$ rolling power exceeding a $3\sigma$ baseline (Eq.~(\ref{eqn:dominance}), calibrated on $150\text{--}175~\mathrm{ms}$, slightly overlapping ECH turn-on at $171.2~\mathrm{ms}$) for $\ge 2~\mathrm{ms}$---enforcing $99.7\,\%$ Gaussian false-alarm rejection over $\ge 80$ cycles \cite{bendat2010random}---and Welch coherence $\gamma^2 > 0.7$ ($100$ ensembles, Eq.~(\ref{eqn:coherence}), $>70\,\%$ phase-coherent variance) on at least one of \texttt{MP1}--\texttt{MP3}, \texttt{MP1}--\texttt{MP4}, or \texttt{MP3}--\texttt{MP4} \cite{KraemerFlecken2024, Singh2024}, with confirmed peaks saved as JSON.
+
+\subsubsection{Poloidal (\texorpdfstring{$m$}{m}) and Toroidal (\texorpdfstring{$n$}{n}) Mode Decomposition}
+After $\mathrm{T/s}$ calibration and polarity inversion of \texttt{PMP1}--\texttt{PMP4} (Appendix~\ref{appendix:poloidalm}), poloidal numbers $m$ were extracted from \texttt{PMP1}--\texttt{PMP14} via spatial NUDFT (Eqs.~(\ref{eqn:nudft})--(\ref{eqn:pol_phase})) \cite{dutt1993fast, Klein2008} over $m = \pm 6$ (expanding to $\pm 20$ if boundary-pinned) with a synthetic alias-free self-test. Because single-mode $40\text{--}80~\mathrm{kHz}$ fits left large equatorial residuals, an exhaustive two-mode search scanned all $\binom{41}{2} = 820$ pairs $(m_1, m_2) \in [-20, +20]^2$ using closest-branch phase assignment (Eq.~(\ref{eqn:dual_branch_phase})) and $r_{\mathrm{circ}}(m_1, m_2)$ (Eq.~(\ref{eqn:r_circ_dual})). Plots used an automated $8.0~\mathrm{ms}$ minimal-$|\mathrm{d}f/\mathrm{d}t|$ sub-window in $259.1\text{--}275.0~\mathrm{ms}$ ($50~\%$ slope tolerance), plus fixed $\mathrm{ECH}+\mathrm{NBI}$ ($259.1\text{--}291.3~\mathrm{ms}$), $\mathrm{NBI}$-only ($291.3\text{--}300.0~\mathrm{ms}$), and post-transition $87~\mathrm{kHz}$ slices ($291.4\text{--}291.8~\mathrm{ms}$ in \#88653; $292.0\text{--}293.0~\mathrm{ms}$ in \#88654). Fits with $r_{\mathrm{circ}} \ge 0.70$ and mean absolute error $\le 45^\circ$ were \emph{supported} (else \emph{unresolved}), while toroidal $n$ from \texttt{MP1}, \texttt{MP3}, and \texttt{MP4} (Eqs.~(\ref{eqn:meas_phase})--(\ref{eqn:rmse})) remained defined modulo~$4$.
+
+\subsubsection{Radial Fluctuation Profiling and Multi-Coil Cross-Correlation}
+\label{subsubsec:method_ece_radial}
+The 16 ECE channels (\texttt{ECE1FAST}--\allowbreak\texttt{ECE16FAST}, $1~\mathrm{GHz}$ spacing) \cite{luo2020measurement, Weir2019} were mapped to $\rho = r/a$ via Eq.~(\ref{eqn:ece_travis_fit}) ($\Delta \rho \approx 0.08\text{--}0.09$, Eq.~(\ref{eqn:ece_radial_res})) and profiled across $\mathrm{ECH}+\mathrm{NBI}$ ($259.1\text{--}291.3~\mathrm{ms}$), $\mathrm{NBI}$-only ($291.3\text{--}300.0~\mathrm{ms}$), its step-free tail ($294.2\text{--}300.0~\mathrm{ms}$), and $259.1\text{--}275.0~\mathrm{ms}$ in $40\text{--}80$ and $80\text{--}100~\mathrm{kHz}$. Localization required: (i)~bandpass root-mean-square (RMS) $\tilde{T}_e > 10\times$ the $150\text{--}175~\mathrm{ms}$ pre-plasma floor; (ii)~adjacent-channel $\gamma^2 > 0.70$; and (iii)~all $16 \times 18$ ECE--Mirnov cross-correlations via carrier $|r_{\mathrm{car}}(\tau)|$ ($|\tau| \le 25~\mu\mathrm{s}$, Eq.~(\ref{eqn:xcorr_carrier})), envelope $|r_{\mathrm{env}}(\tau)|$ ($|\tau| \le 100~\mu\mathrm{s}$, Eq.~(\ref{eqn:xcorr_envelope})), and $\gamma^2(f)$ ($N_{\mathrm{fft}} = 1024, 2048$, $50~\%$ overlap) above $\gamma_{95}^2$ (Eq.~(\ref{eqn:noise_floor})), using $\Delta\phi_{xy}(f)$ and lagged correlations for adjacent propagation.
+
+\subsubsection{Response to ECH Switch-Off}
+\label{subsubsec:method_ech_off}
+Transition dynamics were evaluated on \#88653 with \#88654 as an unpooled same-sign check across one transition per shot ($N=1$; ECH on $171.2~\mathrm{ms}$, NBI on $222.4~\mathrm{ms}$, ECH off $291.32~\mathrm{ms}$ at \texttt{ECHRG500} half-drop with reference $t_0 = 291.20~\mathrm{ms}$, NBI off $300.4~\mathrm{ms}$). Phase-resolved \texttt{MP1} RMS and \texttt{MP1}--\texttt{MP3} coherence tracked persistence, while piecewise linear fits over $2$ and $5~\mathrm{ms}$ windows around $t_0$ yielded $\Delta(\mathrm{d}W_p/\mathrm{d}t)$ and block-bootstrap intervals inside NBI sustainment. Spectral shifts ($30\text{--}55$, $75\text{--}105~\mathrm{kHz}$) compared $[t_0-2.0,\,t_0]~\mathrm{ms}$ vs.\ $[t_0+1.5,\,t_0+3.5]~\mathrm{ms}$ centroids (Eq.~(\ref{eqn:spectral_centroid})) and peak bins, null-calibrated across $261.0\text{--}287.5~\mathrm{ms}$ via $54$ sliding ($0.5~\mathrm{ms}$ step) and $5$ disjoint windows ($p \ge 0.167$, Eq.~(\ref{eqn:empirical_p})) plus $500$ block permutations, alongside $f \propto n_e^{-\gamma}$ fits ($262\text{--}290$, $270\text{--}290$, $275\text{--}291.2~\mathrm{ms}$) tested at $290.2$ and $293.7~\mathrm{ms}$.
+
+\subsection{Second Specific Objective}
+Objective~2 quantified EPM--heating synchronization by correlating conditioned magnetic envelopes and instantaneous frequencies with macroscopic proxies \cite{Adulsiriswad_2024, Varela2023, Zhong2024}.
+
+\subsubsection{Signal Conditioning and Active Burst Detection}
+Heating, ECE, and $n_e$ traces were linearly interpolated onto the $1~\mathrm{MHz}$ Mirnov grid (Figure~\ref{fig:methodology2}). Magnetic signals were filtered (4th-order Bessel bandpass) and Hilbert-transformed for envelope $A(t)$ and unwrapped phase $\phi(t)$ (Eq.~(\ref{eqn:hilbert_inst})) \cite{zang2019observation, Fabus2021}, with $f(t)$ via $525$-sample ($0.525~\mathrm{ms}$) Savitzky--Golay differentiation chosen via bandwidth sweeps to suppress phase-derivative noise while preserving millisecond chirps. Active bursts selected the longest contiguous interval ($> 10.0~\mathrm{ms}$, gaps $\le 3.0~\mathrm{ms}$ bridged) above $\mathrm{median} + 6.0\,\hat{\sigma}_{\mathrm{MAD}}$ (Eq.~(\ref{eqn:mad_sigma})) prior to $100\times$ cascaded IIR decimation \cite{boashash2015time, Fabus2021}.
+
+\begin{figure}[H]
+  \centering
+  \begin{tikzpicture}[
+    font=\sffamily,
+    >=Stealth,
+    tbox/.style={
+      rectangle, rounded corners=3.5pt, draw=#1, fill=white, line width=0.85pt,
+      align=center, inner xsep=3.5pt, inner ysep=5pt, font=\footnotesize,
+      minimum height=1.55cm
+    },
+    arr/.style={->, line width=0.9pt, draw=teal!75!black, rounded corners=3pt}
+  ]
+  % 2x2 Objective 2 conditioning grid in center
+  \node[tbox=teal!75!black, text width=4.05cm] (c1)
+    {\textbf{\small Bessel Bandpass}\\[2pt] Maximally flat delay\\(zero phase distortion)};
+  \node[tbox=teal!75!black, text width=4.05cm, right=0.44cm of c1] (c2)
+    {\textbf{\small Analytic Signal}\\[2pt] Hilbert transform $\mathcal{H}[\cdot]$\\Envelope $A(t)$ \& phase $\phi(t)$};
+  \node[tbox=teal!75!black, text width=4.05cm, anchor=north] (c3) at ([yshift=-0.65cm]c1.south |- c2.south)
+    {\textbf{\small Savitzky--Golay}\\[2pt] 525-sample polynomial\\Preserves sweep dynamics};
+  \node[tbox=teal!75!black, text width=4.05cm, right=0.44cm of c3] (c4)
+    {\textbf{\small Decimation ($\times 100$)}\\[2pt] Multi-stage anti-alias\\Ensures IIR stability};
+
+  \node[anchor=south west, font=\footnotesize\bfseries\sffamily, text=teal!75!black, align=left] (lbl2)
+    at ([yshift=2pt]c1.north west) {Objective 2: Signal Conditioning \&\\Dynamic Parameter Extraction};
+
+  \begin{scope}[on background layer]
+    \node[rounded corners=5pt, draw=teal!60!black, fill=teal!5!white, line width=0.7pt,
+          inner xsep=4pt, inner ysep=7pt, fit=(c1)(c2)(c3)(c4)(lbl2)] (box2) {};
+  \end{scope}
+
+  % Left and right endpoint nodes vertically centered on container
+  \node[tbox=gray!55!black, fill=gray!4!white, text width=2.05cm, left=0.28cm of box2] (raw)
+    {\textbf{\small Raw Signal}\\[2pt] Mirnov $\dot{B}(t)$,\\ECE, or $n_e$\\interpolated};
+  \node[tbox=teal!75!black, line width=1.1pt, text width=2.40cm, right=0.28cm of box2] (out)
+    {\textbf{\small Conditioned}\\\textbf{\small Output}\\[2pt] Synchronized\\$A(t)$ \& $f(t)$\\[-1pt]for correlation};
+
+  % Arrows
+  \draw[arr] (raw.east) -- ++(0.14,0) |- (c1.west);
+  \draw[arr] (c1) -- (c2);
+  \draw[arr] (c2.south) -- ++(0,-0.31) -| (c3.north);
+  \draw[arr] (c3) -- (c4);
+  \draw[arr] (c4.east) -| ([xshift=-0.14cm]out.west) -- (out.west);
+  \end{tikzpicture}
+  \caption[Signal-conditioning and parameter-extraction chain for Objective 2]{Signal-conditioning and parameter-extraction chain for Objective~2. Source: Own elaboration.}
+  \label{fig:methodology2}
+\end{figure}
+
+\subsubsection{Correlation with Heating Systems}
+Lagged cross-correlation (Eq.~(\ref{eqn:lagged_corr})) \cite{bendat2010random, Zhong2024} quantified heating synchronization on \#88653 (with \#88654 unpooled) across $\pm 20.0~\mathrm{ms}$ (amplitude), $\pm 40.0~\mathrm{ms}$ (frequency), and $\pm 50.0~\mathrm{ms}$ (core proxies), requiring $|r| > 0.7$ and autocorrelation-adjusted $p < 0.05$ ($N_{\mathrm{eff}}$, Eqs.~(\ref{eqn:neff})--(\ref{eqn:t_stat})) \cite{shumway2017time}. Shared ECH-step trends were controlled via partial correlation (Eq.~(\ref{eqn:partial_corr}), $30\text{--}70~\%$ step thresholds) \cite{james2021statistical} with Bonferroni (Eq.~(\ref{eq:bonferroni})) and FDR-BH corrections, excluding lagged tests with $N_{\mathrm{eff}} < 5$ \cite{dunn1961multiple, Benjamini1995}, whereas Section~\ref{subsubsec:method_scaling} retained small-$N_{\mathrm{eff}}$ ($4\text{--}9$) scaling models for non-significant physical ranking.
+
+\subsubsection{Theoretical Frequency Scaling Validation}
+\label{subsubsec:method_scaling}
+To construct a relative $T_e(t)$ proxy without claiming absolute temperatures, saturated ECE channels (plateaus $> 20$ samples or rail fraction $> 2~\%$) were excluded; baseline-subtracted non-saturated traces were smoothed using a 4th-order zero-phase Butterworth LPF ($f_c = 30~\mathrm{Hz}$, SOS) suppressing ${\sim}800~\mathrm{Hz}$ modulations, and the representative \texttt{ECE12FAST} (resonant) and \texttt{ECE9FAST} (chord-integrated) channels were correlated ($N_{\mathrm{eff}}$-adjusted) against $W_p$ and $W_p/n_e$ over $248.3$--$300.9~\mathrm{ms}$ and the full shot. Instantaneous frequencies on $259.1$--$275.0~\mathrm{ms}$ (normalized on $250.0$--$270.0~\mathrm{ms}$; checked on $150.0$--$285.0~\mathrm{ms}$) were ranked ($|r|$, $p_{\mathrm{adj}}$) against the seven Section~\ref{subsubsec:scaling_models} models (Eqs.~(\ref{eqn:shear_alfven})--(\ref{eqn:shift_macro})) \cite{chen2016introduction, Varela2024}, which reduced to five time-varying curves over the flat-top beam window (constant Eqs.~(\ref{eqn:epm_density})--(\ref{eqn:epm_drift})): Alfv\'enic $1/\sqrt{n_e}$ ($B = 1.25~\mathrm{T}$, $5$-sample median $n_e$), BAE $\sqrt{T_e}$, coupled BAE $\sqrt{v_A^2+c_s^2}$, current shift $I_p$, and $W_p$.
+
+\subsection{Third Specific Objective}
+Objective~3 tested nonlinear three-wave coupling among MHD modes via auto-bicoherence and asymptotic convergence \cite{Kin2025, Miyashita2025}.
+
+\subsubsection{Heated-Window Selection and Reference Windows}
+Maps spanned two $7.936~\mathrm{ms}$ intervals ($30$ overlapping $512$-sample Hann segments)---$\mathrm{ECH}+\mathrm{NBI}$ ($259.1\text{--}267.0~\mathrm{ms}$) and $\mathrm{NBI}$-only ($291.3\text{--}299.2~\mathrm{ms}$)---against $33$ contiguous $7.936~\mathrm{ms}$ reference windows from $150.0~\mathrm{ms}$ ($10$ NBI; $23$ ohmic/ECH-only/boundary/decay), while convergence evaluated full $\mathrm{ECH}+\mathrm{NBI}$ ($259.1\text{--}291.2~\mathrm{ms}$, $N_{\mathrm{seg}} = 124$) and $\mathrm{NBI}$-only ($291.3\text{--}300.0~\mathrm{ms}$, $N_{\mathrm{seg}} = 32$) intervals.
+
+\subsubsection{Bicoherence Calculation and Asymptotic Convergence Analysis}
+Sum ($f_1 + f_2 = f_3$) and difference ($f_1 - f_2 = f_3$) triads used squared auto-bicoherence $b^2(f_1, f_2)$ (Eqs.~(\ref{eqn:bispectrum})--(\ref{eqn:diff_domain})) \cite{Hou2019, Fujisawa2021} across $50~\%$-overlapped $512$-sample Hann segments ($1.953~\mathrm{kHz}$ bins, linear detrended, maxima over $5\text{--}100~\mathrm{kHz}$ [$2306$ bins]); fixing an off-by-one \texttt{np.roll} offset in $f_1 + f_2$ eliminated a $1.953~\mathrm{kHz}$ shift and matched direct integration within $1.1 \times 10^{-16}$. To separate phase locking from $O(1/K)$ bias, a split-sample search ($11.7\text{--}99.6~\mathrm{kHz}$, $f_1 \le f_2$, peaks $\ge 3$ bins apart) partitioned segments into alternating $6$-segment blocks (dropping $2$ boundary segments against leakage), selected top peaks on $43$ segments, and fitted $b^2(K) = b_0 + C/K$ (Eq.~(\ref{eqn:b2_convergence})) on $10$ disjoint $4$-segment blocks over $1/K \le 0.055$ ($K \ge 18$) across $500$ sub-ensembles without replacement (\texttt{SEED = 20261008}, \texttt{numpy.random.default\_rng}; $R^2 \ge 0.96\text{--}0.99$) against an off-diagonal noise floor. Intercept $95~\%$ confidence intervals and $p_{\mathrm{surr}}$ used $500$ phase-randomized surrogates under the same seed, while the brief $8.7~\mathrm{ms}$ $\mathrm{NBI}$-only interval ($2$ blocks, $<6$ required) was \emph{untestable} in both \#88653 and \#88654.
+
+\subsubsection{Scope and Limits of the Bicoherence Analysis}
+Shot \#88654 served strictly as an unpooled replicate without divertor Langmuir correlations. Because $50~\%$ overlap implied $K_{\mathrm{eff}} < K$ ($\approx 89~\%$ segment sharing at $K = 0.9\,N_{\mathrm{seg}}$) and coupling to $\mathrm{d}W_p/\mathrm{d}t$ was untested, positive $b_0$ established quadratic magnetic phase locking rather than causal transport, and null results reflected absence of evidence rather than evidence of absence.
