@@ -1,6 +1,6 @@
 # Analysis of MHD Oscillations at Heliotron J with Python
 
-This repository contains the complete Python analysis suite, LaTeX manuscript sources, compiled thesis PDF ([Thesis.pdf](file:///c:/TFG/Thesis.pdf)), generated figures, and structured JSON/CSV/LaTeX-table outputs accompanying the Bachelor's Thesis (*Trabajo Final de Graduación*, Instituto Tecnológico de Costa Rica — PlasmaTEC / Kyoto University Institute of Advanced Energy):
+This repository contains the complete Python analysis suite, LaTeX manuscript sources, compiled thesis PDF ([Thesis.pdf](Thesis.pdf)), generated figures, and structured JSON/CSV/LaTeX-table outputs accompanying the Bachelor's Thesis (*Trabajo Final de Graduación*, Instituto Tecnológico de Costa Rica — PlasmaTEC / Kyoto University Institute of Advanced Energy):
 
 > **Analysis of MHD oscillations at Heliotron J with Python**  
 > **Kevinrishor** — Supervised by Prof. Shigeru Inagaki (IAE, Kyoto University), Ph.D. Iván Vargas Blanco & M.Sc. Ricardo Solano Piedra (ITCR PlasmaTEC)
@@ -62,29 +62,29 @@ flowchart TD
 
 ## Thesis-to-Code Mapping (`Thesis.pdf`)
 
-Every compiled figure, table, and code listing in [Thesis.pdf](file:///c:/TFG/Thesis.pdf) maps directly to tracked scripts and outputs in this repository:
+Every compiled figure, table, and code listing in [Thesis.pdf](Thesis.pdf) maps directly to tracked scripts and outputs in this repository:
 
 | Thesis Reference | Description | Generating Script | Repository Asset Path |
 | --- | --- | --- | --- |
-| **Fig. 2.1** | Heliotron J coil/diagnostic geometry diagram | *(Static schematic)* | [Images/Locations.jpeg](file:///c:/TFG/Images/Locations.jpeg) |
-| **Fig. 4.1** | `#88653` MP1 spectrogram with 3-sigma spectral dominance | `analysis/obj1_mode_identification/mhd_analysis_obj1.py` | [Images/obj1_mode_identification/panels/mhd_analysis_objective1_88653_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png](file:///c:/TFG/Images/obj1_mode_identification/panels/mhd_analysis_objective1_88653_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png) |
-| **Fig. 4.2** | Primary mode poloidal decomposition (`PMP1–PMP14`, `m=+3`) | `analysis/obj2_dynamics_and_structure/mhd_analysis_obj2.py` | [Images/obj2_dynamics_and_structure/panels/mhd_analysis_objective2_structure_88653_80_120kHz_panel3_poloidal_mode_number_decomposition_pmp1.png](file:///c:/TFG/Images/obj2_dynamics_and_structure/panels/mhd_analysis_objective2_structure_88653_80_120kHz_panel3_poloidal_mode_number_decomposition_pmp1.png) |
-| **Fig. 4.3** | Toroidal mode fit (`MP1, MP3, MP4`, `n=-1/+3`) | `analysis/obj1_mode_identification/mhd_primary_mode_id.py` | [Images/obj1_mode_identification/panels/mhd_primary_mode_toroidal_n_shot_88653_panel2_measured_phase_vs_theoretical_toroidal_p.png](file:///c:/TFG/Images/obj1_mode_identification/panels/mhd_primary_mode_toroidal_n_shot_88653_panel2_measured_phase_vs_theoretical_toroidal_p.png) |
-| **Fig. 4.4** | Cross-coherence spectra by heating phase (`#88653` & `#88654`) | `analysis/obj_ech/plot_gap_figs_C.py` | [Images/obj1_mode_identification/fig_coherence_spectra_both_shots.png](file:///c:/TFG/Images/obj1_mode_identification/fig_coherence_spectra_both_shots.png) |
-| **Fig. 4.5** | 16-ch ECE × 18-coil radial localization matrix (`#88653`) | `analysis/obj1_mode_identification/analyze_ece_all_probes_radial.py` | [Images/obj1_mode_identification/mhd_ece_all_probes_radial_localization_88653.png](file:///c:/TFG/Images/obj1_mode_identification/mhd_ece_all_probes_radial_localization_88653.png) |
-| **Fig. 4.6** | 2D flux-surface / helical spatial mode reconstruction | `analysis/obj2_dynamics_and_structure/mhd_plot_2d_torus_maps.py` | [Images/obj2_dynamics_and_structure/mhd_mode_spatial_map_2d_88653.png](file:///c:/TFG/Images/obj2_dynamics_and_structure/mhd_mode_spatial_map_2d_88653.png) |
-| **Fig. 4.7** | Whole-discharge heating, `Wp`, `n_e`, `Ip` timeline (`#88653`, `#88654`) | `analysis/obj_ech/plot_gap_figs_B.py` | [Images/obj2_dynamics_and_structure/panels/fig_heating_timeline_both_shots.png](file:///c:/TFG/Images/obj2_dynamics_and_structure/panels/fig_heating_timeline_both_shots.png) |
-| **Fig. 4.8** | 1-ms block RMS vs. time across bands (`#88653`, `#88654`) | `analysis/obj_ech/plot_gap_figs_B.py` | [Images/obj2_dynamics_and_structure/panels/fig_rms_vs_time_both_shots.png](file:///c:/TFG/Images/obj2_dynamics_and_structure/panels/fig_rms_vs_time_both_shots.png) |
+| **Fig. 2.1** | Heliotron J coil/diagnostic geometry diagram | *(Static schematic)* | [Images/Locations.jpeg](Images/Locations.jpeg) |
+| **Fig. 4.1** | `#88653` MP1 spectrogram with 3-sigma spectral dominance | `analysis/obj1_mode_identification/mhd_analysis_obj1.py` | [Images/obj1_mode_identification/panels/mhd_analysis_objective1_88653_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png](Images/obj1_mode_identification/panels/mhd_analysis_objective1_88653_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png) |
+| **Fig. 4.2** | Primary mode poloidal decomposition (`PMP1–PMP14`, `m=+3`) | `analysis/obj2_dynamics_and_structure/mhd_analysis_obj2.py` | [Images/obj2_dynamics_and_structure/panels/mhd_analysis_objective2_structure_88653_80_120kHz_panel3_poloidal_mode_number_decomposition_pmp1.png](Images/obj2_dynamics_and_structure/panels/mhd_analysis_objective2_structure_88653_80_120kHz_panel3_poloidal_mode_number_decomposition_pmp1.png) |
+| **Fig. 4.3** | Toroidal mode fit (`MP1, MP3, MP4`, `n=-1/+3`) | `analysis/obj1_mode_identification/mhd_primary_mode_id.py` | [Images/obj1_mode_identification/panels/mhd_primary_mode_toroidal_n_shot_88653_panel2_measured_phase_vs_theoretical_toroidal_p.png](Images/obj1_mode_identification/panels/mhd_primary_mode_toroidal_n_shot_88653_panel2_measured_phase_vs_theoretical_toroidal_p.png) |
+| **Fig. 4.4** | Cross-coherence spectra by heating phase (`#88653` & `#88654`) | `analysis/obj_ech/plot_gap_figs_C.py` | [Images/obj1_mode_identification/fig_coherence_spectra_both_shots.png](Images/obj1_mode_identification/fig_coherence_spectra_both_shots.png) |
+| **Fig. 4.5** | 16-ch ECE × 18-coil radial localization matrix (`#88653`) | `analysis/obj1_mode_identification/analyze_ece_all_probes_radial.py` | [Images/obj1_mode_identification/mhd_ece_all_probes_radial_localization_88653.png](Images/obj1_mode_identification/mhd_ece_all_probes_radial_localization_88653.png) |
+| **Fig. 4.6** | 2D flux-surface / helical spatial mode reconstruction | `analysis/obj2_dynamics_and_structure/mhd_plot_2d_torus_maps.py` | [Images/obj2_dynamics_and_structure/mhd_mode_spatial_map_2d_88653.png](Images/obj2_dynamics_and_structure/mhd_mode_spatial_map_2d_88653.png) |
+| **Fig. 4.7** | Whole-discharge heating, `Wp`, `n_e`, `Ip` timeline (`#88653`, `#88654`) | `analysis/obj_ech/plot_gap_figs_B.py` | [Images/obj2_dynamics_and_structure/panels/fig_heating_timeline_both_shots.png](Images/obj2_dynamics_and_structure/panels/fig_heating_timeline_both_shots.png) |
+| **Fig. 4.8** | 1-ms block RMS vs. time across bands (`#88653`, `#88654`) | `analysis/obj_ech/plot_gap_figs_B.py` | [Images/obj2_dynamics_and_structure/panels/fig_rms_vs_time_both_shots.png](Images/obj2_dynamics_and_structure/panels/fig_rms_vs_time_both_shots.png) |
 | **Fig. 4.9** | ECH-off `Wp` slope & amplitude transient (`#88653`, `#88654`) | `analysis/obj_ech/plot_ech_figures.py` | `Images/obj2_dynamics_and_structure/panels/fig_ech_wp_step_88653.png` & `fig_ech_wp_step_88654.png` |
 | **Fig. 4.10** | ECH-off secondary-mode centroid frequency transition (`#88653`, `#88654`) | `analysis/obj_ech/plot_ech_figures.py` | `Images/obj2_dynamics_and_structure/panels/fig_ech_secondary_freq_88653.png` & `fig_ech_secondary_freq_88654.png` |
 | **Figs. 4.11–4.13** | Macroscopic correlations (`Ip`, `Wp`, `n_e`) vs. primary mode envelope | `analysis/obj2_dynamics_and_structure/mhd_analysis_obj2.py` | `Images/obj2_dynamics_and_structure/panels/mhd_analysis_objective2_88653_80_120kHz_panel{1..3}_*.png` |
-| **Fig. 4.14** | Low-pass filtered ECE temperature vs. stored energy verification | `analysis/obj2_dynamics_and_structure/plot_ece_lpf_te_single_figure.py` | [Images/obj2_dynamics_and_structure/mhd_ece_lpf_te_verification_88653.png](file:///c:/TFG/Images/obj2_dynamics_and_structure/mhd_ece_lpf_te_verification_88653.png) |
+| **Fig. 4.14** | Low-pass filtered ECE temperature vs. stored energy verification | `analysis/obj2_dynamics_and_structure/plot_ece_lpf_te_single_figure.py` | [Images/obj2_dynamics_and_structure/mhd_ece_lpf_te_verification_88653.png](Images/obj2_dynamics_and_structure/mhd_ece_lpf_te_verification_88653.png) |
 | **Figs. 4.15–4.16** | EP frequency scaling fit (Primary 80–120 kHz & Secondary 40–80 kHz) | `analysis/obj2_dynamics_and_structure/mhd_analysis_obj2.py` | `Images/obj2_dynamics_and_structure/panels/mhd_analysis_objective2_heating_88653_{80_120,40_80}kHz_panel4_*.png` |
-| **Fig. 4.17** | Single-window bicoherence across 33 control windows (`#88653`, `#88654`) | `analysis/obj3_nonlinear_coupling/plot_control_windows.py` | [Images/obj3_nonlinear_coupling/fig_control_windows_v2.png](file:///c:/TFG/Images/obj3_nonlinear_coupling/fig_control_windows_v2.png) |
-| **Fig. 4.18** | Index-corrected 2D auto-bicoherence maps (`#88653`, `#88654`) | `analysis/obj3_nonlinear_coupling/update_bicoherence_maps_converged.py` | [Images/obj3_nonlinear_coupling/fig_bicoherence_maps_both_shots.png](file:///c:/TFG/Images/obj3_nonlinear_coupling/fig_bicoherence_maps_both_shots.png) |
-| **Fig. 4.19** | Asymptotic `1/K` extrapolation vs. 500 surrogates (`#88653`, `#88654`) | `analysis/obj3_nonlinear_coupling/generate_two_panel_convergence_fig.py` | [Images/obj3_nonlinear_coupling/fig_convergence_cumulative_v3_general.png](file:///c:/TFG/Images/obj3_nonlinear_coupling/fig_convergence_cumulative_v3_general.png) |
-| **Tables 4.1–4.8** | Discharge phases, ECH switch-off, mode structure, Obj 2 & 3 stats, `1/K` convergence | `analysis/obj_ech/` & `analysis/obj3_nonlinear_coupling/` | [analysis/obj_ech/results_tables_v2/](file:///c:/TFG/analysis/obj_ech/results_tables_v2/) |
-| **Listing B.1** | Dual-branch NUDFT poloidal mode search module | *(Source module)* | [Code/hjmag_poloidal.py](file:///c:/TFG/Code/hjmag_poloidal.py) |
+| **Fig. 4.17** | Single-window bicoherence across 33 control windows (`#88653`, `#88654`) | `analysis/obj3_nonlinear_coupling/plot_control_windows.py` | [Images/obj3_nonlinear_coupling/fig_control_windows_v2.png](Images/obj3_nonlinear_coupling/fig_control_windows_v2.png) |
+| **Fig. 4.18** | Index-corrected 2D auto-bicoherence maps (`#88653`, `#88654`) | `analysis/obj3_nonlinear_coupling/update_bicoherence_maps_converged.py` | [Images/obj3_nonlinear_coupling/fig_bicoherence_maps_both_shots.png](Images/obj3_nonlinear_coupling/fig_bicoherence_maps_both_shots.png) |
+| **Fig. 4.19** | Asymptotic `1/K` extrapolation vs. 500 surrogates (`#88653`, `#88654`) | `analysis/obj3_nonlinear_coupling/generate_two_panel_convergence_fig.py` | [Images/obj3_nonlinear_coupling/fig_convergence_cumulative_v3_general.png](Images/obj3_nonlinear_coupling/fig_convergence_cumulative_v3_general.png) |
+| **Tables 4.1–4.8** | Discharge phases, ECH switch-off, mode structure, Obj 2 & 3 stats, `1/K` convergence | `analysis/obj_ech/` & `analysis/obj3_nonlinear_coupling/` | [analysis/obj_ech/results_tables_v2/](analysis/obj_ech/results_tables_v2/) |
+| **Listing B.1** | Dual-branch NUDFT poloidal mode search module | *(Source module)* | [Code/hjmag_poloidal.py](Code/hjmag_poloidal.py) |
 
 ---
 
@@ -138,7 +138,7 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
-Note that `jpack/turnelib.py` parses Heliotron J `.edf` records natively in pure Python and NumPy; `pyedflib` is not imported by the active pipeline and is commented out as optional in [requirements.txt](file:///c:/TFG/requirements.txt).
+Note that `jpack/turnelib.py` parses Heliotron J `.edf` records natively in pure Python and NumPy; `pyedflib` is not imported by the active pipeline and is commented out as optional in [requirements.txt](requirements.txt).
 
 ### 2. Reproducing Analyses Without Raw `.edf` Data
 Even without raw `.edf` files, every unit test and all JSON-backed Thesis figures run cleanly out of the box:
@@ -232,7 +232,7 @@ rho = freq_to_rho(66.5)   # Returns normalized minor radius r/a for 66.5 GHz
 
 ## Provenance, License & Citations
 
-- **Thesis Manuscript**: [Thesis.pdf](file:///c:/TFG/Thesis.pdf) is licensed under **CC BY-NC-ND 4.0** (as declared on the title/license page of `Thesis.tex`).
+- **Thesis Manuscript**: [Thesis.pdf](Thesis.pdf) is licensed under **CC BY-NC-ND 4.0** (as declared on the title/license page of `Thesis.tex`).
 - **Experimental Data**: Heliotron J discharge records (`#88653`, `#88654`) belong to the **Institute of Advanced Energy (IAE), Kyoto University** (`Annex A`: `https://heliotronj.iae.kyoto-u.ac.jp/expdata.html`).
 - **Software Dependencies**: Includes `jpack` (2025 v1.0, `Annex B`) unmodified for Heliotron J `.edf` signal reading.
 
