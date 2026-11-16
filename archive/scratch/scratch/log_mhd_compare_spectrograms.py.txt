@@ -1,9 +1,0 @@
---- Zoomed Spectrogram & 3-Sigma Dominance Analysis (Shot 88653) ---
-  [ECH + NBI] (259.1 - 291.3 ms)
-    Primary Mode:   87.60 +/- 5.33 kHz, 3-sigma occupancy: 100.0%, jumps: 1.06/ms
-    Secondary Mode: 45.47 +/- 5.85 kHz, 3-sigma occupancy: 100.0%, jumps: 1.27/ms
-    Saved figure: zoomed_spectrogram_3sigma_ECH_NBI_259.1_291.3ms.png
-  [Just NBI] (291.3 - 300.0 ms)
-    Primary Mode:   86.69 +/- 3.02 kHz, 3-sigma occupancy: 100.0%, jumps: 1.26/ms
-    Secondary Mode: 40.26 +/- 4.27 kHz, 3-sigma occupancy: 100.0%, jumps: 0.46/ms
-    Saved figure: zoomed_spectrogram_3sigma_NBI_only_291.3_300.0ms.png

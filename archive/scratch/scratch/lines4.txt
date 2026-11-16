@@ -1,6 +1,0 @@
-2061:         # 6. Current-induced / iota-shear shift
-2073:             "Current-induced (Ip)": (s_current, "Rotational transform / shear shift", "forestgreen", "--"),
-2474:                          bbox=dict(boxstyle='round,pad=0.3', facecolor='lightyellow', edgecolor='darkorange', alpha=0.9))
-2588:                         bbox=dict(facecolor='black', alpha=0.4, pad=2))
-2647:                         bbox=dict(boxstyle='round,pad=0.3', facecolor='honeydew', edgecolor='darkgreen', alpha=0.9))
-2652:                         bbox=dict(boxstyle='round,pad=0.3', facecolor='linen', edgecolor='darkred', alpha=0.9))

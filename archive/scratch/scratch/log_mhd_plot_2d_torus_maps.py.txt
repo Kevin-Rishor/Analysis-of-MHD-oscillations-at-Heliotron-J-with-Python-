@@ -1,1 +1,0 @@
-2D torus map saved to: 'C:\TFG\mhd_mode_spatial_map_2d_88653.png'

@@ -1,0 +1,12 @@
+# Core scientific computing and visualization stack
+# Thesis development baseline: Python 3.12 (ARM64), NumPy >=1.26.4, SciPy >=1.13.1, Matplotlib >=3.9.2
+# Tested cleanly with Python 3.12.10, NumPy 2.5.1, SciPy 1.18.0, Matplotlib 3.11.0, Pillow 12.3.0
+numpy>=1.26.4
+scipy>=1.13.1
+matplotlib>=3.9.2
+pillow>=10.0.0
+
+# Optional: generic European Data Format (EDF) utilities.
+# Note: Heliotron J .edf files are read natively in pure Python/NumPy via jpack/turnelib.py;
+# pyedflib is NOT imported by analysis/, Code/, or jpack/ and does not need a C compiler to run this repo.
+# pyedflib>=0.1.38

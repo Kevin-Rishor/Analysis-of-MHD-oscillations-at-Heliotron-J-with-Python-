@@ -2,33 +2,49 @@
 data/
 *.edf
 
-# Python virtual environment
+# Regenerable whole-discharge binary caches (built via analysis/obj_ech/build_full_record_cache.py)
+cache/
+*.npz
+
+# Python virtual environment & caches
 .venv/
 env/
 venv/
 ENV/
-
-# Python bytecode and caches
 __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
 
-# IDE and OS files
+# IDE, AI, and OS files
+.continue/
 .vscode/
 .idea/
 Thumbs.db
 Desktop.ini
 .DS_Store
 
-# Log files
+# Local archive of superseded/draft/Overleaf/scratch artifacts (kept locally, excluded from Git)
+.local_archive/
+scratch/
+scratch_test/
+overleaf_*/
+*.zip
+
+# Logs
 *.log
-.continue/
 logs/
 
-# LaTeX build files of the slides
-presentation.aux
-presentation.nav
-presentation.out
-presentation.snm
-presentation.toc
+# LaTeX build intermediates (keep compiled Thesis.pdf tracked)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lot
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc

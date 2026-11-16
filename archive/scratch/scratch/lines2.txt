@@ -1,6 +1,0 @@
-541: # Core ECE Proxy Loading for BAE Mode Identification
-650: Loads and selects the core-proxy ECE signal for BAE acoustic scaling identification.
-2005: # 2. BAE Acoustic: f ~ sqrt(T_e) (Beta-induced acoustic-wave coupling, sound speed c_s)
-2006: # 3. BAE Coupled: f ~ sqrt(v_A^2 + c_s^2) (Compressibility-modified Alfven continuum)
-2043: # 2 & 3. BAE Acoustic and Coupled (using core ECE proxy)
-2061: # 6. Current-induced / iota-shear shift
