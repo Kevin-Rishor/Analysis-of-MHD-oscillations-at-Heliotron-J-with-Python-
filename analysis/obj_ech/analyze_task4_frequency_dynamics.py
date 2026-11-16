@@ -17,6 +17,7 @@ Analyzes shots #88653 and #88654 separately:
 
 import json
 import os
+from pathlib import Path
 import numpy as np
 import scipy.signal as dsp
 from scipy.optimize import curve_fit
@@ -24,10 +25,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
 RNG_SEED = 20261007
 SHOTS = [88653, 88654]
-CACHE_DIR = "c:/TFG/cache"
-OUTPUT_DIR = "c:/TFG/analysis/obj_ech"
+CACHE_DIR = str(ROOT_DIR / "cache")
+OUTPUT_DIR = str(ROOT_DIR / "analysis" / "obj_ech")
 FIG_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 

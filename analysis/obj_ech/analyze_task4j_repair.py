@@ -1124,7 +1124,7 @@ def main():
     ax3a.errorbar(tc_j3, p13_vals, yerr=p13_err, fmt="bo-", capsize=3, label=r"$\phi_{13}$ (MP1-MP3)")
     ax3a.axhline(180, color="r", ls="--", label=r"Prediction $n = -1$ & $n = +3$ ($\phi_{13}=180^\circ$)")
     ax3a.set_ylabel(r"$\phi_{13}$ (deg)")
-    ax3a.set_title("(a) Complex Cross-Phase $\phi_{13}$ across 0.5 ms Transition Segments", fontweight="bold")
+    ax3a.set_title(r"(a) Complex Cross-Phase $\phi_{13}$ across 0.5 ms Transition Segments", fontweight="bold")
     ax3a.legend(loc="lower left", fontsize=8)
     ax3a.grid(True, ls=":", alpha=0.5)
 
@@ -1132,7 +1132,7 @@ def main():
     ax3b.axhline(90, color="r", ls="--", label=r"Prediction $n = -1$ & $n = +3$ ($\phi_{14}=+90^\circ$)")
     ax3b.set_ylabel(r"$\phi_{14}$ (deg)")
     ax3b.set_xlabel("Time (ms)")
-    ax3b.set_title("(b) Complex Cross-Phase $\phi_{14}$ across 0.5 ms Transition Segments", fontweight="bold")
+    ax3b.set_title(r"(b) Complex Cross-Phase $\phi_{14}$ across 0.5 ms Transition Segments", fontweight="bold")
     ax3b.legend(loc="lower left", fontsize=8)
     ax3b.grid(True, ls=":", alpha=0.5)
 

@@ -24,7 +24,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-ROOT_DIR = Path("c:/TFG")
+ROOT_DIR = Path(__file__).resolve().parents[2]
 sys.path.extend([
     str(ROOT_DIR / "jpack"),
     str(ROOT_DIR / "analysis"),

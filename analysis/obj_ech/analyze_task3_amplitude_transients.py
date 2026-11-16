@@ -631,13 +631,6 @@ def main():
     plt.savefig(str(fig_path), dpi=300)
     plt.close(fig)
     print(f"Saved publication figure: {fig_path}")
-    
-    # Copy figure to artifact directory for rendering
-    artifact_dir = Path("C:/Users/kevin/.gemini/antigravity/brain/a71f786c-c60d-4491-a791-447bf89ef43e")
-    if artifact_dir.exists():
-        import shutil
-        shutil.copy2(fig_path, artifact_dir / fig_path.name)
-        print(f"Copied figure to artifact directory: {artifact_dir / fig_path.name}")
 
 
 if __name__ == "__main__":

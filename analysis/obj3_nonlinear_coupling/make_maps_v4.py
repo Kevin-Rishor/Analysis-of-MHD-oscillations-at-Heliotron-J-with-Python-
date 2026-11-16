@@ -15,8 +15,8 @@ import matplotlib.patheffects as path_effects
 import matplotlib.transforms as mtransforms
 
 # Base paths
-base_dir = Path(r"C:\Users\kevin\.gemini\antigravity\brain\5a23ddc3-ffcc-4a9b-a7f0-d135446e46c3")
-out_dir = base_dir / "scratch" / "final23"
+ROOT_DIR = Path(__file__).resolve().parents[2]
+out_dir = ROOT_DIR / "scratch" / "final23"
 staging_dir = out_dir / "staging"
 fig_dir = staging_dir / "figures_final23"
 fig_dir.mkdir(parents=True, exist_ok=True)
@@ -42,7 +42,7 @@ p_out("STEP 1: OLD-FORMAT BICOHERENCE MAPS, CODE DIFF, ORIENTATION TEST, AND 10-
 p_out("=" * 120)
 
 # Setup path imports
-root_dir = Path("C:/TFG")
+root_dir = Path(__file__).resolve().parents[2]
 for p_add in [
     root_dir / "jpack",
     root_dir / "analysis",
@@ -55,7 +55,7 @@ for p_add in [
 from comparison_common import load_channel
 import libana_signal as LAS
 
-staging_common = base_dir / "scratch" / "final11" / "staging" / "analysis" / "common"
+staging_common = root_dir / "analysis" / "common"
 sys.path.insert(0, str(staging_common))
 from abicoh2_corrected import abicoh2_corrected
 
@@ -551,7 +551,7 @@ p_out("4. GENERATING NEW BICOHERENCE MAPS AND COMPUTING 10-PEAK TABLES")
 p_out("=" * 120)
 
 # Check old panel 1 dimensions
-old_panel1_path = Path(r"C:\TFG\Images\heating_phase_comparison\panels\mhd_bicoherence_objective3_88653_ECH_NBI_panel1_squared_auto_bicoherence_leading_channel.png")
+old_panel1_path = root_dir / "Images" / "heating_phase_comparison" / "panels" / "mhd_bicoherence_objective3_88653_ECH_NBI_panel1_squared_auto_bicoherence_leading_channel.png"
 if old_panel1_path.exists():
     im_old_p1 = Image.open(old_panel1_path)
     old_p1_size = im_old_p1.size

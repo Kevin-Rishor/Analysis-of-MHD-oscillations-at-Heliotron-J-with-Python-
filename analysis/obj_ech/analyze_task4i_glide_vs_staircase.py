@@ -1015,7 +1015,7 @@ def main():
 
     ax2b.plot(list(df_power_1ms.keys()), list(df_power_1ms.values()), "bo-", lw=1.5, label="Staircase Accuracy (1 ms)")
     ax2b.axhline(80.0, color="crimson", ls="--", lw=1.5, label="80% Threshold")
-    ax2b.set_xlabel("Line Separation $\Delta f$ (kHz)")
+    ax2b.set_xlabel(r"Line Separation $\Delta f$ (kHz)")
     ax2b.set_ylabel("Discrimination Power (%)")
     ax2b.set_ylim(0, 105)
     ax2b.set_title("(b) Discrimination Power vs Line Separation", fontweight="bold")

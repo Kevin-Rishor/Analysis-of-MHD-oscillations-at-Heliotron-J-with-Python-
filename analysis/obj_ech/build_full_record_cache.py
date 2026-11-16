@@ -8,7 +8,7 @@ Builds complete whole-discharge cache for Heliotron J shots #88653 and #88654:
      Hilbert analytic envelopes, and instantaneous frequencies.
   5. Peripheral diagnostics: nave, Wp, HAFAST (3.5, 7.5, 11.5, 15.5), AXUV (all chords),
      ECHRG500, NBIS*I monitors, and sx2d camera chords.
-Saves to c:/TFG/cache/shot_{shot}_full_record_cache.npz.
+Saves to cache/shot_{shot}_full_record_cache.npz.
 """
 
 import sys

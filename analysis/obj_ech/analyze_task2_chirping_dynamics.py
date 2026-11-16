@@ -8,7 +8,7 @@ Computes:
   2. Dynamic Programming (Viterbi) ridge tracking on 256-sample STFT vs Morlet CWT.
   3. Individual chirp event segmentation for Primary and Secondary modes:
      t_start, duration, f_start, f_end, df (SIGNED), df/dt, A_peak, branch_id, inter_event_interval.
-     Saves to CSV and NPZ in c:/TFG/cache/ and c:/TFG/analysis/obj_ech/.
+     Saves to CSV and NPZ in cache/ and analysis/obj_ech/.
   4. Full statistics for ECH+NBI (259.1-291.3 ms), NBI-only (291.3-300.0 ms), and 4 ms bins:
      Event rate (Poisson CI), fraction of down- vs up-chirps (Wilson score CI),
      median |df/dt|, median |df|, duration (bootstrap CIs), effect size (Cliff's delta),

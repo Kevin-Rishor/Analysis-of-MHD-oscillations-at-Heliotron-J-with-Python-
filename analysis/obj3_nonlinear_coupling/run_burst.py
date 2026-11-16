@@ -8,8 +8,8 @@ import scipy.signal as dsp
 
 t_start_wall = time.time()
 
-base_dir = Path(r"C:\Users\kevin\.gemini\antigravity\brain\5a23ddc3-ffcc-4a9b-a7f0-d135446e46c3")
-out_dir = base_dir / "scratch" / "final19"
+ROOT_DIR = Path(__file__).resolve().parents[2]
+out_dir = ROOT_DIR / "scratch" / "final19"
 out_dir.mkdir(parents=True, exist_ok=True)
 stdout_file = out_dir / "burst_stdout.txt"
 stdout_h = open(stdout_file, "w", encoding="utf-8")
@@ -30,7 +30,7 @@ p_out("TASK FINAL19 - STEP 3: BURST PROFILE & MULTI-CHANNEL MIRNOV ANALYSIS (264
 p_out("========================================================================================================================")
 
 try:
-    root_dir = Path("C:/TFG")
+    root_dir = Path(__file__).resolve().parents[2]
     for p_add in [
         root_dir / "jpack",
         root_dir / "analysis",
@@ -41,7 +41,7 @@ try:
             sys.path.append(str(p_add))
 
     from comparison_common import load_channel
-    staging_common = base_dir / "scratch" / "final11" / "staging" / "analysis" / "common"
+    staging_common = ROOT_DIR / "analysis" / "common"
     sys.path.insert(0, str(staging_common))
 
     nfft = 512

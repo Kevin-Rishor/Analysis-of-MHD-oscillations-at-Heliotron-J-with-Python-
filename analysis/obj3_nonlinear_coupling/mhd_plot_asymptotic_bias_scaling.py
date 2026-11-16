@@ -10,7 +10,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:

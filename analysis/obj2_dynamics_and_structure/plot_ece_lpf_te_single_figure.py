@@ -8,7 +8,6 @@ Verification of Relative Te Proxy via Low-Pass Filtered ECE:
 
 Output:
   - Images/obj2_dynamics_and_structure/mhd_ece_lpf_te_verification_88653.png
-  - overleaf_upload_20261017/Images/obj2_dynamics_and_structure/mhd_ece_lpf_te_verification_88653.png
 """
 
 import sys

@@ -18,12 +18,14 @@ Real data are analysed only if the validation file allows it.
 import os
 import sys
 import json
+from pathlib import Path
 import numpy as np
 import scipy.signal as dsp
 
-sys.path.insert(0, "c:/TFG/analysis/common")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT_DIR / "analysis" / "common"))
 
-CACHE = "c:/TFG/cache"
+CACHE = str(ROOT_DIR / "cache")
 HERE = os.path.dirname(os.path.abspath(__file__))
 FS = 1.0e6
 NFFT = 1024

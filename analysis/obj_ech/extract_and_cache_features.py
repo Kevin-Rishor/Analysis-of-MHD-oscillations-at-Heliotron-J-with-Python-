@@ -2,7 +2,7 @@
 extract_and_cache_features.py
 Extracts and caches multi-channel diagnostic time series, envelopes,
 and instantaneous frequencies for Heliotron J shots #88653 and #88654.
-Saves cached arrays as .npz in c:/TFG/cache/ for efficient downstream reuse.
+Saves cached arrays as .npz in cache/ for efficient downstream reuse.
 """
 
 import sys

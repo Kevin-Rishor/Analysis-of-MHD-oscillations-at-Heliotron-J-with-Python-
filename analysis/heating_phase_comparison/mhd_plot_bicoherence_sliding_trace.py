@@ -17,7 +17,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", current]:
     if str(p_add) not in sys.path:
@@ -118,7 +118,7 @@ def run_sliding_bicoherence_trace(shot=DEFAULT_SHOT, out_dir=None, verbose=False
         ax1.plot(t_centers[invalid], b2_vals[invalid], 's', color='silver', markersize=3, label='Excluded (Low SNR Floor)')
     ax1.axhline(0.20, color='r', linestyle='--', label=r'95% Threshold ($N_{\mathrm{eff}}=15$)')
     ax1.set_ylabel(r'Bicoherence $b^2$', fontsize=11)
-    ax1.set_title(f'Heliotron J #{shot} — Sliding Bicoherence Trace ($8\,\mathrm{{ms}}$ window, step $0.25\,\mathrm{{ms}}$)', fontsize=12, fontweight='bold')
+    ax1.set_title(rf'Heliotron J #{shot} — Sliding Bicoherence Trace ($8\,\mathrm{{ms}}$ window, step $0.25\,\mathrm{{ms}}$)', fontsize=12, fontweight='bold')
     ax1.set_xlim(295, 310)
     ax1.grid(True, alpha=0.3)
     ax1.legend(loc='upper right', fontsize=9)

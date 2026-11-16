@@ -27,16 +27,17 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-sys.path.append("jpack")
-sys.path.append("analysis/obj2_dynamics_and_structure")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+sys.path.append(str(ROOT_DIR / "jpack"))
+sys.path.append(str(ROOT_DIR / "analysis" / "obj2_dynamics_and_structure"))
 from mhd_analysis_obj2 import poloidal_phase_structure_analysis
 import turnelib as TE
 
 RNG_SEED = 20261007
 SHOTS = [88653, 88654]
-CACHE_DIR = Path("c:/TFG/cache")
-DATA_DIR = Path("data")
-OUTPUT_DIR = Path("c:/TFG/analysis/obj_ech")
+CACHE_DIR = ROOT_DIR / "cache"
+DATA_DIR = ROOT_DIR / "data"
+OUTPUT_DIR = ROOT_DIR / "analysis" / "obj_ech"
 FIG_DIR = OUTPUT_DIR / "figures"
 os.makedirs(FIG_DIR, exist_ok=True)
 

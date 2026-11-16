@@ -27,7 +27,8 @@ import scipy.stats as stats
 import matplotlib.pyplot as plt
 
 # Paths
-BASE_DIR = os.path.abspath("c:/TFG")
+from pathlib import Path
+BASE_DIR = str(Path(__file__).resolve().parents[2])
 CACHE_DIR = os.path.join(BASE_DIR, "cache")
 OUTPUT_DIR = os.path.join(BASE_DIR, "analysis", "obj_ech")
 FIG_DIR = os.path.join(OUTPUT_DIR, "figures")

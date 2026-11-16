@@ -14,8 +14,9 @@ import matplotlib.pyplot as plt
 
 t_start_wall = time.time()
 
-base_dir = Path(r"C:\Users\kevin\.gemini\antigravity\brain\5a23ddc3-ffcc-4a9b-a7f0-d135446e46c3")
-out_dir = base_dir / "scratch" / "final21"
+ROOT_DIR = Path(__file__).resolve().parents[2]
+base_dir = ROOT_DIR
+out_dir = ROOT_DIR / "scratch" / "final21"
 fig_dir = out_dir / "staging" / "figures_final20"
 fig_dir.mkdir(parents=True, exist_ok=True)
 stdout_file = out_dir / "step1_stdout.txt"
@@ -40,7 +41,7 @@ try:
     # -------------------------------------------------------------------------
     # Reusing data loading, mask_B, abicoh2_corrected, and state classification
     # -------------------------------------------------------------------------
-    root_dir = Path("C:/TFG")
+    root_dir = Path(__file__).resolve().parents[2]
     for p_add in [
         root_dir / "jpack",
         root_dir / "analysis",
@@ -51,7 +52,7 @@ try:
             sys.path.append(str(p_add))
 
     from comparison_common import load_channel
-    staging_common = base_dir / "scratch" / "final11" / "staging" / "analysis" / "common"
+    staging_common = ROOT_DIR / "analysis" / "common"
     sys.path.insert(0, str(staging_common))
     from abicoh2_corrected import abicoh2_corrected
 

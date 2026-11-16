@@ -14,7 +14,7 @@ for p in [current] + list(current.parents):
         ROOT = p
         break
 if ROOT is None:
-    ROOT = Path("c:/TFG")
+    ROOT = current.parents[2]
 
 for p_add in [ROOT / "jpack", ROOT / "analysis", ROOT / "analysis" / "common"]:
     if str(p_add) not in sys.path:

@@ -17,7 +17,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-ROOT_DIR = Path("c:/TFG")
+ROOT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT_DIR / "data" / "hj88653"
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 FIG_DIR = ROOT_DIR / "Images" / "sawtooth_analysis_88653"

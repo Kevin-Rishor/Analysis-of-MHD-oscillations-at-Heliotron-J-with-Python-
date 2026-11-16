@@ -35,7 +35,7 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-ROOT_DIR = Path("c:/TFG")
+ROOT_DIR = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT_DIR / "data" / "hj88653"
 ANALYSIS_DIR = ROOT_DIR / "analysis"
 OUTPUT_DIR = ANALYSIS_DIR / "obj_ech"
@@ -478,7 +478,7 @@ def main():
     ref = extract_primary_mode_reference(DATA_DIR)
 
     # 2. Build Physical Channel Inventory
-    print("\n>>> Building Complete Physical Channel Inventory from c:/TFG/data/hj88653...")
+    print(f"\n>>> Building Complete Physical Channel Inventory from {DATA_DIR}...")
     all_edf_files = sorted(DATA_DIR.glob("*.edf"))
     print(f"Total .edf files in directory: {len(all_edf_files)}")
 

@@ -1,7 +1,9 @@
 import csv
 from collections import defaultdict
+from pathlib import Path
 
-with open('c:/TFG/analysis/sawtooth_88653_master_ledger.csv', 'r') as f:
+ROOT_DIR = Path(__file__).resolve().parents[1]
+with open(ROOT_DIR / 'analysis' / 'sawtooth_88653_master_ledger.csv', 'r') as f:
     rows = list(csv.DictReader(f))
 
 # 1. Family summary

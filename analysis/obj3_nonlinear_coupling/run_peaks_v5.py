@@ -15,8 +15,9 @@ import matplotlib.patheffects as path_effects
 import matplotlib.transforms as mtransforms
 
 # Base paths
-base_dir = Path(r"C:\Users\kevin\.gemini\antigravity\brain\5a23ddc3-ffcc-4a9b-a7f0-d135446e46c3")
-out_dir = base_dir / "scratch" / "final24"
+ROOT_DIR = Path(__file__).resolve().parents[2]
+base_dir = ROOT_DIR
+out_dir = ROOT_DIR / "scratch" / "final24"
 staging_dir = out_dir / "staging"
 fig_dir = staging_dir / "figures_final24"
 fig_dir.mkdir(parents=True, exist_ok=True)
@@ -42,7 +43,7 @@ p_out("STEP 1: TRIAD FORMS ANALYSIS (1a), CONTROL TEST (1b), AND UPDATED MAPS (1
 p_out("=" * 120)
 
 # Setup path imports
-root_dir = Path("C:/TFG")
+root_dir = ROOT_DIR
 for p_add in [
     root_dir / "jpack",
     root_dir / "analysis",
@@ -55,7 +56,7 @@ for p_add in [
 from comparison_common import load_channel
 import libana_signal as LAS
 
-staging_common = base_dir / "scratch" / "final11" / "staging" / "analysis" / "common"
+staging_common = ROOT_DIR / "analysis" / "common"
 sys.path.insert(0, str(staging_common))
 from abicoh2_corrected import abicoh2_corrected
 

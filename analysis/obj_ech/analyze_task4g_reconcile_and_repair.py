@@ -491,7 +491,7 @@ def main():
     ax.plot(t_bins_c, f_pred_sec_c, "r--", lw=1.8, label=rf"Density Following $\gamma={gamma_sec_fit:.2f}$ (Fit $262\text{{--}}290$)")
     ax.fill_between(t_bins_c, f_pred_sec_c - 2 * sigma_res_sec_c, f_pred_sec_c + 2 * sigma_res_sec_c, color="red", alpha=0.15, label=r"$\pm 2\sigma$ Prediction Band")
     ax.axvline(t0, color="gray", ls=":", label=f"t0 = {t0:.2f} ms")
-    ax.axvline(t_first_leaves_sec, color="magenta", ls="--", label=f"Leaves $2\sigma$ at {t_first_leaves_sec:.1f} ms")
+    ax.axvline(t_first_leaves_sec, color="magenta", ls="--", label=rf"Leaves $2\sigma$ at {t_first_leaves_sec:.1f} ms")
     ax.set_ylabel("Frequency (kHz)")
     ax.set_title("Secondary Mode: Observed vs. Density-Following Prediction (#88653)", fontweight="bold")
     ax.legend(loc="upper right", fontsize=8)

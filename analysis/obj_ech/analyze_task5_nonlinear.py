@@ -2,7 +2,7 @@
 analyze_task5_nonlinear.py
 Task 5: Nonlinear Dynamics & Pre-Specified Hypothesis Testing (H1 - H4)
 Applies all COMMON RULES and 4b/4c additions:
-  - Work strictly in c:/TFG/analysis/obj_ech/ and c:/TFG/cache/.
+  - Work strictly in analysis/obj_ech/ and cache/.
   - Analyse shots #88653 and #88654 separately.
   - Windows:
       Equal 8.7 ms ECH+NBI: [282.5, 291.2] ms
@@ -27,13 +27,14 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 # Import corrected bicoherence
-sys.path.insert(0, str(Path("c:/TFG/analysis/common")))
+ROOT_DIR = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT_DIR / "analysis" / "common"))
 from abicoh2_corrected import abicoh2_corrected
 
 RNG_SEED = 20261008
 SHOTS = [88653, 88654]
-CACHE_DIR = "c:/TFG/cache"
-OUTPUT_DIR = "c:/TFG/analysis/obj_ech"
+CACHE_DIR = str(ROOT_DIR / "cache")
+OUTPUT_DIR = str(ROOT_DIR / "analysis" / "obj_ech")
 FIG_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
@@ -443,7 +444,7 @@ def run_task5_analysis():
     ax_d.axhline(null_mean_d, color="darkred", ls="--", lw=1.5, label=f"Independent Chirp Null Max ({null_mean_d:.3f})")
     ax_d.axvline(1.2, color="orange", ls=":", lw=1.5, label="1.2 kHz Modulation")
     ax_d.axvline(2.2, color="magenta", ls=":", lw=1.5, label="2.2 kHz Modulation")
-    ax_d.set_title("(d) H4: Envelope Coherence $\gamma^2(f)$ vs Independent Null", fontweight="bold")
+    ax_d.set_title(r"(d) H4: Envelope Coherence $\gamma^2(f)$ vs Independent Null", fontweight="bold")
     ax_d.set_xlabel("Envelope Modulation Frequency (kHz)")
     ax_d.set_ylabel(r"Coherence $\gamma^2$")
     ax_d.set_ylim(0, 0.5)
@@ -455,12 +456,6 @@ def run_task5_analysis():
     plt.savefig(fig_path, dpi=300)
     plt.close()
     print(f"[OK] Figure saved to {fig_path}")
-
-    # Copy figure to brain artifact directory
-    artifact_dir = "C:/Users/kevin/.gemini/antigravity/brain/a71f786c-c60d-4491-a791-447bf89ef43e"
-    import shutil
-    shutil.copy2(fig_path, os.path.join(artifact_dir, "fig_task5_nonlinear.png"))
-    print(f"[OK] Figure copied to brain artifact directory.")
 
 
 if __name__ == "__main__":

@@ -7,9 +7,11 @@ from pathlib import Path
 import numpy as np
 import scipy.signal as dsp
 
-out_dir = Path(r"C:\Users\kevin\.gemini\antigravity\brain\5a23ddc3-ffcc-4a9b-a7f0-d135446e46c3\scratch\final15")
+ROOT_DIR = Path(__file__).resolve().parents[2]
+out_dir = ROOT_DIR / "scratch" / "final15"
+out_dir.mkdir(parents=True, exist_ok=True)
 staging_dir = out_dir / "staging"
-staging_common = Path(r"C:\Users\kevin\.gemini\antigravity\brain\5a23ddc3-ffcc-4a9b-a7f0-d135446e46c3\scratch\final11\staging\analysis\common")
+staging_common = ROOT_DIR / "analysis" / "common"
 stdout_file = out_dir / "domain_check_stdout.txt"
 stdout_h = open(stdout_file, "w", encoding="utf-8")
 
@@ -23,19 +25,9 @@ p_out("=========================================================================
 
 try:
     # -------------------------------------------------------------------------
-    # Note: Sections C1-C5 from final11 (presentation edits & git apply) are bypassed
-    # for this domain check rerun to avoid git commands and preserve staged deck edits.
-    # -------------------------------------------------------------------------
-    if False:
-        orig_pres = Path("C:/TFG/presentation.tex")
-        staged_pres = staging_dir / "presentation.tex"
-        staged_pres.write_bytes(orig_pres.read_bytes())
-        # (git apply and presentation edits omitted)
-
-    # -------------------------------------------------------------------------
     # Setup data and libraries
     # -------------------------------------------------------------------------
-    root_dir = Path("C:/TFG")
+    root_dir = ROOT_DIR
     for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", root_dir / "analysis" / "heating_phase_comparison"]:
         if str(p_add) not in sys.path:
             sys.path.append(str(p_add))

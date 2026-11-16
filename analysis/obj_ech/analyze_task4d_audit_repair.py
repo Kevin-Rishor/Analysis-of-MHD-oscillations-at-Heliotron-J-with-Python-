@@ -16,10 +16,11 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+ROOT_DIR = Path(__file__).resolve().parents[2]
 RNG_SEED = 20261008
 SHOTS = [88653, 88654]
-CACHE_DIR = "c:/TFG/cache"
-OUTPUT_DIR = "c:/TFG/analysis/obj_ech"
+CACHE_DIR = str(ROOT_DIR / "cache")
+OUTPUT_DIR = str(ROOT_DIR / "analysis" / "obj_ech")
 FIG_DIR = os.path.join(OUTPUT_DIR, "figures")
 os.makedirs(FIG_DIR, exist_ok=True)
 
@@ -497,12 +498,6 @@ def run_task4d_analysis():
     plt.savefig(fig_path, dpi=300)
     plt.close()
     print(f"[OK] Figure saved to {fig_path}")
-
-    # Copy to artifact directory
-    artifact_dir = "C:/Users/kevin/.gemini/antigravity/brain/a71f786c-c60d-4491-a791-447bf89ef43e"
-    import shutil
-    shutil.copy2(fig_path, os.path.join(artifact_dir, "fig_task4d_audit_repair.png"))
-    print(f"[OK] Figure copied to brain artifact directory.")
 
 
 if __name__ == "__main__":

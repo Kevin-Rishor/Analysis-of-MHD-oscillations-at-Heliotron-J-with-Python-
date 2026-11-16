@@ -5,7 +5,7 @@ import numpy as np
 import scipy.signal as dsp
 import matplotlib.pyplot as plt
 
-root_dir = Path(r"c:\TFG")
+root_dir = Path(__file__).resolve().parents[2]
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
         sys.path.append(str(p_add))
