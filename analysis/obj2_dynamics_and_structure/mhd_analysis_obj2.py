@@ -26,6 +26,7 @@ PMP_INVERT_CHANNELS_DEFAULT = ("PMP1", "PMP2", "PMP3", "PMP4")
 
 import sys
 import os
+import shutil
 import argparse
 import json
 import logging
@@ -86,7 +87,7 @@ for p in [current] + list(current.parents):
         ROOT_DIR = p
         break
 if ROOT_DIR is None:
-    ROOT_DIR = Path("c:/TFG")
+    ROOT_DIR = current.parents[1]
 
 for p_add in [ROOT_DIR / "jpack", ROOT_DIR / "analysis", ROOT_DIR / "analysis" / "common"]:
     if str(p_add) not in sys.path:
@@ -154,6 +155,71 @@ def format_p_value(p):
     if p == 0.0 or p < 1e-300:
         return "p < 1e-300"
     return f"p = {p:.2e}"
+
+
+def format_p_value_mathtext(p):
+    """Formats a p-value in LaTeX mathtext scientific notation for figure titles."""
+    if p == 0.0 or p < 1e-300:
+        return r"$p < 10^{-300}$"
+    if p >= 0.01:
+        return rf"$p = {p:.3f}$"
+    mantissa, exp_str = f"{p:.2e}".split("e")
+    return rf"$p = {mantissa} \times 10^{{{int(exp_str)}}}$"
+
+
+def _plot_macro_correlation_panel(
+    ax, t_ms, envelope, corr_result, line_color, line_label,
+    left_ylabel, title_prefix, missing_msg, shot, highlight_window=False,
+    standalone=False
+):
+    """Plots a macroscopic plasma profile against the conditioned mode envelope with an unclipped twinx axis."""
+    lbl_fs = 12.5 if standalone else 10.0
+    tick_fs = 11.5 if standalone else 9.5
+    leg_fs = 10.5 if standalone else 9.0
+    title_fs = 12.5 if standalone else 11.0
+    if corr_result is not None:
+        ax.plot(t_ms, corr_result["signal"], color=line_color, alpha=0.85, linewidth=1.6 if standalone else 1.2, label=line_label)
+        ax.set_ylabel(left_ylabel, color=line_color, fontsize=lbl_fs)
+        ax.tick_params(axis='y', labelcolor=line_color, labelsize=tick_fs)
+        ax.tick_params(axis='x', labelsize=tick_fs)
+
+        if highlight_window:
+            t_s = corr_result["t_start"]
+            t_e = corr_result["t_end"] if corr_result["t_end"] is not None else t_ms[-1]
+            t_e_label = f"{corr_result['t_end']:.0f} ms" if corr_result["t_end"] is not None else "end"
+            win_lbl = (rf"Analyzed (${t_s:.0f}\ \mathrm{{ms}}$–{t_e_label})" if standalone
+                       else rf"Analyzed Window (Noise-Free, ${t_s:.0f}\ \mathrm{{ms}}$–{t_e_label})")
+            ax.axvspan(t_s, t_e, color=line_color, alpha=0.08, label=win_lbl)
+
+        ax_twin = ax.twinx()
+        ax_twin.plot(t_ms, envelope, color='red', alpha=0.7, linewidth=1.5, label='Mode Envelope')
+        ax_twin.set_ylabel(r"Mode Envelope Amplitude" "\n" r"$A_{\mathrm{env}}$ [V]", color='red', labelpad=8, fontsize=(11.5 if standalone else lbl_fs))
+        ax_twin.tick_params(axis='y', colors='red', labelcolor='red', labelright=True, right=True, labelsize=tick_fs)
+        ax_twin.spines['right'].set_color('red')
+
+        if corr_result["r_sig"] is not None:
+            stat_str = (
+                rf"$r = {corr_result['r_sig']:.3f}$, "
+                rf"$\mathrm{{lag}} = {corr_result['lag_ms']:+.1f}\ \mathrm{{ms}}$, "
+                f"{format_p_value_mathtext(corr_result['p_adj'])}"
+            )
+        else:
+            stat_str = "N/A"
+        if standalone:
+            ax.set_title(f"#{shot}  |  {stat_str}", fontsize=title_fs, fontweight="bold")
+        else:
+            ax.set_title(f"{title_prefix} — Shot #{shot}\n{stat_str}")
+
+        lines, labels = ax.get_legend_handles_labels()
+        linest, labelst = ax_twin.get_legend_handles_labels()
+        leg_loc = 'upper left' if (standalone and highlight_window) else 'upper right'
+        ax.legend(lines + linest, labels + labelst, loc=leg_loc, fontsize=leg_fs, framealpha=0.94)
+    else:
+        ax.text(0.5, 0.5, missing_msg, ha='center', va='center', transform=ax.transAxes, fontsize=11, color='gray')
+        ax.set_title(f"{title_prefix} — Shot #{shot}")
+
+    ax.set_xlabel(r"Time $t$ [ms]", fontsize=lbl_fs)
+    ax.grid(True, alpha=0.3)
 
 
 # -------------------------------------------------------------------------------------------
@@ -617,19 +683,39 @@ def filter_saturated_channels(ece_signals, rail_frac_threshold=0.02, plateau_run
     return clean_signals, saturated_report
 
 
-def select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor):
+def select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor, wp_signal=None):
     """
-    Picks a "core-proxy" ECE channel out of the available ones.
+    Picks a "core-proxy" ECE channel out of the available non-saturated ones.
+    If wp_signal is available, evaluates the low-pass filtered (30 Hz Butterworth SOS)
+    ECE against Wp (stored diamagnetic energy) over the active heating window (170-290 ms)
+    to select the non-saturated channel that best represents the bulk thermal electron temperature.
+    Otherwise falls back to correlation with ECH power.
     """
-    ech_corr = anti_alias_decimate(ech_power, decimate_factor)
     per_channel_r = {}
-    for ch, sig in ece_signals.items():
-        sig_corr = anti_alias_decimate(sig, decimate_factor)
-        if np.std(sig_corr) == 0 or np.std(ech_corr) == 0:
-            per_channel_r[ch] = 0.0
-            continue
-        r_val, _ = stats.pearsonr(sig_corr, ech_corr)
-        per_channel_r[ch] = r_val
+    if wp_signal is not None and np.std(wp_signal) > 0:
+        mask_win = (t_ms >= 170.0) & (t_ms <= 290.0)
+        dt = (t_ms[100] - t_ms[0]) / 100.0 / 1000.0 if len(t_ms) > 100 else 1e-6
+        fs = 1.0 / dt
+        sos = dsp.butter(4, 30.0 / (fs / 2.0), btype='low', output='sos')
+        wp_sub = wp_signal[mask_win]
+        for ch, sig in ece_signals.items():
+            base = np.median(sig[t_ms < 170.0]) if np.any(t_ms < 170.0) else 0.0
+            sig_clean = np.clip(sig - base, 1e-4, None)
+            sig_lpf = dsp.sosfiltfilt(sos, sig_clean)[mask_win]
+            if np.std(sig_lpf) == 0 or np.std(wp_sub) == 0:
+                per_channel_r[ch] = 0.0
+            else:
+                r_val, _ = stats.pearsonr(sig_lpf, wp_sub)
+                per_channel_r[ch] = r_val
+    else:
+        ech_corr = anti_alias_decimate(ech_power, decimate_factor)
+        for ch, sig in ece_signals.items():
+            sig_corr = anti_alias_decimate(sig, decimate_factor)
+            if np.std(sig_corr) == 0 or np.std(ech_corr) == 0:
+                per_channel_r[ch] = 0.0
+                continue
+            r_val, _ = stats.pearsonr(sig_corr, ech_corr)
+            per_channel_r[ch] = r_val
     if not per_channel_r:
         return None, 0.0, {}
     best_channel = max(per_channel_r, key=lambda k: per_channel_r[k])
@@ -645,13 +731,14 @@ def get_output_suffix(args):
     return ""
 
 
-def load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor):
+def load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor, wp_signal=None):
     """
     Loads and selects the core-proxy ECE signal for BAE acoustic scaling identification.
     """
     if getattr(args, "ece_core_channel", None) is not None:
         ece_signals, _ = load_ece_channels(shot, args, t_ms, channels=[args.ece_core_channel])
         if args.ece_core_channel in ece_signals:
+            print(f"  [ECE-CORE] Using explicit channel override: ECE{args.ece_core_channel}FAST")
             return ece_signals[args.ece_core_channel]
         return None
 
@@ -669,8 +756,9 @@ def load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor):
     if not ece_signals:
         return None
 
-    core_ch, _, _ = select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor)
+    core_ch, best_r, _ = select_core_ece_channel(ece_signals, ech_power, t_ms, decimate_factor, wp_signal=wp_signal)
     if core_ch is not None and core_ch in ece_signals:
+        print(f"  [ECE-CORE] Selected thermal channel ECE{core_ch}FAST (correlation with Wp: r = {best_r:+.3f})")
         return ece_signals[core_ch]
     return None
 
@@ -2041,11 +2129,20 @@ def process_shot(shot, args):
         s_alfven = 1.0 / np.sqrt(density_val_clean)
 
         # 2 & 3. BAE Acoustic and Coupled (using core ECE proxy)
-        ece_for_bae = load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor)
+        ece_for_bae = load_core_ece_signal(shot, args, t_ms, ech_power, decimate_factor, wp_signal=wp_signal)
         if ece_for_bae is not None:
             ece_baseline_val = np.median(ece_for_bae[t_ms < args.ech_active_start]) if np.any(t_ms < args.ech_active_start) else 0.0
             ece_clean_bae = np.clip(ece_for_bae - ece_baseline_val, 1e-4, None)
-            ece_smoothed_bae = dsp.medfilt(ece_clean_bae, 1001) if len(ece_clean_bae) > 1001 else ece_clean_bae
+
+            # Low-pass filter (Butterworth 4th-order, 30 Hz cutoff, second-order sections zero-phase)
+            # Smooths out all ~800 Hz sawtooth/MHD oscillations to isolate the macroscopic bulk thermal Te(t) evolution
+            dt_sec = (t_ms[100] - t_ms[0]) / 100.0 / 1000.0 if len(t_ms) > 100 else 1e-6
+            fs_hz = 1.0 / dt_sec
+            fc_lpf = 30.0
+            sos_lpf = dsp.butter(4, fc_lpf / (fs_hz / 2.0), btype='low', output='sos')
+            ece_smoothed_bae = dsp.sosfiltfilt(sos_lpf, ece_clean_bae)
+            ece_smoothed_bae = np.clip(ece_smoothed_bae, 1e-4, None)
+
             s_bae_sound = np.sqrt(ece_smoothed_bae)
             mean_inv_n = np.mean(1.0 / density_val_clean[mask_cal_use]) if np.sum(mask_cal_use) >= 5 else np.mean(1.0 / density_val_clean)
             mean_te = np.mean(ece_smoothed_bae[mask_cal_use]) if np.sum(mask_cal_use) >= 5 else np.mean(ece_smoothed_bae)
@@ -2054,22 +2151,17 @@ def process_shot(shot, args):
             s_bae_sound = None
             s_bae_coupled = None
 
-        # 4 & 5. EPM Beam models
-        s_epm_drive = np.sqrt(np.clip(total_nbi_power, 0.0, None) / density_val_clean)
-        s_epm_power = np.clip(total_nbi_power, 0.0, None)
-
-        # 6. Current-induced / iota-shear shift
+        # 4. Current-induced / iota-shear shift
         s_current = ip_signal
 
-        # 7. Stored diamagnetic energy Wp (plasma beta proxy)
+        # 5. Stored diamagnetic energy Wp (plasma beta proxy)
         s_beta = wp_signal if wp_signal is not None else None
 
+        # Retain only the 5 physically meaningful and distinct models (dropping redundant/flat EPM lines)
         candidate_scalings = {
             "Alfvénic / TAE / GAE (1/√ne)": (s_alfven, "Bulk Alfvén continuum / gap", "tab:red", "--"),
             "BAE Acoustic / GAM (√Te)": (s_bae_sound, "Beta-induced acoustic mode", "tab:blue", "-."),
             "BAE Coupled (√(vA²+cs²))": (s_bae_coupled, "Compressibility-coupled Alfvén", "tab:cyan", ":"),
-            "EPM Beam-Drive (√(PNBI/ne))": (s_epm_drive, "Fast-ion density gradient drive", "tab:purple", "-."),
-            "EPM Beam-Power (PNBI)": (s_epm_power, "Fast ion precession / drift", "darkorange", "-"),
             "Current-induced (Ip)": (s_current, "Rotational transform / shear shift", "forestgreen", "--"),
             "Stored Energy (Wp)": (s_beta, "Diamagnetic / finite-beta scaling", "tab:brown", ":"),
         }
@@ -2215,119 +2307,83 @@ def process_shot(shot, args):
     print(f"\n--- Generating Figure 1: Macroscopic Correlations (mhd_analysis_objective2_{shot}{suffix}.png) ---")
     fig1, axs1 = plt.subplots(4, 1, figsize=(12.5, 14.0), sharex=False)
 
-    # Panel 0: Correlation of Plasma Current (Ip15) vs. Mode Envelope
-    if ip_corr_result is not None:
-        axs1[0].plot(t_ms, ip_corr_result["signal"], color='tab:blue', alpha=0.8, label='Ip (Ip15)')
-        axs1[0].set_ylabel("Plasma Current Ip (kA)", color='tab:blue')
-        axs1[0].tick_params(axis='y', labelcolor='tab:blue')
-        ax0_twin = axs1[0].twinx()
-        ax0_twin.plot(t_ms, envelope, color='red', alpha=0.7, linewidth=1.5, label='Mode Envelope')
-        ax0_twin.set_ylabel("Envelope (V)", color='red')
-        ax0_twin.tick_params(axis='y', labelcolor='red')
-        if ip_corr_result["r_sig"] is not None:
-            ip_title_stat = (f"r={ip_corr_result['r_sig']:.3f}, lag={ip_corr_result['lag_ms']:+.1f} ms, "
-                             f"{format_p_value(ip_corr_result['p_adj'])}")
-        else:
-            ip_title_stat = "N/A"
-        axs1[0].set_title(f"Correlation: Plasma Current (Ip15) vs. Mode Envelope - Shot {shot}\n{ip_title_stat}")
-        lines0, labels0 = axs1[0].get_legend_handles_labels()
-        lines0t, labels0t = ax0_twin.get_legend_handles_labels()
-        axs1[0].legend(lines0 + lines0t, labels0 + labels0t, loc='upper right', fontsize=9)
-    else:
-        axs1[0].text(0.5, 0.5, "No Ip data available\n(Ip15 file missing)",
-                    ha='center', va='center', transform=axs1[0].transAxes, fontsize=11, color='gray')
-        axs1[0].set_title(f"Correlation: Plasma Current (Ip15) vs. Mode Envelope - Shot {shot}")
-    axs1[0].set_xlabel("Time (ms)")
-    axs1[0].grid(True, alpha=0.3)
+    t_ne_start = nave_corr_result["t_start"] if nave_corr_result is not None else 270.0
+    macro_specs = [
+        dict(
+            corr_result=ip_corr_result,
+            line_color='tab:blue',
+            line_label=r'$I_p$',
+            left_ylabel=r'Plasma Current $I_p$ [kA]',
+            title_prefix=r'Correlation: Plasma Current ($I_p$) vs. Mode Envelope',
+            missing_msg='No $I_p$ data available\n(Ip15 file missing)',
+            highlight_window=False,
+            panel_name=f"mhd_analysis_objective2_{shot}{suffix}_panel1_correlation_plasma_current_ip15_vs_mode.png",
+        ),
+        dict(
+            corr_result=wp_corr_result,
+            line_color='tab:green',
+            line_label=r'$W_p$',
+            left_ylabel=r'Stored Energy $W_p$ [kJ]',
+            title_prefix=r'Correlation: Stored Energy ($W_p$) vs. Mode Envelope',
+            missing_msg='No $W_p$ data available\n(Wp file missing)',
+            highlight_window=False,
+            panel_name=f"mhd_analysis_objective2_{shot}{suffix}_panel2_correlation_stored_energy_wp_vs_mode_env.png",
+        ),
+        dict(
+            corr_result=nave_corr_result,
+            line_color='tab:purple',
+            line_label=r'$n_e$',
+            left_ylabel=r'Line-Averaged Density' + '\n' + r'$n_e$ [$10^{19}\ \mathrm{m^{-3}}$]',
+            title_prefix=rf'Correlation: Line-Averaged Density ($n_e$) vs. Mode Envelope (Noise-Free Window: $t \geq {t_ne_start:.0f}\ \mathrm{{ms}}$)',
+            missing_msg='No density data available\n(nave file missing)',
+            highlight_window=True,
+            panel_name=f"mhd_analysis_objective2_{shot}{suffix}_panel3_correlation_line_averaged_density_nave_v.png",
+        ),
+        dict(
+            corr_result=hafast_corr_result,
+            line_color='tab:green',
+            line_label=r'Fast $\mathrm{H}_\alpha$ (HAFAST7.5)',
+            left_ylabel=r'Fast $\mathrm{H}_\alpha$ Emission $I_{\mathrm{H}\alpha}$ [V]',
+            title_prefix=r'Correlation: Fast $\mathrm{H}_\alpha$ Emission vs. Mode Envelope',
+            missing_msg='No HAFAST7.5 data available\n(HAFAST7.5 file missing)',
+            highlight_window=False,
+            panel_name=None,
+        ),
+    ]
 
-    # Panel 1: Correlation of Stored Energy (Wp) vs. Mode Envelope
-    if wp_corr_result is not None:
-        axs1[1].plot(t_ms, wp_corr_result["signal"], color='tab:green', alpha=0.8, label='Wp')
-        axs1[1].set_ylabel("Stored Energy Wp (a.u.)", color='tab:green')
-        axs1[1].tick_params(axis='y', labelcolor='tab:green')
-        ax1_twin = axs1[1].twinx()
-        ax1_twin.plot(t_ms, envelope, color='red', alpha=0.7, linewidth=1.5, label='Mode Envelope')
-        ax1_twin.set_ylabel("Envelope (V)", color='red')
-        ax1_twin.tick_params(axis='y', labelcolor='red')
-        if wp_corr_result["r_sig"] is not None:
-            wp_title_stat = (f"r={wp_corr_result['r_sig']:.3f}, lag={wp_corr_result['lag_ms']:+.1f} ms, "
-                             f"{format_p_value(wp_corr_result['p_adj'])}")
-        else:
-            wp_title_stat = "N/A"
-        axs1[1].set_title(f"Correlation: Stored Energy (Wp) vs. Mode Envelope - Shot {shot}\n{wp_title_stat}")
-        lines1, labels1 = axs1[1].get_legend_handles_labels()
-        lines1t, labels1t = ax1_twin.get_legend_handles_labels()
-        axs1[1].legend(lines1 + lines1t, labels1 + labels1t, loc='upper right', fontsize=9)
-    else:
-        axs1[1].text(0.5, 0.5, "No Wp data available\n(Wp file missing)",
-                    ha='center', va='center', transform=axs1[1].transAxes, fontsize=11, color='gray')
-        axs1[1].set_title(f"Correlation: Stored Energy (Wp) vs. Mode Envelope - Shot {shot}")
-    axs1[1].set_xlabel("Time (ms)")
-    axs1[1].grid(True, alpha=0.3)
-
-    # Panel 2: Correlation of Line-Averaged Density (nave) vs. Mode Envelope
-    if nave_corr_result is not None:
-        axs1[2].plot(t_ms, nave_corr_result["signal"], color='tab:purple', alpha=0.8, label='nave')
-        axs1[2].set_ylabel(r"Line-Averaged Density $\bar{n}_e$ (a.u.)", color='tab:purple')
-        axs1[2].tick_params(axis='y', labelcolor='tab:purple')
-
-        t_s = nave_corr_result["t_start"]
-        t_e = nave_corr_result["t_end"] if nave_corr_result["t_end"] is not None else t_ms[-1]
-        t_e_label = f"{nave_corr_result['t_end']:.0f} ms" if nave_corr_result["t_end"] is not None else "end"
-        axs1[2].axvspan(t_s, t_e, color='purple', alpha=0.08,
-                       label=f'Analyzed Window (Noise-Free, {t_s:.0f} ms - {t_e_label})')
-
-        ax2_twin = axs1[2].twinx()
-        ax2_twin.plot(t_ms, envelope, color='red', alpha=0.7, linewidth=1.5, label='Mode Envelope')
-        ax2_twin.set_ylabel("Envelope (V)", color='red')
-        ax2_twin.tick_params(axis='y', labelcolor='red')
-        if nave_corr_result["r_sig"] is not None:
-            nave_title_stat = (f"r={nave_corr_result['r_sig']:.3f}, lag={nave_corr_result['lag_ms']:+.1f} ms, "
-                               f"{format_p_value(nave_corr_result['p_adj'])}")
-        else:
-            nave_title_stat = "N/A"
-        axs1[2].set_title(f"Correlation: Line-Averaged Density (nave) vs. Mode Envelope (Noise-Free Window: t ≥ {t_s:.0f} ms) - Shot {shot}\n"
-                         f"{nave_title_stat}")
-        lines2, labels2 = axs1[2].get_legend_handles_labels()
-        lines2t, labels2t = ax2_twin.get_legend_handles_labels()
-        axs1[2].legend(lines2 + lines2t, labels2 + labels2t, loc='upper right', fontsize=9)
-    else:
-        axs1[2].text(0.5, 0.5, "No density data available\n(nave file missing)",
-                    ha='center', va='center', transform=axs1[2].transAxes, fontsize=11, color='gray')
-        axs1[2].set_title(f"Correlation: Line-Averaged Density (nave) vs. Mode Envelope - Shot {shot}")
-    axs1[2].set_xlabel("Time (ms)")
-    axs1[2].grid(True, alpha=0.3)
-
-    # Panel 3: Correlation of Fast H-alpha Emission (HAFAST7.5) vs. Mode Envelope
-    if hafast_corr_result is not None:
-        axs1[3].plot(t_ms, hafast_corr_result["signal"], color='tab:green', alpha=0.85, label='Fast H-alpha (HAFAST7.5)')
-        axs1[3].set_ylabel(r"Fast $H_\alpha$ Emission (V)", color='tab:green')
-        axs1[3].tick_params(axis='y', labelcolor='tab:green')
-        ax3_twin = axs1[3].twinx()
-        ax3_twin.plot(t_ms, envelope, color='red', alpha=0.7, linewidth=1.5, label='Mode Envelope')
-        ax3_twin.set_ylabel("Envelope (V)", color='red')
-        ax3_twin.tick_params(axis='y', labelcolor='red')
-        if hafast_corr_result["r_sig"] is not None:
-            ha_title_stat = (f"r={hafast_corr_result['r_sig']:.3f}, lag={hafast_corr_result['lag_ms']:+.1f} ms, "
-                             f"{format_p_value(hafast_corr_result['p_adj'])}")
-        else:
-            ha_title_stat = "N/A"
-        axs1[3].set_title(f"Correlation: Fast H-alpha Emission (HAFAST7.5) vs. Mode Envelope - Shot {shot}\n{ha_title_stat}")
-        lines3, labels3 = axs1[3].get_legend_handles_labels()
-        lines3t, labels3t = ax3_twin.get_legend_handles_labels()
-        axs1[3].legend(lines3 + lines3t, labels3 + labels3t, loc='upper right', fontsize=9)
-    else:
-        axs1[3].text(0.5, 0.5, "No HAFAST7.5 data available\n(HAFAST7.5 file missing)",
-                    ha='center', va='center', transform=axs1[3].transAxes, fontsize=11, color='gray')
-        axs1[3].set_title(f"Correlation: Fast H-alpha Emission (HAFAST7.5) vs. Mode Envelope - Shot {shot}")
-    axs1[3].set_xlabel("Time (ms)")
-    axs1[3].grid(True, alpha=0.3)
+    for ax_idx, spec in enumerate(macro_specs):
+        _plot_macro_correlation_panel(
+            axs1[ax_idx], t_ms, envelope,
+            spec["corr_result"], spec["line_color"], spec["line_label"],
+            spec["left_ylabel"], spec["title_prefix"], spec["missing_msg"],
+            shot, highlight_window=spec["highlight_window"]
+        )
 
     plt.tight_layout()
-    output_png1 = f"mhd_analysis_objective2_{shot}{suffix}.png"
-    plt.savefig(output_png1, dpi=150)
+    obj2_img_dir = ROOT_DIR / "Images" / "obj2_dynamics_and_structure"
+    obj2_img_dir.mkdir(parents=True, exist_ok=True)
+    output_png1 = obj2_img_dir / f"mhd_analysis_objective2_{shot}{suffix}.png"
+    plt.savefig(str(output_png1), dpi=150, bbox_inches='tight', pad_inches=0.08)
     plt.close(fig1)
     print_result(f"  Figure 1 (Macroscopic Correlations) successfully saved to: '{output_png1}'")
+
+    # Standalone Panel 1, 2, 3 exports with unclipped right-hand y-axis labels
+    p_dir = obj2_img_dir / "panels"
+    p_dir.mkdir(parents=True, exist_ok=True)
+    for spec in macro_specs:
+        if spec["panel_name"] is None or spec["corr_result"] is None:
+            continue
+        fig_sp, ax_sp = plt.subplots(figsize=(8.2, 3.0))
+        _plot_macro_correlation_panel(
+            ax_sp, t_ms, envelope,
+            spec["corr_result"], spec["line_color"], spec["line_label"],
+            spec["left_ylabel"], spec["title_prefix"], spec["missing_msg"],
+            shot, highlight_window=spec["highlight_window"], standalone=True
+        )
+        fig_sp.tight_layout()
+        fig_sp.savefig(str(p_dir / spec["panel_name"]), dpi=300, bbox_inches='tight', pad_inches=0.08)
+        plt.close(fig_sp)
+        print_result(f"  Standalone Macro Panel saved to: '{spec['panel_name']}'")
 
     # ===================================================================================
     # FIGURE 2: HEATING SYNCHRONIZATION & EP MODE IDENTIFICATION (4 panels)
@@ -2343,12 +2399,12 @@ def process_shot(shot, args):
     # Panel 0: Heating Power vs Mode Envelope
     axs2[0].plot(t_ms, total_nbi_power, color='darkorange', alpha=0.85, linewidth=1.6, label='Total NBI Power')
     axs2[0].plot(t_ms, ech_power, color='purple', alpha=0.8, linewidth=1.6, linestyle='--', label='ECH Power')
-    axs2[0].set_ylabel("Heating Power (a.u.)")
+    axs2[0].set_ylabel(r"Heating Power $P_{\mathrm{heat}}$ [a.u.]")
     axs2[0].axvspan(args.ech_active_start, args.ech_active_end, color='purple', alpha=0.06,
                     label=f'Active ECH Window ({args.ech_active_start:.0f}-{args.ech_active_end:.0f} ms)')
     ax2_0_twin = axs2[0].twinx()
     ax2_0_twin.plot(t_ms, envelope, color='red', alpha=0.75, linewidth=1.5, label='Mode Envelope')
-    ax2_0_twin.set_ylabel("Envelope (V)", color='red')
+    ax2_0_twin.set_ylabel(r"Envelope Amplitude $A_{\mathrm{env}}$ [V]", color='red')
     ax2_0_twin.tick_params(axis='y', labelcolor='red')
 
     title_p0 = (f"Heating Synchronization: Total NBI & ECH Power vs. Mode Envelope - Shot {shot}\n"
@@ -2359,7 +2415,7 @@ def process_shot(shot, args):
     lines2_0, labels2_0 = axs2[0].get_legend_handles_labels()
     lines2_0t, labels2_0t = ax2_0_twin.get_legend_handles_labels()
     axs2[0].legend(lines2_0 + lines2_0t, labels2_0 + labels2_0t, loc='upper right', fontsize=8.5)
-    axs2[0].set_xlabel("Time (ms)")
+    axs2[0].set_xlabel(r"Time $t$ [ms]")
     axs2[0].grid(True, alpha=0.3)
 
     # Panel 1: Instantaneous Frequency vs. Heating Power (in mode-active window)
@@ -2367,13 +2423,13 @@ def process_shot(shot, args):
         t_mode_act = t_ms[mask_mode_active]
         f_mode_act = ifreq_khz[mask_mode_active]
         axs2[1].plot(t_mode_act, f_mode_act, color='tab:blue', linewidth=1.8, label=r'Measured $f_\mathrm{inst}$ (kHz)')
-        axs2[1].set_ylabel(r"Mode Frequency $f_\mathrm{inst}$ (kHz)", color='tab:blue')
+        axs2[1].set_ylabel(r"Mode Frequency $f_\mathrm{inst}$ [kHz]", color='tab:blue')
         axs2[1].tick_params(axis='y', labelcolor='tab:blue')
 
         ax2_1_twin = axs2[1].twinx()
         ax2_1_twin.plot(t_ms, total_nbi_power, color='darkorange', alpha=0.6, label='Total NBI Power')
         ax2_1_twin.plot(t_ms, ech_power, color='purple', alpha=0.6, linestyle='--', label='ECH Power')
-        ax2_1_twin.set_ylabel("Heating Power (a.u.)")
+        ax2_1_twin.set_ylabel(r"Heating Power $P_{\mathrm{heat}}$ [a.u.]")
         axs2[1].axvspan(t_ms[i0_mode], t_ms[i1_mode - 1], color='tab:blue', alpha=0.08,
                         label=f'Mode-Active Burst ({t_ms[i0_mode]:.1f}-{t_ms[i1_mode-1]:.1f} ms)')
         if t_mode_strong_start is not None and t_mode_strong_end is not None:
@@ -2397,7 +2453,7 @@ def process_shot(shot, args):
         axs2[1].text(0.5, 0.5, "Insufficient mode-active window samples (<200) for frequency correlation",
                     ha='center', va='center', transform=axs2[1].transAxes, fontsize=11, color='gray')
         axs2[1].set_title(f"Instantaneous Frequency Response to Heating - Shot {shot}")
-    axs2[1].set_xlabel("Time (ms)")
+    axs2[1].set_xlabel(r"Time $t$ [ms]")
     axs2[1].grid(True, alpha=0.3)
 
     # Panel 2: Lagged Cross-Correlation Functions
@@ -2425,8 +2481,8 @@ def process_shot(shot, args):
 
     axs2[2].axhline(y=0.0, color='black', linestyle='-', linewidth=0.6, alpha=0.4)
     axs2[2].axvline(x=0.0, color='black', linestyle='--', linewidth=0.8, alpha=0.5, label='Zero Lag (τ = 0 ms)')
-    axs2[2].set_xlabel("Lag (ms)")
-    axs2[2].set_ylabel("Cross-Correlation Coefficient")
+    axs2[2].set_xlabel(r"Lag $\tau$ [ms]")
+    axs2[2].set_ylabel(r"Cross-Correlation $R(\tau)$ [-]")
     axs2[2].set_title(f"Lagged Cross-Correlation Diagnostics (Synchronization & Delay Analysis) - Shot {shot}", fontsize=10)
     axs2[2].legend(loc='upper right', fontsize=8, ncol=2)
     axs2[2].grid(True, alpha=0.3)
@@ -2449,6 +2505,13 @@ def process_shot(shot, args):
         axs2[3].axvspan(win_start, win_end, color='purple', alpha=0.10,
                         label=f'Strongly Present Window ({win_start:.1f}-{win_end:.1f} ms)')
 
+        def _fmt_p_mathtext(pval):
+            if pval >= 0.001:
+                return rf"$p_{{\mathrm{{adj}}}}={pval:.3f}$"
+            exp_p = int(np.floor(np.log10(max(pval, 1e-300))))
+            mant_p = pval / (10.0 ** exp_p)
+            return rf"$p_{{\mathrm{{adj}}}}={mant_p:.2f}\times 10^{{{exp_p}}}$"
+
         # Overlay candidate EP scaling curves
         for m_name, m_dict in ep_scaling_results.items():
             if m_name in ("best_model", "eval_window", "window_type_label"):
@@ -2458,7 +2521,7 @@ def process_shot(shot, args):
             is_best = (m_name == ep_scaling_results.get("best_model"))
             lw = 2.4 if is_best else 1.2
             alpha_val = 0.95 if is_best else 0.70
-            p_str = format_p_value(p_val).replace("p = ", "adj. p=")
+            p_str = _fmt_p_mathtext(p_val)
             lbl = f"{m_name}: r={r_val:+.3f} ({p_str})" + (" [highest |r|, n.s.]" if is_best else "")
             axs2[3].plot(t_ms[mask_plot_ep], m_dict["f_theo_curve"][mask_plot_ep], color=m_dict["color"],
                          linestyle=m_dict["linestyle"], linewidth=lw, alpha=alpha_val, label=lbl,
@@ -2479,12 +2542,13 @@ def process_shot(shot, args):
             best_neff = best_dict.get("N_eff", 0.0)
             sig_str = "significant" if best_p_adj < 0.05 else "not significant"
             sign_str = "expected sign" if best_r > 0 else "sign opposite to model"
-            badge_text = f"Highest |r|: {sig_str} (adj. p={best_p_adj:.3f}, N_eff~{best_neff:.0f}); {sign_str}"
+            best_p_txt = _fmt_p_mathtext(best_p_adj)
+            badge_text = rf"Highest $|r|$: {sig_str} ({best_p_txt}, $N_{{\mathrm{{eff}}}}\approx {best_neff:.0f}$); {sign_str}"
         else:
             badge_text = ""
 
         title_str = (f"Energetic Particle Mode Identification: Measured Frequency vs. Theoretical Scalings\n"
-                     f"(Band: {args.lower:.0f}-{args.upper:.0f} kHz | Strongly-Present Window: {win_start:.1f}-{win_end:.1f} ms | Calibrated on {args.alfven_cal_start:.0f}-{args.alfven_cal_end:.0f} ms)")
+                     f"(Band: {args.lower:.0f}-{args.upper:.0f} kHz | Eval Window: {win_start:.1f}-{win_end:.1f} ms | Calibrated on {args.alfven_cal_start:.0f}-{args.alfven_cal_end:.0f} ms)")
         if badge_text:
             title_str += f"\n[{badge_text}]"
 
@@ -2494,15 +2558,70 @@ def process_shot(shot, args):
         axs2[3].text(0.5, 0.5, "Density data unavailable for theoretical EP mode scaling",
                      ha='center', va='center', transform=axs2[3].transAxes, fontsize=11, color='gray')
         axs2[3].set_title("Energetic Particle Mode Identification")
-    axs2[3].set_xlabel("Time (ms)")
-    axs2[3].set_ylabel("Frequency (kHz)")
+    axs2[3].set_xlabel(r"Time $t$ [ms]")
+    axs2[3].set_ylabel(r"Frequency $f$ [kHz]")
     axs2[3].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    output_png2 = f"mhd_analysis_objective2_heating_{shot}{suffix}.png"
-    plt.savefig(output_png2, dpi=150)
+    output_png2 = obj2_img_dir / f"mhd_analysis_objective2_heating_{shot}{suffix}.png"
+    plt.savefig(str(output_png2), dpi=150)
     plt.close(fig2)
     print_result(f"  Figure 2 (Heating & EP Mode Identification) successfully saved to: '{output_png2}'")
+
+    # Standalone Panel 4 Export for Thesis & Overleaf
+    if ep_scaling_results:
+        fig_p4, ax_p4 = plt.subplots(figsize=(8.8, 4.82))
+        ax_p4.plot(t_ms[mask_plot_ep], ifreq_khz[mask_plot_ep], color='gray', linewidth=1.0, alpha=0.35, label=r'Measured $f_\mathrm{inst}(t)$ (quiet)')
+        if n_mode_active >= 50:
+            ax_p4.plot(t_ms[mask_mode_active], ifreq_khz[mask_mode_active], color='gray', linewidth=1.6, alpha=0.65, label=r'Measured $f_\mathrm{inst}(t)$ (burst)', zorder=3)
+        ax_p4.plot(t_ms[mask_eval_plot], ifreq_khz[mask_eval_plot], color='black', linewidth=2.4, label=r'Measured $f_\mathrm{inst}(t)$ (active)', zorder=5)
+
+        ax_p4.axvspan(win_start, win_end, color='purple', alpha=0.10,
+                      label=f'Eval Window ({win_start:.1f}–{win_end:.1f} ms)')
+
+        _p4_short_names = {
+            "Alfvénic / TAE / GAE (1/√ne)": r"Alfvénic / TAE ($1/\sqrt{n_e}$)",
+            "BAE Acoustic / GAM (√Te)": r"BAE Acoustic / GAM ($\sqrt{T_e}$)",
+            "BAE Coupled (√(vA²+cs²))": r"BAE Coupled ($\sqrt{v_A^2+c_s^2}$)",
+            "Current-induced (Ip)": r"Current-induced ($I_p$)",
+            "Stored Energy (Wp)": r"Stored Energy ($W_p$)",
+        }
+
+        for m_name, m_dict in ep_scaling_results.items():
+            if m_name in ("best_model", "eval_window", "window_type_label"):
+                continue
+            r_val = m_dict["r"]
+            p_val = m_dict["p_adj"]
+            is_best = (m_name == ep_scaling_results.get("best_model"))
+            lw = 2.6 if is_best else 1.5
+            alpha_val = 0.95 if is_best else 0.75
+            p_str = _fmt_p_mathtext(p_val)
+            disp_name = _p4_short_names.get(m_name, m_name)
+            lbl = f"{disp_name}: r={r_val:+.3f} ({p_str})"
+            ax_p4.plot(t_ms[mask_plot_ep], m_dict["f_theo_curve"][mask_plot_ep], color=m_dict["color"],
+                       linestyle=m_dict["linestyle"], linewidth=lw, alpha=alpha_val, label=lbl,
+                       zorder=4 if is_best else 2)
+
+        ax_p4.axvspan(args.alfven_cal_start, args.alfven_cal_end, color='gray', alpha=0.15,
+                      label=f'Calib. ({args.alfven_cal_start:.0f}–{args.alfven_cal_end:.0f} ms)')
+        ax_p4.set_xlim(t_plot_min, t_plot_max)
+        ax_p4.set_ylim(args.lower - 5.0, args.upper + 8.0)
+        p4_title = f"#{shot} ({args.lower:.0f}–{args.upper:.0f} kHz | Eval {win_start:.1f}–{win_end:.1f} ms)"
+        if badge_text:
+            p4_title += f"\n[{badge_text}]"
+        ax_p4.legend(loc='lower center', bbox_to_anchor=(0.5, 1.02), ncol=2, fontsize=11.2,
+                     framealpha=0.95, columnspacing=0.8, handlelength=1.6)
+        ax_p4.set_title(p4_title, fontsize=13.5, fontweight="bold", pad=128)
+        ax_p4.set_xlabel(r"Time $t$ [ms]", fontsize=14.5)
+        ax_p4.set_ylabel(r"Frequency $f$ [kHz]", fontsize=14.5)
+        ax_p4.tick_params(labelsize=13.5)
+        ax_p4.grid(True, alpha=0.3)
+        plt.tight_layout()
+
+        panel4_name = f"mhd_analysis_objective2_heating_{shot}{suffix}_panel4_energetic_particle_mode_identification_m.png"
+        fig_p4.savefig(str(p_dir / panel4_name), dpi=300, bbox_inches='tight')
+        plt.close(fig_p4)
+        print_result(f"  Standalone Panel 4 saved to: '{panel4_name}'")
 
     # ===================================================================================
     # FIGURE 3: SPATIAL MODAL STRUCTURE ANALYSIS (4 panels)
@@ -2517,7 +2636,7 @@ def process_shot(shot, args):
 
     # Panel 0: Carrier Coherence
     if n_mode_active >= 200 and n_flat_active >= 200:
-        window_kind = "[M7] burst" if flat_info.get("used_fallback") else "[M9] flat sub-window"
+        window_kind = "burst" if flat_info.get("used_fallback") else "flat sub-window"
         mode_active_ms_str = f"{t_ms[i0_flat]:.1f}-{t_ms[i1_flat - 1]:.1f} ms, {window_kind}"
     else:
         mode_active_ms_str = "no mode-active/flat window"
@@ -2537,16 +2656,16 @@ def process_shot(shot, args):
         if n_mode_active < 200:
             placeholder_msg = "No mode-active window detected\n(too few burst samples)"
         elif n_flat_active < 200:
-            placeholder_msg = "Flat-frequency [M9] sub-window\ntoo short (too few samples)"
+            placeholder_msg = "Flat-frequency sub-window\ntoo short (too few samples)"
         else:
             placeholder_msg = "No probe pair available\n(MP3 and/or MP4 file missing)"
         axs3[0].text(0.5, 0.5, placeholder_msg, ha='center', va='center',
                     transform=axs3[0].transAxes, fontsize=11, color='gray')
     axs3[0].axhline(y=0.5, color='black', linestyle=':', label='Significance Threshold (0.5)')
-    axs3[0].set_title("Cross-Spectral Coherence Between Mirnov Probes: Carrier-Mode Oscillations [M8]\n"
+    axs3[0].set_title("Cross-Spectral Coherence Between Mirnov Probes: Carrier-Mode Oscillations\n"
                       f"(window: {mode_active_ms_str})", fontsize=10)
-    axs3[0].set_xlabel("Frequency (kHz)")
-    axs3[0].set_ylabel(r"Coherence $\gamma^2$")
+    axs3[0].set_xlabel(r"Frequency $f$ [kHz]")
+    axs3[0].set_ylabel(r"Coherence $\gamma^2$ [-]")
     axs3[0].set_ylim(0, 1.05)
     axs3[0].grid(True, alpha=0.3, which='both', linestyle=':')
     axs3[0].legend(loc='upper right')
@@ -2567,28 +2686,30 @@ def process_shot(shot, args):
         if n_mode_active < 200:
             placeholder_msg = "No mode-active window detected\n(too few burst samples)"
         elif n_flat_active < 200:
-            placeholder_msg = "Flat-frequency [M9] sub-window\ntoo short (too few samples)"
+            placeholder_msg = "Flat-frequency sub-window\ntoo short (too few samples)"
         else:
             placeholder_msg = "No probe pair available\n(MP3 and/or MP4 file missing)"
         axs3[1].text(0.5, 0.5, placeholder_msg, ha='center', va='center',
                     transform=axs3[1].transAxes, fontsize=11, color='gray')
     axs3[1].axhline(y=0.5, color='black', linestyle=':', label='Significance Threshold (0.5)')
-    axs3[1].set_title("Cross-Spectral Coherence Between Probe Envelopes: Modal-Structure Estimation [M8]\n"
+    axs3[1].set_title("Cross-Spectral Coherence Between Probe Envelopes: Modal-Structure Estimation\n"
                       f"(window: {mode_active_ms_str})", fontsize=10)
-    axs3[1].set_xlabel("Modulation Frequency (kHz)")
-    axs3[1].set_ylabel(r"Coherence $\gamma^2$")
+    axs3[1].set_xlabel(r"Modulation Frequency $f_{\mathrm{mod}}$ [kHz]")
+    axs3[1].set_ylabel(r"Coherence $\gamma^2$ [-]")
     axs3[1].set_ylim(0, 1.05)
     axs3[1].grid(True, alpha=0.3, which='both', linestyle=':')
     axs3[1].legend(loc='upper right')
 
     # Panel 2: Poloidal Mode Decomposition
     if poloidal_result is not None:
+        P2d_max = float(np.max(poloidal_result["P2d_plot"]))
+        P2d_norm = poloidal_result["P2d_plot"] / (P2d_max if P2d_max > 0 else 1.0)
         pcm = axs3[2].pcolormesh(
             poloidal_result["f_band_khz_plot"], poloidal_result["k_grid_plot"],
-            np.log10(poloidal_result["P2d_plot"] + 1e-30), cmap='jet', shading='auto'
+            np.log10(P2d_norm + 1e-30), cmap='jet', shading='auto'
         )
         cb = plt.colorbar(pcm, ax=axs3[2])
-        cb.set_label(r"log$_{10}$ Poloidal Power (a.u.)")
+        cb.set_label(r"Normalized Poloidal Power" "\n" r"$\log_{10} P_{\mathrm{norm}}$ [a.u.]")
         untrustworthy = poloidal_result["is_edge_pinned"] and poloidal_result["verdict"] != "confirmed_stable"
         line_color = 'red' if untrustworthy else 'white'
         line_label = (f"m = {poloidal_result['m_dominant']:+d} [UNTRUSTWORTHY - see log]" if untrustworthy
@@ -2607,9 +2728,9 @@ def process_shot(shot, args):
                             else "No mode-active/flat window\navailable for this shot")
         axs3[2].text(0.5, 0.5, placeholder_msg, ha='center', va='center',
                     transform=axs3[2].transAxes, fontsize=11, color='gray')
-    axs3[2].set_title(f"Poloidal Mode-Number Decomposition (PMP1-PMP14 Array) [M10]\n(window: {mode_active_ms_str})", fontsize=10)
-    axs3[2].set_xlabel("Frequency (kHz)")
-    axs3[2].set_ylabel("Poloidal Mode Number m")
+    axs3[2].set_title(f"Poloidal Mode-Number Decomposition (PMP1-PMP14 Array)\n(window: {mode_active_ms_str})", fontsize=10)
+    axs3[2].set_xlabel(r"Frequency $f$ [kHz]")
+    axs3[2].set_ylabel(r"Poloidal Mode Number $m$ [-]")
 
     # Panel 3: Poloidal Phase Structure Verification
     if phase_structure_result is not None:
@@ -2673,11 +2794,11 @@ def process_shot(shot, args):
         axs3[3].set_yticklabels([r'$-\pi$', r'$-\pi/2$', r'$0$', r'$\pi/2$', r'$\pi$'])
         axs3[3].axhline(y=0, color='black', linewidth=0.5, alpha=0.3)
         axs3[3].axvline(x=0, color='black', linewidth=0.5, alpha=0.3)
-        axs3[3].set_title(f"Poloidal Phase Structure Verification [M10-PHASE]\n"
+        axs3[3].set_title(f"Poloidal Phase Structure Verification\n"
                           f"(cross-spectral phase at {ps['f_peak_hz']/1000:.2f} kHz, "
                           f"ref: {ps['ref_channel']}, mean $\\gamma^2$ = {ps['mean_coherence']:.2f}, window: {mode_active_ms_str})", fontsize=10)
-        axs3[3].set_xlabel(r"Poloidal Angle $\theta$ (rad)")
-        axs3[3].set_ylabel(r"Cross-Spectral Phase $\phi$ (rad)")
+        axs3[3].set_xlabel(r"Poloidal Angle $\theta$ [rad]")
+        axs3[3].set_ylabel(r"Cross-Spectral Phase $\phi$ [rad]")
         axs3[3].grid(True, alpha=0.3)
         axs3[3].legend(loc='upper right', fontsize=8, ncol=2)
     else:
@@ -2685,15 +2806,49 @@ def process_shot(shot, args):
                             else "Phase structure unavailable\n(insufficient data)")
         axs3[3].text(0.5, 0.5, placeholder_msg, ha='center', va='center',
                     transform=axs3[3].transAxes, fontsize=11, color='gray')
-        axs3[3].set_title("Poloidal Phase Structure Verification [M10-PHASE]")
-        axs3[3].set_xlabel(r"Poloidal Angle $\theta$ (rad)")
-        axs3[3].set_ylabel(r"Cross-Spectral Phase $\phi$ (rad)")
+        axs3[3].set_title("Poloidal Phase Structure Verification")
+        axs3[3].set_xlabel(r"Poloidal Angle $\theta$ [rad]")
+        axs3[3].set_ylabel(r"Cross-Spectral Phase $\phi$ [rad]")
 
     plt.tight_layout()
-    output_png3 = f"mhd_analysis_objective2_structure_{shot}{suffix}.png"
-    plt.savefig(output_png3, dpi=150)
+    output_png3 = obj2_img_dir / f"mhd_analysis_objective2_structure_{shot}{suffix}.png"
+    plt.savefig(str(output_png3), dpi=150)
     plt.close(fig3)
     print_result(f"  Figure 3 (Spatial Modal Structure) successfully saved to: '{output_png3}'")
+
+    if poloidal_result is not None:
+        fig_p3, ax_p3 = plt.subplots(figsize=(7.8, 3.6))
+        P2d_max = float(np.max(poloidal_result["P2d_plot"]))
+        P2d_norm = poloidal_result["P2d_plot"] / (P2d_max if P2d_max > 0 else 1.0)
+        pcm_p3 = ax_p3.pcolormesh(
+            poloidal_result["f_band_khz_plot"], poloidal_result["k_grid_plot"],
+            np.log10(P2d_norm + 1e-30), cmap='jet', shading='auto'
+        )
+        cb_p3 = plt.colorbar(pcm_p3, ax=ax_p3)
+        cb_p3.set_label(r"Normalized Poloidal Power" "\n" r"$\log_{10} P_{\mathrm{norm}}$ [a.u.]", fontsize=10.5)
+        cb_p3.ax.tick_params(labelsize=11.0)
+        untrustworthy = poloidal_result["is_edge_pinned"] and poloidal_result["verdict"] != "confirmed_stable"
+        line_color = 'red' if untrustworthy else 'white'
+        line_label = (f"m = {poloidal_result['m_dominant']:+d} [UNTRUSTWORTHY - see log]" if untrustworthy
+                      else f"Dominant m = {poloidal_result['m_dominant']:+d}")
+        ax_p3.axhline(y=poloidal_result["m_dominant"], color=line_color, linestyle='--', linewidth=1.6,
+                      label=line_label)
+        if poloidal_result["was_expanded_for_plot"]:
+            ax_p3.text(0.02, 0.02, f"(auto-expanded to +/-{poloidal_result['k_grid_plot'].max()}, "
+                       f"default was +/-{poloidal_result['k_grid'].max()})",
+                       transform=ax_p3.transAxes, fontsize=9.5, color='white',
+                       bbox=dict(facecolor='black', alpha=0.4, pad=2))
+        ax_p3.set_xlim(args.lower, args.upper)
+        ax_p3.set_title(f"#{shot} ({mode_active_ms_str})", fontsize=12.0, fontweight="bold")
+        ax_p3.set_xlabel(r"Frequency $f$ [kHz]", fontsize=12.5)
+        ax_p3.set_ylabel(r"Poloidal Mode Number $m$ [-]", fontsize=12.5)
+        ax_p3.tick_params(labelsize=11.5)
+        ax_p3.legend(loc='upper right', fontsize=11.0, framealpha=0.9)
+        plt.tight_layout()
+        panel3_name = f"mhd_analysis_objective2_structure_{shot}{suffix}_panel3_poloidal_mode_number_decomposition_pmp1.png"
+        fig_p3.savefig(str(p_dir / panel3_name), dpi=300, bbox_inches='tight')
+        plt.close(fig_p3)
+        print_result(f"  Standalone Panel 3 saved to: '{panel3_name}'")
 
     # --- Per-shot summary printout ---
     print_result(f"\n SHOT {shot} SUMMARY ")
@@ -2936,8 +3091,10 @@ def cross_discharge_analysis(results_list, args):
 
     plt.tight_layout()
     suffix = get_output_suffix(args)
-    output_png = f"mhd_analysis_objective2_multishot_summary{suffix}.png"
-    plt.savefig(output_png, dpi=150)
+    summary_dir = ROOT_DIR / "Images" / "obj2_dynamics_and_structure"
+    summary_dir.mkdir(parents=True, exist_ok=True)
+    output_png = summary_dir / f"mhd_analysis_objective2_multishot_summary{suffix}.png"
+    plt.savefig(str(output_png), dpi=150)
     plt.close(fig)
     print(f"\nCross-discharge summary plot saved to: '{output_png}'")
 

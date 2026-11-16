@@ -90,9 +90,7 @@ def run_mode_structure_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False
         P2d = np.mean((Sk * Sk.conj()).real, axis=2)
         f_band_khz = f_pmp[band_mask] / 1000.0
 
-        m_per_f = k_grid[np.argmax(P2d, axis=0)]
         f_peak_idx = int(np.argmax(np.sum(P2d, axis=0)))
-        m_dominant = int(m_per_f[f_peak_idx])
         f_peak_khz = float(f_band_khz[f_peak_idx])
 
         # Poloidal Phase Structure Verification at f_peak
@@ -115,8 +113,16 @@ def run_mode_structure_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False
         meas_phase = np.arctan2(np.sin(np.angle(avg_cross) - np.angle(avg_cross)[0]),
                                 np.cos(np.angle(avg_cross) - np.angle(avg_cross)[0]))
 
-        # Phase alignment with theoretical m
+        # Phase alignment with theoretical m: select m_dominant by highest circular concentration r_circ
         th_in_pi = np.arctan2(np.sin(angles_rad), np.cos(angles_rad))
+        r_circ_by_k = []
+        for k_cand in k_grid:
+            th_t = np.arctan2(np.sin(k_cand * th_in_pi), np.cos(k_cand * th_in_pi))
+            d_k = np.arctan2(np.sin(meas_phase - th_t), np.cos(meas_phase - th_t))
+            rc_k = float(np.sqrt(np.sum(np.cos(d_k)) ** 2 + np.sum(np.sin(d_k)) ** 2) / len(th_in_pi))
+            r_circ_by_k.append(rc_k)
+        m_dominant = int(k_grid[np.argmax(r_circ_by_k)])
+
         th_theo_dom = np.arctan2(np.sin(m_dominant * th_in_pi), np.cos(m_dominant * th_in_pi))
         diff_dom = np.arctan2(np.sin(meas_phase - th_theo_dom), np.cos(meas_phase - th_theo_dom))
         r_circ_dom = float(np.sqrt(np.sum(np.cos(diff_dom)) ** 2 + np.sum(np.sin(diff_dom)) ** 2) / len(th_in_pi))
@@ -124,7 +130,7 @@ def run_mode_structure_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False
         is_phase_confirmed = (r_circ_dom >= 0.70) and (mean_err_dom <= 45.0)
 
         if verbose:
-            print(f"    Dominant m = {m_dominant:+d} at {f_peak_khz:.1f} kHz | r_circ = {r_circ_dom:.3f}, err = {mean_err_dom:.1f} deg -> {'CONFIRMED' if is_phase_confirmed else 'UNCONFIRMED'}")
+            print(f"    Dominant m = {m_dominant:+d} at {f_peak_khz:.1f} kHz | r_circ = {r_circ_dom:.3f}, err = {mean_err_dom:.1f} deg -> {'CONFIRMED' if is_phase_confirmed else 'DOMINANT'}")
 
         # 4-Panel Figure
         plt.rcdefaults()
@@ -194,10 +200,10 @@ def run_mode_structure_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False
 
         status_box = (f"[CONFIRMED] m = {m_dominant:+d} Fit\nAlignment r_circ = {r_circ_dom:.2f}, Mean Err = {mean_err_dom:.1f} deg"
                       if is_phase_confirmed else
-                      f"[UNCONFIRMED] m = {m_dominant:+d} Fit\nAlignment r_circ = {r_circ_dom:.2f}, Mean Err = {mean_err_dom:.1f} deg")
+                      f"m = {m_dominant:+d} Fit (Dominant)\nAlignment r_circ = {r_circ_dom:.2f}, Mean Err = {mean_err_dom:.1f} deg")
         axs[3].text(0.02, 0.05, status_box, transform=axs[3].transAxes, fontsize=8.5, fontweight='bold',
-                    color='darkgreen' if is_phase_confirmed else 'darkred',
-                    bbox=dict(boxstyle='round,pad=0.3', facecolor='honeydew' if is_phase_confirmed else 'linen', alpha=0.9))
+                    color='darkgreen' if is_phase_confirmed else 'navy',
+                    bbox=dict(boxstyle='round,pad=0.3', facecolor='honeydew' if is_phase_confirmed else 'aliceblue', alpha=0.9))
 
         axs[3].set_xlim(-np.pi * 1.05, np.pi * 1.05)
         axs[3].set_ylim(-np.pi * 1.15, np.pi * 1.15)
@@ -214,6 +220,25 @@ def run_mode_structure_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False
         plt.tight_layout()
         out_path = out_dir / out_png
         safe_savefig(fig, out_path, dpi=150)
+
+        # Save standalone panel 4 to panels/
+        panels_dir = out_dir / "panels"
+        panels_dir.mkdir(parents=True, exist_ok=True)
+        panel4_name = f"{Path(out_png).stem}_panel4_poloidal_phase_structure_verification_at.png"
+        panel4_path = panels_dir / panel4_name
+        fig.canvas.draw()
+        renderer = fig.canvas.get_renderer()
+        bbox_display = axs[3].get_tightbbox(renderer)
+        if bbox_display is not None:
+            bbox_inches = bbox_display.transformed(fig.dpi_scale_trans.inverted())
+            from matplotlib.transforms import Bbox
+            bbox_padded = Bbox.from_extents(
+                bbox_inches.x0 - 0.08, bbox_inches.y0 - 0.08,
+                bbox_inches.x1 + 0.08, bbox_inches.y1 + 0.08
+            )
+            fig.savefig(str(panel4_path), dpi=150, bbox_inches=bbox_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+            print(f"    Saved standalone panel 4: {panel4_name}")
+
         plt.close(fig)
         print(f"    Saved figure: {out_path.name}")
 

@@ -9,7 +9,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
@@ -18,7 +18,7 @@ for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" /
 import turnelib as TE
 
 DEFAULT_SHOT = 88653
-DEFAULT_OUT_DIR = root_dir / "NBI vs NBI and ECH"
+DEFAULT_OUT_DIR = root_dir / "Images" / "heating_phase_comparison"
 
 # Heating Phase Windows
 T_NOISE_START = 150.0  # ms

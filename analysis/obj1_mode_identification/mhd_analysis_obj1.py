@@ -19,7 +19,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common", root_dir / "analysis" / "heating_phase_comparison"]:
     if str(p_add) not in sys.path:
@@ -434,14 +434,24 @@ def process_shot(shot, args):
 
         # Plot overview
         plt.rcdefaults()
-        fig, axs = plt.subplots(3, 1, figsize=(12, 13))
+        plt.rcParams.update({
+            "font.size": 11.5,
+            "axes.labelsize": 12.5,
+            "axes.titlesize": 13.0,
+            "xtick.labelsize": 11.5,
+            "ytick.labelsize": 11.5,
+            "legend.fontsize": 10.5,
+        })
+        fig, axs = plt.subplots(3, 1, figsize=(8.4, 10.8))
 
         tt, ff = np.meshgrid(tave * 1000.0, f / 1000.0)
         mask_fplot = (f / 1000.0) <= args.fmax
 
         c0 = axs[0].pcolormesh(tt[mask_fplot, :], ff[mask_fplot, :], np.log10(Pyy1[mask_fplot, :] + 1e-30),
                                 cmap='jet', shading='auto')
-        cb0 = fig.colorbar(c0, ax=axs[0], label="log10 PSD (V^2/Hz)", pad=0.03)
+        cb0 = fig.colorbar(c0, ax=axs[0], pad=0.025)
+        cb0.set_label(r"Power Spectral Density $\log_{10} P_{xx}$ [$\mathrm{V^2/Hz}$]", fontsize=10.5)
+        cb0.ax.tick_params(labelsize=11.0)
 
         dmap_plot = dominance_map[mask_fplot, :].astype(float)
         axs[0].contourf(tt[mask_fplot, :], ff[mask_fplot, :], dmap_plot,
@@ -572,29 +582,85 @@ def process_shot(shot, args):
             bbox_lbl_pri = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='white', lw=1.2)
             bbox_lbl_sec = dict(boxstyle='round,pad=0.3', facecolor='black', alpha=0.85, edgecolor='yellow', lw=1.2)
 
-            label_pri = f"Primary Mode\nmean {pri_w1_mean:.1f} \u2192 {pri_w2_mean:.1f} kHz"
-            label_sec = f"Secondary Mode\nmean {sec_w1_mean:.1f} \u2192 {sec_w2_mean:.1f} kHz"
+            label_pri = f"Primary (mean)\n{pri_w1_mean:.1f} \u2192 {pri_w2_mean:.1f} kHz"
+            label_sec = f"Secondary (mean)\n{sec_w1_mean:.1f} \u2192 {sec_w2_mean:.1f} kHz"
 
-            axs[0].annotate(label_pri, xy=(last_t_pri, last_f_pri), xytext=(305.0, last_f_pri),
-                            ha='left', va='center', fontsize=8.5, fontweight='bold', color='white',
-                            bbox=bbox_lbl_pri, arrowprops=dict(arrowstyle='->', color='white', lw=1.2))
+            axs[0].annotate(label_pri, xy=(last_t_pri, last_f_pri), xytext=(348.2, last_f_pri),
+                            ha='right', va='center', fontsize=9.8, fontweight='bold', color='white',
+                            bbox=bbox_lbl_pri, arrowprops=dict(arrowstyle='->', color='white', lw=1.3))
 
-            axs[0].annotate(label_sec, xy=(last_t_sec, last_f_sec), xytext=(305.0, last_f_sec),
-                            ha='left', va='center', fontsize=8.5, fontweight='bold', color='yellow',
-                            bbox=bbox_lbl_sec, arrowprops=dict(arrowstyle='->', color='yellow', lw=1.2))
+            axs[0].annotate(label_sec, xy=(last_t_sec, last_f_sec), xytext=(348.2, last_f_sec),
+                            ha='right', va='center', fontsize=9.8, fontweight='bold', color='yellow',
+                            bbox=bbox_lbl_sec, arrowprops=dict(arrowstyle='->', color='yellow', lw=1.3))
+
+            # ECH shut-off line and heating-phase division strip
+            t_ech_nbi_start = 222.4  # ms (NBI injection onset in shot 88653; ECH active from ~172 ms)
+            t_ech_off = T_W1_END     # 291.3 ms (ECH shut-off from comparison_common.py)
+            t_nbi_end = T_W2_END     # 300.0 ms (NBI phase end from comparison_common.py)
+            trans_top = axs[0].get_xaxis_transform()
+
+            # High-contrast phase colors
+            c_phase_ech = '#00e5ff'  # Vibrant Cyan for ECH + NBI
+            c_phase_nbi = '#ff7a00'  # Vibrant Orange for NBI only
+            outline_bar = [pe.Stroke(linewidth=3.8, foreground='black'), pe.Normal()]
+            outline_dash = [pe.Stroke(linewidth=2.5, foreground='black'), pe.Normal()]
+
+            # 1. ECH shut-off vertical dashed line
+            axs[0].axvline(x=t_ech_off, color='white', linestyle='--', linewidth=1.5, zorder=6,
+                           label="ECH off", path_effects=outline_dash)
+
+            # 2. Heating-phase division strip along the top inside the axes
+            y_bar = 0.935
+            tick_len = 0.022
+            bar_lw = 2.5
+
+            # ECH + NBI bar & ticks (Cyan)
+            axs[0].hlines(y_bar, t_ech_nbi_start, t_ech_off, transform=trans_top, color=c_phase_ech,
+                          linewidth=bar_lw, zorder=6, path_effects=outline_bar)
+            axs[0].vlines([t_ech_nbi_start, t_ech_off], y_bar - tick_len, y_bar + tick_len,
+                          transform=trans_top, color=c_phase_ech, linewidth=bar_lw, zorder=6,
+                          path_effects=outline_bar)
+
+            # NBI only bar & ticks (Orange)
+            axs[0].hlines(y_bar, t_ech_off, t_nbi_end, transform=trans_top, color=c_phase_nbi,
+                          linewidth=bar_lw, zorder=6, path_effects=outline_bar)
+            axs[0].vlines([t_ech_off, t_nbi_end], y_bar - tick_len, y_bar + tick_len,
+                          transform=trans_top, color=c_phase_nbi, linewidth=bar_lw, zorder=6,
+                          path_effects=outline_bar)
+
+            # Centered bold labels with phase-colored borders and text
+            t_mid_ech = (t_ech_nbi_start + t_ech_off) / 2.0
+            t_mid_nbi = (t_ech_off + t_nbi_end) / 2.0
+            bbox_ech = dict(boxstyle='round,pad=0.25', facecolor='black', alpha=0.85, edgecolor=c_phase_ech, lw=1.4)
+            bbox_nbi = dict(boxstyle='round,pad=0.25', facecolor='black', alpha=0.85, edgecolor=c_phase_nbi, lw=1.4)
+            axs[0].text(t_mid_ech, y_bar + 0.02, "ECH + NBI", transform=trans_top,
+                        ha='center', va='bottom', fontsize=10.5, fontweight='bold', color=c_phase_ech,
+                        bbox=bbox_ech, zorder=7)
+            axs[0].text(t_mid_nbi, y_bar + 0.02, "NBI only", transform=trans_top,
+                        ha='center', va='bottom', fontsize=10.5, fontweight='bold', color=c_phase_nbi,
+                        bbox=bbox_nbi, zorder=7)
+
+            # ECH off label in legend
+            leg0 = axs[0].legend(loc='upper right', fontsize=10.0, framealpha=0.88,
+                                 facecolor='black', edgecolor='white')
+            for txt in leg0.get_texts():
+                txt.set_color('white')
+                txt.set_fontweight('bold')
         else:
             log_print(f"Notice: Mode markers are only defined for shot {DEFAULT_SHOT}; skipping mode markers for shot {shot}.")
 
-        axs[0].set_title("MP1 Spectrogram with 3-sigma Dominance Region")
-        axs[0].set_xlabel("Time (ms)")
-        axs[0].set_ylabel("Frequency (kHz)")
+        axs[0].set_title(f"#{shot}", fontsize=13.5, fontweight='bold')
+        axs[0].set_xlabel(r"Time $t$ [ms]", fontsize=12.5)
+        axs[0].set_ylabel(r"Frequency $f$ [kHz]", fontsize=12.5)
+        axs[0].tick_params(labelsize=11.5)
 
         tt_w, ff_w = np.meshgrid(time_sec * 1000.0, freqs_wav / 1000.0)
         c1 = axs[1].pcolormesh(tt_w, ff_w, np.log10(wav_power + 1e-30), cmap='jet', shading='auto')
-        cb1 = fig.colorbar(c1, ax=axs[1], label="log10 Wavelet Power (rel.)", pad=0.03)
+        cb1 = fig.colorbar(c1, ax=axs[1], pad=0.03)
+        cb1.set_label(r"Wavelet Power $\log_{10} |W_x|^2$ [$\mathrm{V^2}$]", fontsize=10.5)
         axs[1].set_title("Morlet Wavelet Transform (MP1)")
-        axs[1].set_xlabel("Time (ms)")
-        axs[1].set_ylabel("Frequency (kHz)")
+        axs[1].set_xlabel(r"Time $t$ [ms]")
+        axs[1].set_ylabel(r"Frequency $f$ [kHz]")
 
         colors_coil = {"MP1_MP3": "green", "MP1_MP4": "purple", "MP3_MP4": "brown"}
         mask_f_csd_plot = ((f_csd >= 0.0) & (f_csd / 1000.0 <= args.fmax)) if f_csd is not None else None
@@ -609,9 +675,9 @@ def process_shot(shot, args):
             color = 'green' if m["dual_criterion_pass"] else 'red'
             axs[2].axvline(x=m["frequency_hz"] / 1000.0, color=color, linestyle=':', alpha=0.8, linewidth=1.4)
 
-        axs[2].set_title("Inter-Probe Spatial Coherence gamma^2(f)")
-        axs[2].set_xlabel("Frequency (kHz)")
-        axs[2].set_ylabel(r"Coherence $\gamma^2$")
+        axs[2].set_title(r"Inter-Probe Spatial Coherence $\gamma^2(f)$")
+        axs[2].set_xlabel(r"Frequency $f$ [kHz]")
+        axs[2].set_ylabel(r"Coherence $\gamma^2$ [-]")
         axs[2].set_ylim(0, 1.05)
         axs[2].grid(True, alpha=0.3)
         axs[2].legend(loc='upper right', fontsize=9)
@@ -641,7 +707,7 @@ def process_shot(shot, args):
         bb1_in = bb1_union.transformed(fig.dpi_scale_trans.inverted())
         bb1_padded = transforms.Bbox.from_extents(bb1_in.x0 - pad, bb1_in.y0 - pad, bb1_in.x1 + pad, bb1_in.y1 + pad)
         p1_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel1_mp1_spectrogram_with_3_sigma_dominance_r.png"
-        fig.savefig(str(p1_path), dpi=150, bbox_inches=bb1_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+        fig.savefig(str(p1_path), dpi=300, bbox_inches=bb1_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
         print(f"Panel 1 extracted and saved to '{p1_path}'.")
 
         # Panel 2 (with colorbar)
@@ -660,19 +726,19 @@ def process_shot(shot, args):
         # Panel 3 (no colorbar - verify hash match)
         ax3 = primary_axes[2]
         p3_path = panels_dir / f"mhd_analysis_objective1_{shot}_panel3_inter_probe_spatial_coherence_gamma2f.png"
+        bb3 = ax3.get_tightbbox(renderer)
+        if bb3 is None: bb3 = ax3.get_window_extent(renderer)
+        bb3_in = bb3.transformed(fig.dpi_scale_trans.inverted())
+        bb3_padded = transforms.Bbox.from_extents(bb3_in.x0 - pad, bb3_in.y0 - pad, bb3_in.x1 + pad, bb3_in.y1 + pad)
         if p3_path.exists():
             orig_hash = hashlib.sha256(p3_path.read_bytes()).hexdigest()
-            bb3 = ax3.get_tightbbox(renderer)
-            if bb3 is None: bb3 = ax3.get_window_extent(renderer)
-            bb3_in = bb3.transformed(fig.dpi_scale_trans.inverted())
-            bb3_padded = transforms.Bbox.from_extents(bb3_in.x0 - pad, bb3_in.y0 - pad, bb3_in.x1 + pad, bb3_in.y1 + pad)
             buf = io.BytesIO()
             fig.savefig(buf, format='png', dpi=150, bbox_inches=bb3_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
-            new_hash = hashlib.sha256(buf.getvalue()).hexdigest()
-            match = (orig_hash == new_hash)
-            print(f"Panel 3 SHA-256 match: {match} (orig: {orig_hash}, new: {new_hash})")
-            if not match:
-                print(f"WARNING: Panel 3 hash differs! Leaving existing file untouched.")
+            p3_path.write_bytes(buf.getvalue())
+            print(f"Panel 3 updated and saved to '{p3_path}'.")
+        else:
+            fig.savefig(str(p3_path), dpi=150, bbox_inches=bb3_padded, facecolor=fig.get_facecolor(), edgecolor='none', pad_inches=0)
+            print(f"Panel 3 saved to '{p3_path}'.")
 
         plt.close(fig)
 

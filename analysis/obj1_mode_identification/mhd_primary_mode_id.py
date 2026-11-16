@@ -12,7 +12,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
@@ -56,8 +56,11 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
 
     if out_dir is None:
         out_dir = root_dir
+        img_dir = root_dir / "Images" / "obj1_mode_identification"
     else:
         out_dir = Path(out_dir)
+        img_dir = out_dir
+    img_dir.mkdir(parents=True, exist_ok=True)
 
     print(f"Primary Mode Identification (Shot {shot}, target: {mode_freq:.1f} kHz, window: {t_start:.1f}-{t_end:.1f} ms)")
 
@@ -234,7 +237,8 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     axs_tor[0].axhline(0.5, color="gray", linestyle=":", label="Significance Floor (0.5)")
     axs_tor[0].set_xlim(60.0, 120.0)
     axs_tor[0].set_ylim(0.0, 1.05)
-    axs_tor[0].set_ylabel(r"Cross-Coherence $\gamma^2$")
+    axs_tor[0].set_xlabel(r"Frequency $f$ [kHz]")
+    axs_tor[0].set_ylabel(r"Cross-Coherence $\gamma^2$ [-]")
     axs_tor[0].set_title("Inter-Probe Cross-Spectral Coherence", fontsize=10)
     axs_tor[0].legend(loc="upper right", fontsize=8.5)
     axs_tor[0].grid(True, alpha=0.3)
@@ -254,10 +258,10 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
 
     axs_tor[1].set_xlim(-10, 290)
     axs_tor[1].set_ylim(-195, 195)
-    axs_tor[1].set_xlabel(r"Toroidal Probe Separation $\Delta\varphi$ (deg)")
-    axs_tor[1].set_ylabel(r"Cross-Spectral Phase $\Delta\phi$ (deg)")
+    axs_tor[1].set_xlabel(r"Toroidal Probe Separation $\Delta\varphi$ [deg]")
+    axs_tor[1].set_ylabel(r"Cross-Spectral Phase $\Delta\phi$ [deg]")
     axs_tor[1].set_title(r"Measured Phase vs. Theoretical Toroidal Phase $\Delta\phi = n \Delta\varphi \ (\mathrm{mod}\ 2\pi)$", fontsize=10)
-    axs_tor[1].legend(loc="lower right", fontsize=8)
+    axs_tor[1].legend(loc="upper left", fontsize=8)
     axs_tor[1].grid(True, alpha=0.3)
 
     n_plot = list(range(-6, 7))
@@ -265,18 +269,60 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     bar_cols = ["forestgreen" if r < 10.0 else "lightcoral" for r in rmse_plot]
     axs_tor[2].bar(n_plot, rmse_plot, color=bar_cols, width=0.65, edgecolor="black", alpha=0.85)
     axs_tor[2].axhline(45.0, color="gray", linestyle="--", label="Phase Tolerance Limit (45 deg)")
-    axs_tor[2].set_xlabel("Toroidal Mode Number (n)")
-    axs_tor[2].set_ylabel("Phase RMSE (deg)")
+    axs_tor[2].set_xlabel(r"Toroidal Mode Number $n$ [-]")
+    axs_tor[2].set_ylabel(r"Phase RMSE $\mathrm{RMSE}(n)$ [deg]")
     axs_tor[2].set_title(f"Toroidal Mode Phase Error (Best: n = {best_n:+d} / {second_best_n:+d}, RMSE = {n_fit_results[best_n]['rmse_deg']:.1f} deg)", fontsize=10)
     axs_tor[2].set_xticks(n_plot)
     axs_tor[2].legend(loc="upper right", fontsize=8.5)
     axs_tor[2].grid(True, alpha=0.3)
 
     plt.tight_layout()
-    out_png_tor = out_dir / f"mhd_primary_mode_toroidal_n_shot_{shot}.png"
+    out_png_tor = img_dir / f"mhd_primary_mode_toroidal_n_shot_{shot}.png"
     plt.savefig(out_png_tor, dpi=150)
     plt.close(fig_tor)
     print(f"Toroidal fit figure saved to: '{out_png_tor}'")
+
+    # Standalone high-res Panel 2 export for thesis
+    plt.rcParams.update({
+        "font.size": 12.0,
+        "axes.labelsize": 13.0,
+        "xtick.labelsize": 11.5,
+        "ytick.labelsize": 11.5,
+        "legend.fontsize": 10.2,
+    })
+    fig_p2, ax_p2 = plt.subplots(figsize=(7.6, 3.8))
+    for n_test, col, ls in [(-1, "crimson", "-"), (+3, "navy", "--"), (+1, "gray", ":"), (+2, "darkorange", "-.")]:
+        theo_line = [(n_test * np.radians(a) + np.pi) % (2 * np.pi) - np.pi for a in d_angles_plot]
+        ax_p2.plot(d_angles_plot, np.degrees(theo_line), color=col, linestyle=ls, linewidth=1.8,
+                   label=f"Theoretical n = {n_test:+d} (RMSE={n_fit_results[n_test]['rmse_deg']:.1f}°)")
+
+    ann_offsets = {
+        "MP3-MP4 (+90 deg)": (0, 14),
+        "MP1-MP3 (+180 deg)": (-12, 16),
+        "MP1-MP4 (+270 deg)": (-10, 14),
+    }
+    for a, p, lbl in zip(measured_dphi, measured_phases_deg, pair_names):
+        ax_p2.scatter([a], [p], color="blue", s=100, zorder=5, edgecolors="black", linewidth=1.5)
+        ox, oy = ann_offsets.get(lbl, (0, 12))
+        lbl_disp = lbl.replace(" deg)", "°)")
+        ax_p2.annotate(f"{lbl_disp}\n({p:+.1f}°)", (a, p), textcoords="offset points", xytext=(ox, oy),
+                       ha="center", fontsize=10.5, fontweight="bold",
+                       bbox=dict(boxstyle="round,pad=0.18", facecolor="white", edgecolor="#cccccc", alpha=0.85))
+
+    ax_p2.set_xlim(-12, 292)
+    ax_p2.set_ylim(-205, 225)
+    ax_p2.set_xlabel(r"Toroidal Probe Separation $\Delta\varphi$ [deg]", fontsize=13.0)
+    ax_p2.set_ylabel(r"Cross-Spectral Phase $\Delta\phi$ [deg]", fontsize=13.0)
+    ax_p2.grid(True, alpha=0.3)
+    ax_p2.legend(loc="lower center", bbox_to_anchor=(0.5, 1.02), ncol=2, fontsize=10.0, framealpha=0.95)
+    ax_p2.set_title(f"#{shot} ({mode_freq:.1f} kHz, {t_start:.1f}–{t_end:.1f} ms)", fontsize=13.0, fontweight="bold", pad=52)
+    fig_p2.tight_layout()
+    panels_dir_tor = img_dir / "panels"
+    panels_dir_tor.mkdir(parents=True, exist_ok=True)
+    p2_standalone = panels_dir_tor / f"mhd_primary_mode_toroidal_n_shot_{shot}_panel2_measured_phase_vs_theoretical_toroidal_p.png"
+    fig_p2.savefig(p2_standalone, dpi=300, bbox_inches="tight")
+    plt.close(fig_p2)
+    print(f"Standalone Toroidal Panel 2 saved to: '{p2_standalone}'")
 
     # 5. Plot Radial Profiles
     fig_rad, axs_rad = plt.subplots(3, 1, figsize=(10, 11))
@@ -289,8 +335,8 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
 
     axs_rad[0].plot(ece_ghz, ece_rms, marker="o", color="crimson", linewidth=2.0, markersize=7, label=r"RMS Fluctuation $\tilde{T}_e$ (V)")
     axs_rad[0].axvspan(64.0, 67.0, color="gold", alpha=0.2, label=r"Peak Fluctuation Zone (64.5 - 66.5 GHz)")
-    axs_rad[0].set_xlabel("ECE Frequency (GHz)")
-    axs_rad[0].set_ylabel(r"Fluctuation RMS Amplitude $\tilde{T}_e$ (V)")
+    axs_rad[0].set_xlabel(r"ECE Frequency $f_{\mathrm{ECE}}$ [GHz]")
+    axs_rad[0].set_ylabel(r"Fluctuation RMS $\tilde{T}_e$ [V]")
     axs_rad[0].set_title(r"Radial Electron Temperature Fluctuation Profile $\tilde{T}_e(r)$", fontsize=10)
     for g, r, ch in zip(ece_ghz, ece_rms, ece_chs):
         if r > 0.05:
@@ -299,8 +345,8 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     axs_rad[0].legend(loc="upper left", fontsize=8.5)
 
     axs_rad[1].plot(ece_ghz, ece_gam, marker="s", color="tab:blue", linewidth=1.8, markersize=6, label=r"Coherence $\gamma^2(89\mathrm{kHz})$ with MP1")
-    axs_rad[1].set_xlabel("ECE Frequency (GHz)")
-    axs_rad[1].set_ylabel(r"Cross-Coherence $\gamma^2$")
+    axs_rad[1].set_xlabel(r"ECE Frequency $f_{\mathrm{ECE}}$ [GHz]")
+    axs_rad[1].set_ylabel(r"Cross-Coherence $\gamma^2$ [-]")
     axs_rad[1].set_title("Radial Coherence with Mirnov Probe MP1", fontsize=10)
     axs_rad[1].grid(True, alpha=0.3)
     axs_rad[1].legend(loc="lower right", fontsize=8.5)
@@ -314,8 +360,8 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     ax_ha_twin.plot(np.arange(len(ha_names)) + 0.15, ha_rms, marker="D", color="darkorange", linewidth=2.0, label=r"RMS Fluctuation (V)")
     axs_rad[2].set_xticks(np.arange(len(ha_names)))
     axs_rad[2].set_xticklabels(ha_names)
-    axs_rad[2].set_ylabel(r"Cross-Coherence $\gamma^2$", color="teal")
-    ax_ha_twin.set_ylabel("RMS Fluctuation Amplitude (V)", color="darkorange")
+    axs_rad[2].set_ylabel(r"Cross-Coherence $\gamma^2$ [-]", color="teal")
+    ax_ha_twin.set_ylabel(r"RMS Fluctuation Amplitude $\sigma_{\mathrm{H}\alpha}$ [V]", color="darkorange")
     axs_rad[2].set_title(r"Edge Fluctuation Coupling: Fast $H_\alpha$ Array (HAFAST)", fontsize=10)
     axs_rad[2].grid(True, alpha=0.3)
 
@@ -324,7 +370,7 @@ def identify_primary_mode(shot=88653, data_dir=None, t_start=259.1, t_end=275.0,
     axs_rad[2].legend(h1 + h2, l1 + l2, loc="upper right", fontsize=8.5)
 
     plt.tight_layout()
-    out_png_rad = out_dir / f"mhd_primary_mode_radial_profile_shot_{shot}.png"
+    out_png_rad = img_dir / f"mhd_primary_mode_radial_profile_shot_{shot}.png"
     plt.savefig(out_png_rad, dpi=150)
     plt.close(fig_rad)
     print(f"Radial profile figure saved to: '{out_png_rad}'")

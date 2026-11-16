@@ -4,7 +4,7 @@ import numpy as np
 import scipy.signal as dsp
 import matplotlib.pyplot as plt
 
-root_dir = Path(r"c:\TFG")
+root_dir = Path(__file__).resolve().parents[2]
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
         sys.path.append(str(p_add))
@@ -15,9 +15,10 @@ from mhd_common import extract_instantaneous_frequency
 
 def generate_modulator_dual_mode_plot(shot=88653, out_dir=None):
     if out_dir is None:
-        out_dir = root_dir
+        out_dir = root_dir / "Images" / "obj2_dynamics_and_structure"
     else:
         out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     data_dir = root_dir / "data" / f"hj{shot}"
     t_start, t_end = 259.1, 275.0

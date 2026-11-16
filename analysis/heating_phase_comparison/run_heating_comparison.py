@@ -9,7 +9,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [
     root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common",
@@ -64,6 +64,11 @@ def main():
     parser.add_argument("-s", "--shots", type=int, default=DEFAULT_SHOT, help=f"Shot number (default: {DEFAULT_SHOT})")
     parser.add_argument("-o", "--out-dir", type=str, default=str(DEFAULT_OUT_DIR), help=f"Output directory (default: {DEFAULT_OUT_DIR})")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose logging")
+    parser.add_argument(
+        "--include-legacy-bicoherence",
+        action="store_true",
+        help="Also run superseded LAS.abicoh2 bicoherence comparisons (see analysis/obj3_nonlinear_coupling/SUPERSEDED.md)",
+    )
     args = parser.parse_args()
 
     out_dir = Path(args.out_dir)
@@ -89,8 +94,11 @@ def main():
         # 3. Objective 2 Spatial Modal Structure (4 figures)
         run_mode_structure_comparison(shot=args.shots, out_dir=out_dir, verbose=args.verbose)
 
-        # 4. Objective 3 Non-Linear Bicoherence Matrices
-        run_bicoherence_comparison(shot=args.shots, out_dir=out_dir, verbose=args.verbose)
+        # 4. Objective 3 Non-Linear Bicoherence Matrices (superseded LAS.abicoh2 guarded)
+        if args.include_legacy_bicoherence:
+            run_bicoherence_comparison(shot=args.shots, out_dir=out_dir, verbose=args.verbose)
+        else:
+            print("Skipping legacy LAS.abicoh2 bicoherence comparison (use analysis/obj3_nonlinear_coupling/update_bicoherence_maps_converged.py; pass --include-legacy-bicoherence to run).")
 
         # 5. Toroidal Mode Number n & Radial Localization
         run_toroidal_and_radial_comparison(shot=args.shots, out_dir=out_dir, verbose=args.verbose)
@@ -103,8 +111,11 @@ def main():
         generate_nbi_comparison_envelope_ip_plot(shot=args.shots, out_dir=out_dir)
         print(f"    Saved figure: mhd_mode_envelopes_and_ip_ECH_NBI_comparison.png")
 
-        # 8. Sliding Bicoherence Trace with SNR Cutoff
-        run_sliding_bicoherence_trace(shot=args.shots, out_dir=out_dir, verbose=args.verbose)
+        # 8. Sliding Bicoherence Trace with SNR Cutoff (superseded LAS.abicoh2 guarded)
+        if args.include_legacy_bicoherence:
+            run_sliding_bicoherence_trace(shot=args.shots, out_dir=out_dir, verbose=args.verbose)
+        else:
+            print("Skipping legacy LAS.abicoh2 sliding bicoherence trace (see analysis/obj3_nonlinear_coupling/SUPERSEDED.md).")
 
         print(f"\nComparative heating phase analysis completed successfully.")
         print(f"All figures and summary JSON files saved to: '{out_dir}'\n")

@@ -109,8 +109,8 @@ try:
     p_out("Assertion M == 2306 passed: True")
 
     # State classifier
-    ECH_on, ECH_off = 240.0, 291.2
-    NBI_on, NBI_off = 223.2, 300.4
+    ECH_on, ECH_off = 171.2, 291.32
+    NBI_on, NBI_off = 222.4, 300.4
 
     def classify_state(start_ms, end_ms):
         if end_ms < NBI_on:
@@ -246,8 +246,8 @@ try:
 
     def plot_control_panel(ax, ws, maxs, states, nom_ech, nom_nbi, shot_title):
         # Shaded heating spans
-        ax.axvspan(223.2, 300.4, color="#d9f0d3", alpha=0.55, label="NBI (223.2-300.4 ms)", zorder=0)
-        ax.axvspan(240.0, 291.2, color="#fee0b6", alpha=0.65, label="ECH (240.0-291.2 ms)", zorder=1)
+        ax.axvspan(222.4, 300.4, color="#d9f0d3", alpha=0.55, label="NBI (222.4-300.4 ms)", zorder=0)
+        ax.axvspan(171.2, 291.32, color="#fee0b6", alpha=0.65, label="ECH (171.2-291.32 ms)", zorder=1)
 
         # Dashed horizontal reference lines
         ax.axhline(

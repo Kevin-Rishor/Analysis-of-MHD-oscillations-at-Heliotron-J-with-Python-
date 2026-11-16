@@ -11,7 +11,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 for p_add in [root_dir / "jpack", root_dir / "analysis", root_dir / "analysis" / "common"]:
     if str(p_add) not in sys.path:
@@ -23,9 +23,10 @@ from mhd_common import extract_instantaneous_frequency
 
 def analyze_b_tilde_vs_envelope(shot=88653, out_dir=None):
     if out_dir is None:
-        out_dir = root_dir
+        out_dir = root_dir / "Images" / "obj2_dynamics_and_structure"
     else:
         out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     data_dir = root_dir / "data" / f"hj{shot}"
     mp1_file = data_dir / f"MP1@{shot}.edf"

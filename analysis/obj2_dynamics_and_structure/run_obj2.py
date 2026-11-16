@@ -9,7 +9,7 @@ for p in [current] + list(current.parents):
         root_dir = p
         break
 if root_dir is None:
-    root_dir = Path("c:/TFG")
+    root_dir = current.parents[1]
 
 
 def main():
@@ -19,10 +19,12 @@ def main():
 
     scripts = [
         ("Heating & Confinement vs. Mirnov", [sys.executable, str(current / "heating_vs_mirnov.py")]),
-        ("Secondary Band (40-80 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "--bands", "40:80"]),
-        ("Primary Band (80-120 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "--bands", "80:120"]),
+        ("Dual-Band Dynamics & Structure (40-80, 80-120 kHz)", [sys.executable, str(current / "mhd_analysis_obj2.py"), "--shots", "88653", "88654", "--bands", "40:80", "80:120"]),
+        ("Two-Mode Poloidal Combination Search", [sys.executable, str(current / "mhd_two_mode_combination_search.py"), "--shot", "88653"]),
+        ("ECE vs. LPF Te Verification (Multi-panel)", [sys.executable, str(current / "verify_ece_lpf_temperature.py")]),
+        ("ECE vs. LPF Te Verification (Final 2-panel Figure)", [sys.executable, str(current / "plot_ece_lpf_te_single_figure.py")]),
         ("2D Magnetic Surface Map", [sys.executable, str(current / "mhd_plot_2d_torus_maps.py")]),
-        ("Self-Coupling Coherence", [sys.executable, str(current / "mhd_plot_self_coupling_coherence.py")])
+        ("Self-Coupling Coherence", [sys.executable, str(current / "mhd_plot_self_coupling_coherence.py")]),
     ]
 
     for desc, cmd in scripts:

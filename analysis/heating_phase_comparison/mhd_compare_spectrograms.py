@@ -27,7 +27,7 @@ from comparison_common import (
 
 def run_spectrogram_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False):
     if out_dir is None:
-        out_dir = DEFAULT_OUT_DIR
+        out_dir = root_dir / "Images" / "heating_phase_comparison"
     else:
         out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -119,7 +119,7 @@ def run_spectrogram_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False):
         print(f"    Primary Mode:   {np.mean(f_pri_track):.2f} +/- {np.std(f_pri_track):.2f} kHz, 3-sigma occupancy: {np.mean(dom_pri_track)*100:.1f}%, jumps: {jump_rate_pri:.2f}/ms")
         print(f"    Secondary Mode: {np.mean(f_sec_track):.2f} +/- {np.std(f_sec_track):.2f} kHz, 3-sigma occupancy: {np.mean(dom_sec_track)*100:.1f}%, jumps: {jump_rate_sec:.2f}/ms")
 
-        # Plot 2-Panel Figure
+        # Plot 2-Panel Figure with perfectly aligned horizontal time axes
         plt.rcdefaults()
         fig, (ax_top, ax_bot) = plt.subplots(2, 1, figsize=(11.5, 9.0), gridspec_kw={'height_ratios': [2.2, 1.2]}, sharex=True)
         tt, ff = np.meshgrid(t_sub, f_khz)
@@ -127,7 +127,7 @@ def run_spectrogram_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False):
 
         c0 = ax_top.pcolormesh(tt[mask_fzoom, :], ff[mask_fzoom, :], np.log10(psd_sub[mask_fzoom, :] + 1e-30),
                                cmap='jet', shading='auto', vmin=-11, vmax=-4)
-        fig.colorbar(c0, ax=ax_top, label=r"$\log_{10}\mathrm{PSD}\ (\mathrm{V}^2/\mathrm{Hz})$", pad=0.02)
+        cbar = fig.colorbar(c0, ax=ax_top, label=r"$\log_{10}\mathrm{PSD}\ (\mathrm{V}^2/\mathrm{Hz})$", pad=0.02)
 
         dmap_plot = dom_sub[mask_fzoom, :].astype(float)
         ax_top.contourf(tt[mask_fzoom, :], ff[mask_fzoom, :], dmap_plot, levels=[0.5, 1.5], colors=['black'], alpha=0.15)
@@ -164,7 +164,16 @@ def run_spectrogram_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False):
         ax_bot.grid(True, linestyle=':', alpha=0.4)
         ax_bot.legend(loc='lower right', fontsize=8.5, framealpha=0.9)
 
-        plt.tight_layout()
+        # Force exact shared x-limits matching physical time window
+        ax_top.set_xlim(tw_start, tw_end)
+        ax_bot.set_xlim(tw_start, tw_end)
+
+        # Exact pixel synchronization: match ax_bot horizontal position to ax_top
+        fig.canvas.draw()
+        pos_top = ax_top.get_position()
+        pos_bot = ax_bot.get_position()
+        ax_bot.set_position([pos_top.x0, pos_bot.y0, pos_top.width, pos_bot.height])
+
         out_fig = out_dir / out_name
         safe_savefig(fig, out_fig, dpi=150)
         plt.close(fig)
@@ -172,9 +181,10 @@ def run_spectrogram_comparison(shot=DEFAULT_SHOT, out_dir=None, verbose=False):
 
 
 if __name__ == "__main__":
+    target_dir = root_dir / "Images" / "heating_phase_comparison"
     parser = argparse.ArgumentParser(description="Zoomed Spectrogram Comparison (ECH+NBI vs Just NBI)")
     parser.add_argument("-s", "--shots", type=int, default=DEFAULT_SHOT, help="Shot number to analyze")
-    parser.add_argument("-o", "--out-dir", type=str, default=str(DEFAULT_OUT_DIR), help="Output directory")
+    parser.add_argument("-o", "--out-dir", type=str, default=str(target_dir), help="Output directory")
     parser.add_argument("-v", "--verbose", action="store_true", help="Verbose output")
     args = parser.parse_args()
 
